@@ -23,9 +23,20 @@ public abstract class AEvent implements Event {
     this.status = status;
   }
 
+  public LocalDateTime getStartDate() {
+    return LocalDateTime.of(startDateTime.getYear(), startDateTime.getMonthValue(),
+            startDateTime.getDayOfMonth(), startDateTime.getHour(), startDateTime.getMinute());
+  }
+
+  public LocalDateTime getEndDate() {
+    return LocalDateTime.of(endDateTime.getYear(), endDateTime.getMonthValue(),
+            endDateTime.getDayOfMonth(), endDateTime.getHour(), endDateTime.getMinute());
+  }
+
   @Override
   public abstract void addToCalendar(Map<LocalDateTime, ArrayList<AEvent>> calendar,
                                      Map<String, ArrayList<LocalDateTime>> recurringEvents);
+
 }
 
 

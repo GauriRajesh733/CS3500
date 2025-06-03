@@ -58,13 +58,11 @@ public class CreateEventSeries implements CalendarCommand {
     SeriesEvent currentEvent = new SeriesEvent(subject, startDateTime, endDateTime);
     SeriesEvent prevEvent = null;
     SeriesEvent nextEvent = null;
-    DayOfWeek startDayOfWeek = startDateTime.getDayOfWeek();
-    DayOfWeek endDayOfWeek = startDateTime.getDayOfWeek();
 
     while (eventCount < occurrences - 1) {
       DayOfWeek currentDayOfWeek = daysOfWeek[eventCount % daysOfWeek.length];
-      LocalDateTime nextStartDate = nextDayOfWeekDate(startDayOfWeek, currentEvent.getStartDate());
-      LocalDateTime nextEndDate = nextDayOfWeekDate(endDayOfWeek, currentEvent.getEndDate());
+      LocalDateTime nextStartDate = nextDayOfWeekDate(currentDayOfWeek, currentEvent.getStartDate());
+      LocalDateTime nextEndDate = nextDayOfWeekDate(currentDayOfWeek, currentEvent.getEndDate());
       nextEvent = new SeriesEvent(subject, nextStartDate, nextEndDate);
 
       currentEvent.setNext(nextEvent);
@@ -82,6 +80,7 @@ public class CreateEventSeries implements CalendarCommand {
 
     SeriesEvent firstEvent = nextEvent;
 
+    // traverse backwards to get first event in series
     while (firstEvent.hasPrev()) {
       firstEvent = firstEvent.prev();
     }

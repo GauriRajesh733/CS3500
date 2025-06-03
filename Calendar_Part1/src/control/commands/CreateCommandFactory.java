@@ -266,7 +266,7 @@ public final class CreateCommandFactory implements CommandFactory {
 
       // create single multi-day event
       if (this.daysOfWeek == null) {
-        return new CreateMultidayEvent(subject, startDateTime, endDateTime, startDate);
+        return new CreateMultidayEvent(subject, startDateTime, endDateTime);
       }
 
       // create event series on specific weekdays that repeats N times

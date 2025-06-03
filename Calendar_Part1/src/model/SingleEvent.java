@@ -4,20 +4,10 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Map;
 
-public class SingleEvent extends AEvent  {
+public class SingleEvent extends AEvent {
 
   public SingleEvent(String subject, LocalDateTime startDate, LocalDateTime endDate) {
     super(subject, startDate, endDate, null, null, null);
-  }
-
-  public LocalDateTime getStartDate() {
-    return LocalDateTime.of(startDateTime.getYear(), startDateTime.getMonthValue(),
-            startDateTime.getDayOfMonth(), startDateTime.getHour(), startDateTime.getMinute());
-  }
-
-  public LocalDateTime getEndDate() {
-    return LocalDateTime.of(endDateTime.getYear(), endDateTime.getMonthValue(),
-            endDateTime.getDayOfMonth(), endDateTime.getHour(), endDateTime.getMinute());
   }
 
   // NOTE: should we just put the same start and end date but for different dates if it spans multiple days?
