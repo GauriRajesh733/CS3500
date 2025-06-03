@@ -1,24 +1,31 @@
 package model;
 
 
-// NOTE: add builder pattern!
-public class AEvent implements Event {
-  protected String subject;
-  protected Date startDate; //YYYY-MM-DD-HH-MM
-  protected Date endDate; //YYYY-MM-DD-HH-MM
-  protected String description;
-  protected Location location;
-  protected Status status;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Map;
 
-  protected AEvent(String subject, Date startDate, String description,
-                   Location location, Status status, Date endDate) {
+// NOTE: add builder pattern!
+public abstract class AEvent implements Event {
+  protected final LocalDateTime startDateTime;
+  protected final LocalDateTime endDateTime;
+  protected final String subject;
+  protected final String description;
+  protected final Location location;
+  protected final Status status;
+
+  protected AEvent(String subject, LocalDateTime startDateTime, LocalDateTime endDateTime, String description, Location location, Status status) {
     this.subject = subject;
-    this.startDate = startDate;
-    this.endDate = endDate;
+    this.startDateTime = startDateTime;
+    this.endDateTime = endDateTime;
     this.description = description;
     this.location = location;
     this.status = status;
   }
+
+  @Override
+  public abstract void addToCalendar(Map<LocalDateTime, ArrayList<AEvent>> calendar,
+                                     Map<String, ArrayList<LocalDateTime>> recurringEvents);
 }
 
 

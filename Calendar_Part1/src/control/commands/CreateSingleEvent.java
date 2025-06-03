@@ -1,36 +1,29 @@
 package control.commands;
 
+import java.time.LocalDateTime;
+
 import control.CalendarCommand;
 import model.CalendarModel;
-import model.Date;
 import model.SingleEvent;
 
 public class CreateSingleEvent implements CalendarCommand {
-  private final Date startDate;
-  private final Date endDate;
+  private final LocalDateTime startDate;
+  private final LocalDateTime endDate;
   private final String subject;
 
-  public CreateSingleEvent(String subject, Date startDateTime, Date endDateTime, Date startDate) {
-
-    if (startDateTime == null && startDate == null) {
-      throw new IllegalArgumentException("Start date cannot be null");
-    }
-
-    if (endDateTime == null) {
-      this.endDate = new Date(startDate.getYear(), startDate.getMonth(), startDate.getDay(), 17, 0);
-    }
-    else {
-      this.endDate = endDateTime;
-    }
-
-    if (startDate == null) {
-      this.startDate = startDateTime;
-    }
-    else {
-      this.startDate = new Date(startDate.getYear(), startDate.getMonth(), startDate.getDay(), 8, 0);
-    }
-
+  // create all day event
+  public CreateSingleEvent(String subject, LocalDateTime startDate) {
     this.subject = subject;
+    this.startDate = startDate;
+    this.endDate = LocalDateTime.of(startDate.getYear(), startDate.getMonthValue(),
+            startDate.getDayOfMonth(), 17, 0);
+  }
+
+  // create single day event
+  public CreateSingleEvent(String subject, LocalDateTime startDateTime, LocalDateTime endDateTime) {
+    this.subject = subject;
+    this.startDate = startDateTime;
+    this.endDate = endDateTime;
   }
 
   @Override
