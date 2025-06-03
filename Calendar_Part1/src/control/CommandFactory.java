@@ -1,5 +1,7 @@
 package control;
 
 public interface CommandFactory {
-  public CalendarCommand createCalendarCommand(String input);
+  CalendarCommand createCalendarCommand(String input);
+
+  //int searchKeyword(String input) throws IllegalArgumentException;
 }

@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class CalendarModelImpl implements CalendarModel {
   private Map<LocalDateTime, ArrayList<AEvent>> calendar;
-  private Map<String, ArrayList<LocalDateTime>> recurringEvents;
+  private Map<String, ArrayList<LocalDateTime>> events;
 
 
   // NOTE: check if subject date repeated!

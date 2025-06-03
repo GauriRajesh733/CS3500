@@ -12,11 +12,18 @@ public class MultidaySingleEvent extends AMultidayEvent<MultidaySingleEvent> {
 
   @Override
   public void addToCalendar(Map<LocalDateTime, ArrayList<AEvent>> calendar, Map<String, ArrayList<LocalDateTime>> recurringEvents) {
-    // add first event to calendar with end time as 5pm?
+    MultidaySingleEvent currentDay = new MultidaySingleEvent(this.subject, this.startDateTime,
+            this.endDateTime);
+    LocalDateTime currentDate = this.startDateTime;
 
-    // for each "in between" day event keep same start and end date as whole event
+    while (!currentDate.isAfter(this.endDateTime)) {
+      if (!calendar.containsKey(currentDate)) {
+        calendar.put(currentDate, new ArrayList<AEvent>());
+      }
+      calendar.get(currentDate).add(this);
 
-    // add last event to calendar with start time as 8am?
+      currentDate = currentDate.plusDays(1);
+    }
   }
 
 
