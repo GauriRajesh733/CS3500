@@ -21,7 +21,6 @@ public class SingleEvent extends AEvent {
       LocalDateTime nextDate = currentDate.plusDays(1);
       calendar.get(nextDate).add(this);
     }
-
   }
 
 
