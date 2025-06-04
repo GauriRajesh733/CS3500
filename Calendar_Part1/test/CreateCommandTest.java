@@ -4,9 +4,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 
 import control.commands.CreateEventSeries;
-import control.commands.CreateMultidayEvent;
 import control.commands.CreateSingleEvent;
-import model.SeriesEvent;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;

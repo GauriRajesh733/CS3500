@@ -15,17 +15,14 @@ public class CreateEventSeries implements CalendarCommand {
   public CreateEventSeries(
           String subject, DayOfWeek[] daysOfWeek, Integer occurrences, LocalDateTime startDateTime,
           LocalDateTime endDateTime) {
-    this.firstEvent = this.createNEventSeries(
-            subject, daysOfWeek, occurrences, startDateTime, endDateTime);
+    this.firstEvent = new SeriesEvent(subject, daysOfWeek, occurrences, startDateTime, endDateTime);
   }
 
   // create event series on specific weekdays until specific end date and time
   public CreateEventSeries(
           String subject, DayOfWeek[] daysOfWeek, LocalDateTime startDateTime,
           LocalDateTime endDateTime, LocalDateTime seriesEndDate) {
-    this.firstEvent = this.createNEventSeries(subject, daysOfWeek,
-            this.calculateOccurrences(startDateTime, seriesEndDate, daysOfWeek),
-            startDateTime, endDateTime);
+    this.firstEvent = new SeriesEvent(subject, daysOfWeek, this.calculateOccurrences(startDateTime, seriesEndDate, daysOfWeek), startDateTime, endDateTime);
   }
 
   // create a series of all day events that repeat N times on specific weekdays
@@ -33,7 +30,7 @@ public class CreateEventSeries implements CalendarCommand {
           String subject, DayOfWeek[] daysOfWeek, Integer occurrences, LocalDateTime startDate) {
     LocalDateTime endDate = LocalDateTime.of(startDate.getYear(), startDate.getMonthValue(),
             startDate.getDayOfMonth(), 15, 0);
-    this.firstEvent = this.createNEventSeries(subject, daysOfWeek, occurrences, startDate, endDate);
+    this.firstEvent = new SeriesEvent(subject, daysOfWeek, occurrences, startDate, endDate);
   }
 
   // create a series of all day events until a specific date (inclusive)
@@ -42,50 +39,13 @@ public class CreateEventSeries implements CalendarCommand {
           LocalDateTime seriesEndDate) {
     LocalDateTime endDate = LocalDateTime.of(startDate.getYear(), startDate.getMonthValue(),
             startDate.getDayOfMonth(), 15, 0);
-    this.firstEvent = this.createNEventSeries(subject, daysOfWeek,
+    this.firstEvent = new SeriesEvent(subject, daysOfWeek,
             this.calculateOccurrences(startDate, seriesEndDate, daysOfWeek), startDate, endDate);
   }
 
   @Override
   public void go(CalendarModel m) {
     m.addEvent(this.firstEvent);
-  }
-
-  private SeriesEvent createNEventSeries(String subject, DayOfWeek[] daysOfWeek, int occurrences,
-                                         LocalDateTime startDateTime, LocalDateTime endDateTime) {
-
-    int eventCount = 0;
-    SeriesEvent currentEvent = new SeriesEvent(subject, startDateTime, endDateTime);
-    SeriesEvent prevEvent = null;
-    SeriesEvent nextEvent = null;
-
-    while (eventCount < occurrences - 1) {
-      DayOfWeek currentDayOfWeek = daysOfWeek[eventCount % daysOfWeek.length];
-      LocalDateTime nextStartDate = nextDayOfWeekDate(currentDayOfWeek, currentEvent.getStartDate());
-      LocalDateTime nextEndDate = nextDayOfWeekDate(currentDayOfWeek, currentEvent.getEndDate());
-      nextEvent = new SeriesEvent(subject, nextStartDate, nextEndDate);
-
-      currentEvent.setNext(nextEvent);
-      nextEvent.setPrev(currentEvent);
-      currentEvent.setPrev(prevEvent);
-      if (prevEvent != null) {
-        prevEvent.setNext(currentEvent);
-      }
-
-      prevEvent = currentEvent;
-      currentEvent = nextEvent;
-
-      eventCount++;
-    }
-
-    SeriesEvent firstEvent = nextEvent;
-
-    // traverse backwards to get first event in series
-    while (firstEvent.hasPrev()) {
-      firstEvent = firstEvent.prev();
-    }
-
-    return firstEvent;
   }
 
   private LocalDateTime nextDayOfWeekDate(DayOfWeek dayOfWeek, LocalDateTime startDate) {

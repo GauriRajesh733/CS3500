@@ -1,5 +1,6 @@
 package model;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Map;
@@ -7,21 +8,45 @@ import java.util.Map;
 public class SingleEvent extends AEvent {
 
   public SingleEvent(String subject, LocalDateTime startDate, LocalDateTime endDate) {
-    super(subject, startDate, endDate, null, null, null);
+    super(subject, startDate, endDate);
   }
 
-  // NOTE: should we just put the same start and end date but for different dates if it spans multiple days?
-  // OR should it be all day event for in between days??
   @Override
-  public void addToCalendar(Map<LocalDateTime, ArrayList<AEvent>> calendar) {
-    LocalDateTime currentDate = this.startDateTime;
+  public void addToCalendar(Map<LocalDate, ArrayList<AEvent>> calendar) {
+    LocalDate currentDate = this.startDateTime.toLocalDate();
 
-    // multi spanning event!
-    while(!currentDate.isAfter(this.endDateTime)) {
-      LocalDateTime nextDate = currentDate.plusDays(1);
-      calendar.get(nextDate).add(this);
+    // add event to all dates in between if multiday event
+    while (!currentDate.isAfter(this.endDateTime.toLocalDate())) {
+      calendar.get(currentDate).add(this);
+      currentDate = currentDate.plusDays(1);
     }
+  }
+
+  public void editSingleEvent(EventProperty propertyToEdit, String newProperty) {
+    switch (propertyToEdit) {
+      // if not editing start or end date call super method
+      case SUBJECT:
+      case DESCRIPTION:
+      case LOCATION:
+      case STATUS:
+      case END:
+        super.editSingleEvent(propertyToEdit, newProperty);
+        // if editing start or end date update this event
+      case START:
+        this.startDateTime = LocalDateTime.parse(newProperty);
+    }
+  }
+
+  @Override
+  public void editSeriesEvent(EventProperty propertyToEdit, String newProperty) {
+    this.editSingleEvent(propertyToEdit, newProperty);
+  }
+
+  @Override
+  public void editEvents(EventProperty propertyToEdit, String newProperty) {
+    this.editSingleEvent(propertyToEdit, newProperty);
   }
 
 
 }
+

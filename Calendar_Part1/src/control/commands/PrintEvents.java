@@ -11,7 +11,7 @@ import model.CalendarModel;
  * Command to print events for a specific date.
  */
 public class PrintEvents implements CalendarCommand {
-  LocalDate date;
+  private final LocalDate date;
   /**
    * Constructor for the PrintEvents command.
    *
