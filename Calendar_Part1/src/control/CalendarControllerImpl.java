@@ -7,18 +7,16 @@ import java.util.Scanner;
 
 import control.commands.CalendarCommandFactory;
 import model.CalendarModel;
-import model.CalendarModelImpl;
+import view.CalendarView;
 
 public class CalendarControllerImpl implements CalendarController {
   private final InputStream in;
-  private final PrintStream out;
 
-  public CalendarControllerImpl(InputStream in, PrintStream out) {
+  public CalendarControllerImpl(InputStream in) {
     this.in = in;
-    this.out = out;
   }
 
-  public void go(CalendarModel m) {
+  public void go(CalendarModel m, CalendarView v) {
     Objects.requireNonNull(m);
     Scanner s = new Scanner(this.in);
 

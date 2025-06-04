@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.TreeMap;
 import java.util.Map;
 
 public class CalendarModelImpl implements CalendarModel {
@@ -38,7 +37,7 @@ public class CalendarModelImpl implements CalendarModel {
 
     for (AEvent event : eventToEdit) {
       // if not editing start date update event
-      if (propertyToEdit != EventProperty.START) {
+      if (propertyToEdit != EventProperty.START  && propertyToEdit != EventProperty.END) {
         event.editSingleEvent(propertyToEdit, newProperty);
       }
       // if editing start date
@@ -80,7 +79,7 @@ public class CalendarModelImpl implements CalendarModel {
 
     for (AEvent event : eventToEdit) {
       // if editing start date update event
-      if (propertyToEdit != EventProperty.START) {
+      if (propertyToEdit != EventProperty.START && propertyToEdit != EventProperty.END) {
         event.editEvents(propertyToEdit, newProperty);
       }
       // if editing start date
@@ -139,7 +138,7 @@ public class CalendarModelImpl implements CalendarModel {
 
     for (AEvent event : eventToEdit) {
       // if not editing start date update event
-      if (propertyToEdit != EventProperty.START) {
+      if (propertyToEdit != EventProperty.START && propertyToEdit != EventProperty.END) {
         event.editSeriesEvent(propertyToEdit, newProperty);
       }
       // if editing start date
@@ -169,8 +168,6 @@ public class CalendarModelImpl implements CalendarModel {
     }
     return false;
   }
-
-  private AEvent findEvent();
 
   private ArrayList<AEvent> findSingleEvent(LocalDateTime startDate, LocalDateTime endDate, String subject) {
     ArrayList<AEvent> singleEvent = new ArrayList<AEvent>();
