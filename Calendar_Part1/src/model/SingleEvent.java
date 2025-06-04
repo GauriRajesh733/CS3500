@@ -13,7 +13,7 @@ public class SingleEvent extends AEvent {
   // NOTE: should we just put the same start and end date but for different dates if it spans multiple days?
   // OR should it be all day event for in between days??
   @Override
-  public void addToCalendar(Map<LocalDateTime, ArrayList<AEvent>> calendar, Map<String, ArrayList<LocalDateTime>> recurringEvents) {
+  public void addToCalendar(Map<LocalDateTime, ArrayList<AEvent>> calendar) {
     LocalDateTime currentDate = this.startDateTime;
 
     // multi spanning event!

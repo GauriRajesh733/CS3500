@@ -34,8 +34,7 @@ public abstract class AEvent implements Event {
   }
 
   @Override
-  public abstract void addToCalendar(Map<LocalDateTime, ArrayList<AEvent>> calendar,
-                                     Map<String, ArrayList<LocalDateTime>> recurringEvents);
+  public abstract void addToCalendar(Map<LocalDateTime, ArrayList<AEvent>> calendar);
 
 }
 
