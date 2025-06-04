@@ -11,8 +11,8 @@ import model.CalendarModel;
  * Command to print events within a specified time interval.
  */
 public class PrintEventsUsingInterval implements CalendarCommand {
-  LocalDateTime start;
-  LocalDateTime end;
+  private final LocalDateTime start;
+  private final LocalDateTime end;
 
   /**
    * Constructor for the PrintEventsUsingInterval command.

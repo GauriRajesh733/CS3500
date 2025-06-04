@@ -3,13 +3,14 @@ package control.commands;
 import java.time.LocalDateTime;
 import java.time.DayOfWeek;
 
+import control.ACommandFactory;
 import control.CalendarCommand;
 import control.CommandFactory;
 
 // NOTE: ADD TRY CATCH BLOCKS TO PRIVATE METHODS!
 // ADD HELPER METHOD TO CHECK INDEX OF WORD AND THROW EXCEPTION THERE!  MAYBE TAKE IN ANY STRING
 // ADD HELPER METHOD ALSO FOR SUBSTRINGS TAKE IN INDICES AND THROW EXCEPTION IF NEEDED
-public final class CreateCommandFactory implements CommandFactory {
+public final class CreateCommandFactory extends ACommandFactory {
 
   public CalendarCommand createCalendarCommand(String input) {
     // create single event
@@ -254,19 +255,9 @@ public final class CreateCommandFactory implements CommandFactory {
         throw new IllegalArgumentException("No start and/or end date provided");
       }
 
-      boolean singleDayEvent = ((this.startDateTime.getYear() == this.endDateTime.getYear())
-              && (this.startDateTime.getMonthValue() == this.endDateTime.getMonthValue())
-              && (this.startDateTime.getDayOfMonth() == this.endDateTime.getDayOfMonth()))
-              || (startDate != null);
-
-      // create single all day event
-      if (this.daysOfWeek == null && singleDayEvent) {
-        return new CreateSingleEvent(subject, startDateTime, endDateTime);
-      }
-
-      // create single multi-day event
+      // create single event (single day or multiple days)
       if (this.daysOfWeek == null) {
-        return new CreateMultidayEvent(subject, startDateTime, endDateTime);
+        return new CreateSingleEvent(subject, startDateTime, endDateTime);
       }
 
       // create event series on specific weekdays that repeats N times

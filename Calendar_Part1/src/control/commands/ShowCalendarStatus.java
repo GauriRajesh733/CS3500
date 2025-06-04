@@ -10,7 +10,7 @@ import model.CalendarModel;
  */
 public class ShowCalendarStatus implements CalendarCommand {
 
-  LocalDateTime dateTime;
+  private final LocalDateTime dateTime;
   /**
    * Constructor for ShowCalendarStatus.
    *
