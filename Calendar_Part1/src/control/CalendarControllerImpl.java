@@ -1,13 +1,17 @@
 package control;
 
 import java.io.InputStream;
-import java.io.PrintStream;
+import java.time.format.DateTimeParseException;
 import java.util.Objects;
 import java.util.Scanner;
 
 import control.commands.CalendarCommandFactory;
 import model.CalendarModel;
 import view.CalendarView;
+
+/**
+ * CalendarController implementation that takes input, processes it, and sends it to the model.
+ */
 
 public class CalendarControllerImpl implements CalendarController {
   private final InputStream in;
@@ -27,8 +31,14 @@ public class CalendarControllerImpl implements CalendarController {
         return;
       }
 
-      CalendarCommand cmd = new CalendarCommandFactory().createCalendarCommand(input);
-      cmd.go(m);
+      try {
+        CalendarCommand cmd = new CalendarCommandFactory().createCalendarCommand(input);
+
+        cmd.go(m, v);
+      } catch (Exception e) {
+        v.showErrorMessage(e.getMessage());
+        this.go(m, v);
+      }
     }
   }
 

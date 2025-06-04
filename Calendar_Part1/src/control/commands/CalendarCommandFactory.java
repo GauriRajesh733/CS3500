@@ -3,7 +3,6 @@ package control.commands;
 
 import control.ACommandFactory;
 import control.CalendarCommand;
-import control.CommandFactory;
 
 public final class CalendarCommandFactory extends ACommandFactory {
 
@@ -22,7 +21,7 @@ public final class CalendarCommandFactory extends ACommandFactory {
     }
     // create ShowStatus command
     else if (input.startsWith("show status")) {
-      //return new ShowCalendarStatus(input);
+      return new ShowCalendarStatus().createCalendarCommand(input);
     }
     // throw exception for invalid calendar event command
     throw new IllegalArgumentException("Invalid calendar event command: " + input);

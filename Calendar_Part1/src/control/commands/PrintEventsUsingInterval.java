@@ -6,6 +6,7 @@ import java.util.List;
 import control.CalendarCommand;
 import model.AEvent;
 import model.CalendarModel;
+import view.CalendarView;
 
 /**
  * Command to print events within a specified time interval.
@@ -27,7 +28,7 @@ public class PrintEventsUsingInterval implements CalendarCommand {
 
   //no events found in the view
   @Override
-  public void go(CalendarModel m) {
-    m.printEventsUsingInterval(this.start, this.end);
+  public void go(CalendarModel m, CalendarView v) {
+    v.showEventsInRange(m.printEventsUsingInterval(this.start, this.end), this.start, this.end);
   }
 }

@@ -5,27 +5,28 @@ import java.time.LocalDateTime;
 import control.ACommandFactory;
 import control.CalendarCommand;
 import model.CalendarModel;
+import view.CalendarView;
 
 /**
  * Class to show the status of a calendar event on a specific date.
  */
-public class ShowCalendarStatus extends ACommandFactory implements CalendarCommand {
-
-  private final LocalDateTime dateTime;
-  /**
-   * Constructor for ShowCalendarStatus.
-   *
-   * @param dateTime The input string containing the date and time to check the status.
-   */
-  public ShowCalendarStatus(LocalDateTime dateTime) {
-    this.dateTime = dateTime;
-  }
+public class ShowCalendarStatus extends ACommandFactory {
 
   @Override
   public CalendarCommand createCalendarCommand(String input) {
-    int onIndex = input.indexOf("on");
+    if (input.contains("on")) {
+      return this.showStatus(input);
+    } else {
+      throw new IllegalArgumentException("Invalid show status command" + input);
+    }
+  }
 
-    String eventDateTime = input.substring(onIndex + 3);
+  private CalendarCommand showStatus(String input) {
+    int onIndex = searchKeywordIndex(input, "on");
+
+    String eventDateTime = search(
+            input, onIndex + 3, input.length(),
+            "CalendarCommand ShowCalendarStatus input eventDateTime wrong indexing.");
 
     if (!validDateTime(eventDateTime)) {
       throw new IllegalArgumentException("Invalid date format.");
@@ -33,11 +34,19 @@ public class ShowCalendarStatus extends ACommandFactory implements CalendarComma
 
     LocalDateTime date = LocalDateTime.parse(eventDateTime);
 
-    return new ShowCalendarStatus(date);
+    return new ShowStatus(date);
   }
 
-  @Override
-  public void go(CalendarModel m) {
-    m.showCalendarStatus(this.dateTime);
+  private static class ShowStatus implements CalendarCommand {
+    LocalDateTime dateTime;
+
+    public ShowStatus(LocalDateTime dateTime) {
+      this.dateTime = dateTime;
+    }
+
+    @Override
+    public void go(CalendarModel m, CalendarView v) {
+      v.showStatus(m.showCalendarStatus(this.dateTime), this.dateTime);
+    }
   }
 }

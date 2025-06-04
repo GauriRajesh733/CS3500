@@ -6,6 +6,7 @@ import java.util.List;
 import control.CalendarCommand;
 import model.AEvent;
 import model.CalendarModel;
+import view.CalendarView;
 
 /**
  * Command to print events for a specific date.
@@ -23,7 +24,7 @@ public class PrintEvents implements CalendarCommand {
 
   //no events found in the view
   @Override
-  public void go(CalendarModel m) {
-    m.printEventsForDate(this.date);
+  public void go(CalendarModel m, CalendarView v) {
+    v.showEventsOnDate(m.printEventsForDate(this.date), this.date);
   }
 }

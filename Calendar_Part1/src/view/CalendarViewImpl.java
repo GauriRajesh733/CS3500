@@ -49,4 +49,10 @@ public class CalendarViewImpl implements CalendarView {
     }
     out.println("Available on " + dateTime);
   }
+
+  @Override
+  public void showErrorMessage(String errorMessage) {
+    out.println(errorMessage);
+    out.println("Try again");
+  }
 }

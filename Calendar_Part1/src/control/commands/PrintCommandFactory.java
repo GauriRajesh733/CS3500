@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 
 import control.ACommandFactory;
 import control.CalendarCommand;
-import control.CommandFactory;
 
 /**
  * Factory class to create print commands based on user input.
@@ -23,28 +22,38 @@ public class PrintCommandFactory extends ACommandFactory {
   }
 
   private CalendarCommand printEvents(String input) {
-    int onIndex = input.indexOf("on");
+    int onIndex = searchKeywordIndex(input, "on");
 
-    String eventDate = input.substring(onIndex + 3);
-    if (!validDateTime(eventDate)) {
+    String eventDate = search(
+            input, onIndex + 3, input.length(),
+            "Calendar Command printEvents input eventDate wrong indexing.");
+    if (!validDate(eventDate)) {
       throw new IllegalArgumentException("Invalid date provided: " + eventDate);
     }
 
     LocalDate date = LocalDate.parse(eventDate);
-    //get the lists of events along with their start time, end time, and location (if any)
     return new PrintEvents(date);
   }
 
   private CalendarCommand printEventsWithInterval(String input) {
-    int fromIndex = input.indexOf("from");
-    int toIndex = input.indexOf("to");
+    int fromIndex = searchKeywordIndex(input, "from");
+    int toIndex = searchKeywordIndex(input, "to");
 
-    String eventStartDateTime = input.substring(fromIndex + 5, toIndex - 1);
-    String eventEndDateTime = input.substring(toIndex + 3);
+    String eventStartDateTime = search(
+            input, fromIndex + 5, toIndex - 1,
+            "Calendar Command printEventsWithIntervals input eventStartDateTime wrong indexing.");
+    String eventEndDateTime =search(
+            input, toIndex + 3, input.length(),
+            "Calendar Command printEventsWithIntervals input eventEndDateTime wrong indexing.");
 
-    if (!validDateTime(eventStartDateTime) || !validDateTime(eventEndDateTime)) {
+    if (!validDateTime(eventStartDateTime)) {
       throw new IllegalArgumentException(
-              "Invalid date provided: " + eventStartDateTime + " or " + eventEndDateTime);
+              "Invalid date provided: " + eventStartDateTime);
+    }
+
+    if (!validDateTime(eventEndDateTime)) {
+      throw new IllegalArgumentException(
+              "Invalid date provided: " + eventEndDateTime);
     }
 
     LocalDateTime startDateTime = LocalDateTime.parse(eventStartDateTime);
@@ -53,9 +62,6 @@ public class PrintCommandFactory extends ACommandFactory {
     if (startDateTime.isAfter(endDateTime)) {
       throw new IllegalArgumentException("Start date cannot be after end date");
     }
-
-    //gets list of all events in the given interval including their start time and end time and
-    // location
 
     return new PrintEventsUsingInterval(startDateTime, endDateTime);
   }
