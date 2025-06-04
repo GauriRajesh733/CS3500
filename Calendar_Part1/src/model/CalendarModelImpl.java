@@ -33,11 +33,18 @@ public class CalendarModelImpl implements CalendarModel {
   public void editSeries(EventProperty propertyToEdit, String subject, LocalDateTime startDate, String newProperty) {
 
   }
-  
+
+  private AEvent findEvent()
+
   // find date
 
   // find subject
 
   // if it exists then update
 
+  // if editing non-date property just mutate or create new event
+
+  // if editing date property
+
+  private boolean 
 }
