@@ -155,14 +155,13 @@ public class CalendarModelImpl implements CalendarModel {
   }
   @Override
   public boolean showCalendarStatus(LocalDateTime dateTime) {
-    LocalDate date = dateTime.toLocalDate();
 
     for (ArrayList<AEvent> eventList: this.calendar.values()) {
       for (AEvent event: eventList) {
-        LocalDate eventStartDate = event.getStartDate().toLocalDate();
-        LocalDate eventEndDate = event.getEndDate().toLocalDate();
+        LocalDateTime eventStartDate = event.getStartDate();
+        LocalDateTime eventEndDate = event.getEndDate();
 
-        if (!date.isBefore(eventStartDate) && !date.isAfter(eventEndDate)) {
+        if (!dateTime.isBefore(eventStartDate) && !dateTime.isAfter(eventEndDate)) {
           return true;
         }
       }
