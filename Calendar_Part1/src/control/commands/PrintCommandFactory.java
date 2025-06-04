@@ -26,12 +26,12 @@ public class PrintCommandFactory extends ACommandFactory {
     int onIndex = input.indexOf("on");
 
     String eventDate = input.substring(onIndex + 3);
-    if (validDateTime())
+    if (!validDateTime(eventDate)) {
+      throw new IllegalArgumentException("Invalid date provided for print command: " + eventDate);
+    }
 
     LocalDate date = LocalDate.parse(eventDate);
-
     //get the lists of events along with their start time, end time, and location (if any)
-
     return new PrintEvents(date);
   }
 

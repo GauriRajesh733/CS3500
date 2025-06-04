@@ -64,11 +64,11 @@ public final class CreateCommandFactory extends ACommandFactory {
   //"create event <eventSubject> from <dateStringTtimeString> to <dateStringTtimeString> repeats
   // <weekdays> for <N> times"
   private CalendarCommand createNEventSeries(String input) {
-    int fromIndex = input.indexOf("from");
-    int repeatIndex = input.indexOf("repeats");
-    int toIndex = input.indexOf("to");
-    int forIndex = input.indexOf("for");
-    int timesIndex = input.indexOf("times");
+    int fromIndex = searchKeywordIndex(input, "from");
+    int repeatIndex = searchKeywordIndex(input, "repeats");
+    int toIndex = searchKeywordIndex(input, "to");
+    int forIndex = searchKeywordIndex(input, "for");
+    int timesIndex = searchKeywordIndex(input, "times");
 
     String eventSubject = input.substring(13, fromIndex - 1);
     String startDateTime = input.substring(fromIndex + 5, toIndex - 1);
@@ -200,7 +200,7 @@ public final class CreateCommandFactory extends ACommandFactory {
         } else {
           this.endDate = LocalDateTime.of(year, month, day, 17, 0);
         }
-      } catch (Exception e) {
+      } catch (NumberFormatException e) {
         throw new IllegalArgumentException("Invalid start date: " + startDateTime);
       }
     }
