@@ -81,9 +81,7 @@ public class CalendarModelImpl implements CalendarModel {
     }
   }
 
-  //addSingleEvent
-  //addSeriesEvent
-
+  // NOTE: pass to view here??
   @Override
   public List<AEvent> printEventsForDate(LocalDate date) {
     List<AEvent> events = new ArrayList<>();
