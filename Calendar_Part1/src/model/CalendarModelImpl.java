@@ -1,8 +1,11 @@
 package model;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.TreeMap;
 import java.util.Map;
 
 public class CalendarModelImpl implements CalendarModel {
@@ -29,6 +32,32 @@ public class CalendarModelImpl implements CalendarModel {
 
   }
 
+  //addSingleEvent
+  //addSeriesEvent
+
+  @Override
+  public List<AEvent> printEventsForDate(LocalDate date) {
+    List<AEvent> events = new ArrayList<>();
+    for (Map.Entry<LocalDateTime, ArrayList<AEvent>> entry : this.calendar.entrySet()) {
+      if (entry.getKey().toLocalDate().equals(date)) {
+        events.addAll(entry.getValue());
+      }
+    }
+    return events;
+  }
+
+  @Override
+  public List<AEvent> printEventsUsingInterval(LocalDateTime start, LocalDateTime end) {
+    List<AEvent> events = new ArrayList<>();
+    for (Map.Entry<LocalDateTime, ArrayList<AEvent>> entry : this.calendar.entrySet()) {
+      LocalDateTime eventStart = entry.getKey();
+      if ((eventStart.isAfter(start) || eventStart.isEqual(start)) &&
+              (eventStart.isBefore(end) || eventStart.isEqual(end))) {
+        events.addAll(entry.getValue());
+      }
+    }
+    return events;
+  }
   @Override
   public void editSeries(EventProperty propertyToEdit, String subject, LocalDateTime startDate, String newProperty) {
 
