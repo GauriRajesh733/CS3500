@@ -34,7 +34,7 @@ public class CalendarModelImpl implements CalendarModel {
 
   }
 
-  private AEvent findEvent()
+  private AEvent findEvent();
 
   // find date
 
@@ -46,5 +46,4 @@ public class CalendarModelImpl implements CalendarModel {
 
   // if editing date property
 
-  private boolean 
 }
