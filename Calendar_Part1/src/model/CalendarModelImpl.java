@@ -25,14 +25,19 @@ public class CalendarModelImpl implements CalendarModel {
   }
 
   @Override
-  public void editEvents(EventProperty propertyToEdit, String subject, LocalDateTime startDate) {
+  public void editEvents(EventProperty propertyToEdit, String subject, LocalDateTime startDate, String newProperty) {
 
   }
 
-  // error if given single event??
   @Override
-  public void editSeries() {
+  public void editSeries(EventProperty propertyToEdit, String subject, LocalDateTime startDate, String newProperty) {
 
   }
+  
+  // find date
+
+  // find subject
+
+  // if it exists then update
 
 }

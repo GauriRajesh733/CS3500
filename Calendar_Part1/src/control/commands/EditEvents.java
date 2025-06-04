@@ -21,7 +21,7 @@ public class EditEvents implements CalendarCommand {
 
   @Override
   public void go(CalendarModel m) {
-    m.editEvents(propertyToEdit, subject, startDate);
+    m.editEvents(propertyToEdit, subject, startDate, newProperty);
   }
 }
 
