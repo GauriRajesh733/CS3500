@@ -1,14 +1,13 @@
 package view;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 
 import model.AEvent;
 
 public interface CalendarView {
-  void showEventsOnDate(ArrayList<AEvent> events, LocalDate date);
+  void showEventsOnDate(ArrayList<AEvent> events);
 
-  void showEventsInRange(ArrayList<AEvent> events, LocalDate startDate, LocalDate endDate);
+  void showEventsInRange(ArrayList<AEvent> events);
 
-  void showStatus(ArrayList<AEvent> events);
+  void showStatus(boolean status);
 }

@@ -25,13 +25,11 @@ public abstract class AEvent implements Event {
   }
 
   public LocalDateTime getStartDate() {
-    return LocalDateTime.of(startDateTime.getYear(), startDateTime.getMonthValue(),
-            startDateTime.getDayOfMonth(), startDateTime.getHour(), startDateTime.getMinute());
+    return this.startDateTime;
   }
 
   public LocalDateTime getEndDate() {
-    return LocalDateTime.of(endDateTime.getYear(), endDateTime.getMonthValue(),
-            endDateTime.getDayOfMonth(), endDateTime.getHour(), endDateTime.getMinute());
+    return this.endDateTime;
   }
 
   public String getSubject() {

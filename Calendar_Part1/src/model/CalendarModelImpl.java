@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TreeMap;
 import java.util.Map;
 
 public class CalendarModelImpl implements CalendarModel {
@@ -94,26 +95,34 @@ public class CalendarModelImpl implements CalendarModel {
     }
   }
 
-  // NOTE: pass to view here??
+  //MULTIDAY EVENTS :(
   @Override
   public List<AEvent> printEventsForDate(LocalDate date) {
     List<AEvent> events = new ArrayList<>();
-    for (Map.Entry<LocalDate, ArrayList<AEvent>> entry : this.calendar.entrySet()) {
-      if (entry.getKey().equals(date)) {
-        events.addAll(entry.getValue());
+    for (ArrayList<AEvent> eventList : this.calendar.values()) {
+      for (AEvent event : eventList) {
+        LocalDate eventStartDate = event.getStartDate().toLocalDate();
+        LocalDate eventEndDate = event.getEndDate().toLocalDate();
+        if (!date.isBefore(eventStartDate) && !date.isAfter(eventEndDate)) {
+          events.add(event);
+        }
       }
     }
     return events;
   }
 
+  //location
   @Override
   public List<AEvent> printEventsUsingInterval(LocalDateTime start, LocalDateTime end) {
     List<AEvent> events = new ArrayList<>();
-    for (Map.Entry<LocalDate, ArrayList<AEvent>> entry : this.calendar.entrySet()) {
-      LocalDate eventStart = entry.getKey();
-      if ((eventStart.isAfter(start.toLocalDate()) || eventStart.isEqual(start.toLocalDate())) &&
-              (eventStart.isBefore(end.toLocalDate()) || eventStart.isEqual(end.toLocalDate()))) {
-        events.addAll(entry.getValue());
+    for (ArrayList<AEvent> eventList: this.calendar.values()) {
+      for (AEvent event : eventList) {
+        LocalDateTime eventStartDateTime = event.getStartDate();
+        LocalDateTime eventEndDateTime = event.getEndDate();
+        if ((eventStartDateTime.isAfter(start) || eventStartDateTime.isEqual(start)) &&
+                (eventEndDateTime.isBefore(end) || eventEndDateTime.isEqual(end))) {
+          events.add(event);
+        }
       }
     }
     return events;
@@ -144,6 +153,24 @@ public class CalendarModelImpl implements CalendarModel {
       }
     }
   }
+  @Override
+  public boolean showCalendarStatus(LocalDateTime dateTime) {
+    LocalDate date = dateTime.toLocalDate();
+
+    for (ArrayList<AEvent> eventList: this.calendar.values()) {
+      for (AEvent event: eventList) {
+        LocalDate eventStartDate = event.getStartDate().toLocalDate();
+        LocalDate eventEndDate = event.getEndDate().toLocalDate();
+
+        if (!date.isBefore(eventStartDate) && !date.isAfter(eventEndDate)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  private AEvent findEvent();
 
   private ArrayList<AEvent> findSingleEvent(LocalDateTime startDate, LocalDateTime endDate, String subject) {
     ArrayList<AEvent> singleEvent = new ArrayList<AEvent>();

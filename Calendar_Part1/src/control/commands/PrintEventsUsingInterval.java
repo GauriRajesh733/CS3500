@@ -25,15 +25,9 @@ public class PrintEventsUsingInterval implements CalendarCommand {
     this.end = end;
   }
 
+  //no events found in the view
   @Override
   public void go(CalendarModel m) {
-    List< AEvent> events = m.printEventsUsingInterval(this.start, this.end);
-    if (events.isEmpty()) {
-      System.out.println("No events found between " + this.start + " and " + this.end);
-    } else {
-      for (AEvent e : events) {
-        System.out.println(e);
-      }
-    }
+    m.printEventsUsingInterval(this.start, this.end);
   }
 }

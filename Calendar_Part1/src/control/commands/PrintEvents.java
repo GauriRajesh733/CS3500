@@ -21,17 +21,9 @@ public class PrintEvents implements CalendarCommand {
     this.date = date;
   }
 
+  //no events found in the view
   @Override
   public void go(CalendarModel m) {
-    List<AEvent> event = m.printEventsForDate(this.date);
-
-    if (event.isEmpty()) {
-      System.out.println("No events found for " + this.date);
-    } else {
-      for (AEvent e : event) {
-        System.out.println(e);
-      }
-    }
-
+    m.printEventsForDate(this.date);
   }
 }
