@@ -8,6 +8,8 @@ import java.util.Map;
 public interface Event {
   void addToCalendar(Map<LocalDate, ArrayList<AEvent>> calendar);
 
+  String getSubject();
+
   LocalDateTime getStartDate();
 
   LocalDateTime getEndDate();

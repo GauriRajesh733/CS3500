@@ -11,20 +11,29 @@ public class CalendarModelImpl implements CalendarModel {
   private final Map<LocalDate, ArrayList<AEvent>> calendar;
 
   public CalendarModelImpl() {
-    // add comparator to treemap!
     this.calendar = new HashMap<>();
   }
 
   @Override
   public void addEvent(AEvent event) {
-    // check for repeated date??
-    event.addToCalendar(this.calendar);
+    // check if event already exists in calendar
+    if (this.findSingleEvent(event.getStartDate(), event.getEndDate(), event.getSubject()).isEmpty()) {
+      event.addToCalendar(this.calendar);
+    }
+    else {
+      throw new IllegalArgumentException("Given event with start date, end date, and subject already exists in calendar");
+    }
+
   }
 
   @Override
   public void editSingleEvent(EventProperty propertyToEdit, LocalDateTime startDate, LocalDateTime endDate, String subject, String newProperty) {
     // find event or events if single multiday event
     ArrayList<AEvent> eventToEdit = this.findSingleEvent(startDate, endDate, subject);
+
+    if (eventToEdit.isEmpty()) {
+      throw new IllegalArgumentException("No events in calendar with given start date, end date, and subject");
+    }
 
     for (AEvent event : eventToEdit) {
       // if not editing start date update event
@@ -61,8 +70,12 @@ public class CalendarModelImpl implements CalendarModel {
 
   @Override
   public void editEvents(EventProperty propertyToEdit, String subject, LocalDateTime startDate, String newProperty) {
-// find event or events if single multiday event
+    // find event or events if single multiday event
     ArrayList<AEvent> eventToEdit = this.findSeries(startDate, subject);
+
+    if (eventToEdit.isEmpty()) {
+      throw new IllegalArgumentException("No events in calendar with given start date, end date, and subject");
+    }
 
     for (AEvent event : eventToEdit) {
       // if editing start date update event
@@ -111,6 +124,10 @@ public class CalendarModelImpl implements CalendarModel {
     // find event or events if single multiday event
     ArrayList<AEvent> eventToEdit = this.findSeries(startDate, subject);
 
+    if (eventToEdit.isEmpty()) {
+      throw new IllegalArgumentException("No events in calendar with given start date, end date, and subject");
+    }
+
     for (AEvent event : eventToEdit) {
       // if not editing start date update event
       if (propertyToEdit != EventProperty.START) {
@@ -128,13 +145,8 @@ public class CalendarModelImpl implements CalendarModel {
     }
   }
 
-  private ArrayList<AEvent> findSingleEvent(LocalDateTime startDate, LocalDateTime endDate, String subject) throws IllegalArgumentException {
+  private ArrayList<AEvent> findSingleEvent(LocalDateTime startDate, LocalDateTime endDate, String subject) {
     ArrayList<AEvent> singleEvent = new ArrayList<AEvent>();
-
-    // if date does not exist in calendar
-    if (!this.calendar.containsKey(startDate.toLocalDate())) {
-      throw new IllegalArgumentException("No events in calendar with given start date " + startDate);
-    }
 
     ArrayList<AEvent> dayEvents = this.calendar.get(startDate.toLocalDate());
 
@@ -148,17 +160,11 @@ public class CalendarModelImpl implements CalendarModel {
       }
     }
 
-    throw new IllegalArgumentException("No events in calendar with given start date " + startDate
-            + " and subject " + subject + " and end date " + endDate);
+    return singleEvent;
   }
 
-  private ArrayList<AEvent> findSeries(LocalDateTime startDate, String subject) throws IllegalArgumentException {
+  private ArrayList<AEvent> findSeries(LocalDateTime startDate, String subject) {
     ArrayList<AEvent> seriesEvent = new ArrayList<AEvent>();
-
-    // if date does not exist in calendar
-    if (!this.calendar.containsKey(startDate.toLocalDate())) {
-      throw new IllegalArgumentException("No events in calendar with given start date " + startDate);
-    }
 
     ArrayList<AEvent> dayEvents = this.calendar.get(startDate.toLocalDate());
 
@@ -172,8 +178,7 @@ public class CalendarModelImpl implements CalendarModel {
       }
     }
 
-    throw new IllegalArgumentException("No events in calendar with given start date " + startDate
-            + " and subject " + subject);
+    return seriesEvent;
   }
 
 }

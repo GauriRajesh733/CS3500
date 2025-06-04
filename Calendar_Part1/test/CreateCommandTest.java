@@ -19,7 +19,7 @@ public class CreateCommandTest {
     LocalDateTime nextStart = LocalDateTime.of(2025,6 ,9,12,30);
     LocalDateTime nextEnd = LocalDateTime.of(2025,6,9,16,30);
     CreateEventSeries cmd1 = new CreateEventSeries("hi", days, 2, start, end);
-    CreateMultidayEvent cmd2 = new CreateMultidayEvent("hi", start, nextStart); // 7 day event
+    CreateSingleEvent cmd2 = new CreateSingleEvent("hi", start, nextStart); // 7 day event
     /**
 
     SeriesEvent firstEvent = new SeriesEvent("hi", start, end);

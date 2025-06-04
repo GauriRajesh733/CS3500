@@ -21,11 +21,10 @@ public final class CalendarCommandFactory implements CommandFactory {
     }
     // create ShowStatus command
     else if (input.startsWith("show status")) {
-      return new ShowCalendarStatus(input);
+      //return new ShowCalendarStatus(input);
     }
     // throw exception for invalid calendar event command
-    else {
-      throw new IllegalArgumentException("Invalid calendar event command: " + input);
-    }
+    throw new IllegalArgumentException("Invalid calendar event command: " + input);
+    
   }
 }

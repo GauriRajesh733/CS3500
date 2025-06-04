@@ -34,6 +34,10 @@ public abstract class AEvent implements Event {
             endDateTime.getDayOfMonth(), endDateTime.getHour(), endDateTime.getMinute());
   }
 
+  public String getSubject() {
+    return this.subject;
+  }
+
   @Override
   public abstract void addToCalendar(Map<LocalDate, ArrayList<AEvent>> calendar);
 
