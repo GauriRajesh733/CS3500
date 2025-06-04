@@ -1,10 +1,11 @@
 package control.commands;
 
 
+import control.ACommandFactory;
 import control.CalendarCommand;
 import control.CommandFactory;
 
-public final class CalendarCommandFactory implements CommandFactory {
+public final class CalendarCommandFactory extends ACommandFactory {
 
   public CalendarCommand createCalendarCommand(String input) {
     // create CreateCalendarEvent command
@@ -25,6 +26,6 @@ public final class CalendarCommandFactory implements CommandFactory {
     }
     // throw exception for invalid calendar event command
     throw new IllegalArgumentException("Invalid calendar event command: " + input);
-    
+
   }
 }

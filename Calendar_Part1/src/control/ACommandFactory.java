@@ -1,5 +1,6 @@
 package control;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 
@@ -34,6 +35,15 @@ abstract public class ACommandFactory implements CommandFactory {
   protected boolean validDateTime(String input) throws IllegalArgumentException {
     try {
       LocalDateTime.parse(input);
+    } catch (DateTimeParseException e) {
+      return false;
+    }
+    return true;
+  }
+
+  protected boolean validDate(String input) throws IllegalArgumentException {
+    try {
+      LocalDate.parse(input);
     } catch (DateTimeParseException e) {
       return false;
     }

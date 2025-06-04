@@ -26,6 +26,7 @@ public class PrintCommandFactory extends ACommandFactory {
     int onIndex = input.indexOf("on");
 
     String eventDate = input.substring(onIndex + 3);
+    if (validDateTime())
 
     LocalDate date = LocalDate.parse(eventDate);
 
