@@ -13,4 +13,6 @@ public interface CalendarModel {
 
   void editEvents(EventProperty propertyToEdit, String subject, LocalDateTime startDate, String newProperty);
   void editSeries(EventProperty propertyToEdit, String subject, LocalDateTime startDate, String newProperty);
+
+  boolean showCalendarStatus(LocalDateTime date);
 }

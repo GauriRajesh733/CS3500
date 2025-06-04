@@ -34,6 +34,6 @@ public class ShowCalendarStatus implements CalendarCommand {
   //show busy if there is an event scheduled on that date, so checks if the date exists if not will return busy
   @Override
   public void go(CalendarModel m) {
-
+    m.showCalendarStatus(this.dateTime);
   }
 }
