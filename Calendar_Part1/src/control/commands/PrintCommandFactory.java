@@ -27,7 +27,7 @@ public class PrintCommandFactory extends ACommandFactory {
 
     String eventDate = input.substring(onIndex + 3);
     if (!validDateTime(eventDate)) {
-      throw new IllegalArgumentException("Invalid date provided for print command: " + eventDate);
+      throw new IllegalArgumentException("Invalid date provided: " + eventDate);
     }
 
     LocalDate date = LocalDate.parse(eventDate);
@@ -42,6 +42,11 @@ public class PrintCommandFactory extends ACommandFactory {
     String eventStartDateTime = input.substring(fromIndex + 5, toIndex - 1);
     String eventEndDateTime = input.substring(toIndex + 3);
 
+    if (!validDateTime(eventStartDateTime) || !validDateTime(eventEndDateTime)) {
+      throw new IllegalArgumentException(
+              "Invalid date provided: " + eventStartDateTime + " or " + eventEndDateTime);
+    }
+
     LocalDateTime startDateTime = LocalDateTime.parse(eventStartDateTime);
     LocalDateTime endDateTime = LocalDateTime.parse(eventEndDateTime);
 
@@ -49,7 +54,8 @@ public class PrintCommandFactory extends ACommandFactory {
       throw new IllegalArgumentException("Start date cannot be after end date");
     }
 
-    //gets list of all events in the given interval including their start time and end time and location
+    //gets list of all events in the given interval including their start time and end time and
+    // location
 
     return new PrintEventsUsingInterval(startDateTime, endDateTime);
   }
