@@ -35,32 +35,60 @@ public class CalendarModelImpl implements CalendarModel {
   //addSingleEvent
   //addSeriesEvent
 
+  //MULTIDAY EVENTS :(
   @Override
   public List<AEvent> printEventsForDate(LocalDate date) {
     List<AEvent> events = new ArrayList<>();
-    for (Map.Entry<LocalDateTime, ArrayList<AEvent>> entry : this.calendar.entrySet()) {
-      if (entry.getKey().toLocalDate().equals(date)) {
-        events.addAll(entry.getValue());
+    for (ArrayList<AEvent> eventList : this.calendar.values()) {
+      for (AEvent event : eventList) {
+        LocalDate eventStartDate = event.getStartDate().toLocalDate();
+        LocalDate eventEndDate = event.getEndDate().toLocalDate();
+        if (!date.isBefore(eventStartDate) && !date.isAfter(eventEndDate)) {
+          events.add(event);
+        }
       }
     }
     return events;
   }
 
+  //location
   @Override
   public List<AEvent> printEventsUsingInterval(LocalDateTime start, LocalDateTime end) {
     List<AEvent> events = new ArrayList<>();
-    for (Map.Entry<LocalDateTime, ArrayList<AEvent>> entry : this.calendar.entrySet()) {
-      LocalDateTime eventStart = entry.getKey();
-      if ((eventStart.isAfter(start) || eventStart.isEqual(start)) &&
-              (eventStart.isBefore(end) || eventStart.isEqual(end))) {
-        events.addAll(entry.getValue());
+    for (ArrayList<AEvent> eventList: this.calendar.values()) {
+      for (AEvent event : eventList) {
+
+        LocalDateTime eventStartDateTime = event.toLocalDateTime();
+        LocalDateTime eventEndDateTime = event.getEndDate().toLocalDateTime();
+        if ((eventStartDate.isAfter(start) || eventStartDate.isEqual(start)) &&
+                (eventEndDate.isBefore(end) || eventEndDate.isEqual(end))) {
+          events.addAll(entry.getValue());
+        }
       }
     }
     return events;
   }
+
   @Override
   public void editSeries(EventProperty propertyToEdit, String subject, LocalDateTime startDate, String newProperty) {
 
+  }
+
+  @Override
+  public boolean showCalendarStatus(LocalDateTime dateTime) {
+    LocalDate date = dateTime.toLocalDate();
+
+    for (ArrayList<AEvent> eventList: this.calendar.values()) {
+      for (AEvent event: eventList) {
+        LocalDate eventStartDate = event.getStartDate().toLocalDate();
+        LocalDate eventEndDate = event.getEndDate().toLocalDate();
+
+        if (!date.isBefore(eventStartDate) && !date.isAfter(eventEndDate)) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   private AEvent findEvent();
