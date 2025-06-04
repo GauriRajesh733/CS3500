@@ -12,7 +12,7 @@ public final class CalendarCommandFactory implements CommandFactory {
       return new CreateCommandFactory().createCalendarCommand(input);
     }
     // create EditCalendarEvent command
-    else if (input.startsWith("edit event")) {
+    else if (input.startsWith("edit")) {
       return new EditCommandFactory().createCalendarCommand(input);
     }
     // create PrintCalendarEvent command
