@@ -23,5 +23,4 @@ public interface Event {
   boolean sameEvent(String subject, LocalDateTime startDate, LocalDateTime endDate);
 
   boolean sameSubjectAndStart(String subject, LocalDateTime startDate);
-
 }

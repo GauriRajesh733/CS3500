@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 
 import control.ACommandFactory;
 import control.CalendarCommand;
+import control.CommandFactory;
 
 /**
  * Factory class to create print commands based on user input.
@@ -30,9 +31,7 @@ public class PrintCommandFactory extends ACommandFactory {
     }
 
     LocalDate date = LocalDate.parse(eventDate);
-
     //get the lists of events along with their start time, end time, and location (if any)
-
     return new PrintEvents(date);
   }
 

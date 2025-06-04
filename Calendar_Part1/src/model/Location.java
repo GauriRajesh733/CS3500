@@ -13,4 +13,15 @@ public enum Location {
         throw new IllegalArgumentException("Invalid location provided: " + input);
     }
   }
+
+  public String toInput() {
+    switch (this) {
+      case PHYSICAL:
+        return "physical";
+      case ONLINE:
+        return "online";
+      default:
+        throw new IllegalArgumentException("Invalid location provided: " + this);
+    }
+  }
 }

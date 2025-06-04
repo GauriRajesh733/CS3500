@@ -31,6 +31,7 @@ public class SingleEvent extends AEvent {
       case STATUS:
       case END:
         super.editSingleEvent(propertyToEdit, newProperty);
+        break;
         // if editing start or end date update this event
       case START:
         this.startDateTime = LocalDateTime.parse(newProperty);

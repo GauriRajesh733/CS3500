@@ -48,14 +48,19 @@ public abstract class AEvent implements Event {
     switch (propertyToEdit) {
       case SUBJECT:
         this.subject = newProperty;
+        break;
       case DESCRIPTION:
         this.description = newProperty;
+        break;
       case LOCATION:
         this.location = Location.fromInput(newProperty);
+        break;
       case STATUS:
         this.status = Status.fromInput(newProperty);
+        break;
       case END:
         this.endDateTime = LocalDateTime.parse(newProperty);
+        break;
     }
   }
 
@@ -65,6 +70,22 @@ public abstract class AEvent implements Event {
 
   public boolean sameSubjectAndStart(String subject, LocalDateTime startDate) {
     return this.subject.equals(subject) && this.startDateTime.equals(startDate);
+  }
+
+  @Override
+  public String toString() {
+    if (this.startDateTime == null || this.endDateTime == null || this.subject == null) {
+      throw new IllegalArgumentException("Event is missing start date, end date, or subject");
+    }
+
+    return "- " + this.subject + this.formatLocation() + this.startDateTime + " to " + this.endDateTime;
+  }
+
+  private String formatLocation() {
+    if (this.location == null) {
+      return ": ";
+    }
+    return " (" + this.location.toInput() + "): ";
   }
 
 

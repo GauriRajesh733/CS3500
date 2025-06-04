@@ -73,6 +73,7 @@ public class SeriesEvent extends AEvent {
       case STATUS:
       case END:
         super.editSingleEvent(propertyToEdit, newProperty);
+        break;
         // if editing start date update this event and unlink from series
       case START:
         this.startDateTime = LocalDateTime.parse(newProperty);
@@ -97,6 +98,7 @@ public class SeriesEvent extends AEvent {
         if (this.hasNext()) {
           this.next.editSeriesEvent(propertyToEdit, newProperty);
         }
+        break;
         // if editing start date update this event and following events in series
       case START:
         this.startDateTime = LocalDateTime.parse(newProperty);
@@ -106,6 +108,7 @@ public class SeriesEvent extends AEvent {
         if (this.hasNext()) {
           this.next.editSeriesEvent(propertyToEdit, newProperty);
         }
+        break;
     }
   }
 
@@ -122,6 +125,7 @@ public class SeriesEvent extends AEvent {
         if (this.hasNext()) {
           this.next.editEvents(propertyToEdit, newProperty);
         }
+        break;
         // if editing start date update this event and following events in series; unlink first from previous
       case START:
         this.startDateTime = LocalDateTime.parse(newProperty);
@@ -129,6 +133,7 @@ public class SeriesEvent extends AEvent {
         if (this.hasNext()) {
           this.next.editFollowingEvents(propertyToEdit, newProperty);
         }
+        break;
     }
   }
 
