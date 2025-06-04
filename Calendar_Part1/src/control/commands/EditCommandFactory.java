@@ -37,7 +37,7 @@ public final class EditCommandFactory extends ACommandFactory {
     LocalDateTime startDate = LocalDateTime.parse(startDateStr);
 
     // get new property
-    String newProperty = search(input, withIndex + 5, input.length() - 1, "Calendar command missing new property");
+    String newProperty = search(input, withIndex + 5, input.length(), "Calendar command missing new property");
 
     // Identify the event/portion of series based on the subject and start date and edit the given property
     if (input.contains("events") && input.contains("from") && input.contains("with")) {
@@ -76,7 +76,7 @@ public final class EditCommandFactory extends ACommandFactory {
     }
     LocalDateTime endDate = LocalDateTime.parse(endDateStr);
     // get new property value and check if it matches the property to edit type
-    String newProperty = search(input, withIndex + 5, input.length() - 1, "Calendar command missing new property value");
+    String newProperty = search(input, withIndex + 5, input.length(), "Calendar command missing new property value");
     if (!validNewProperty(newProperty, propertyToEdit)) {
       throw new IllegalArgumentException("Type of new property does not match property to edit");
     }

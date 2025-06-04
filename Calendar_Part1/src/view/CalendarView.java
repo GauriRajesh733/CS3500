@@ -12,4 +12,6 @@ public interface CalendarView {
   void showEventsInRange(ArrayList<AEvent> events, LocalDateTime start, LocalDateTime end);
 
   void showStatus(boolean status, LocalDateTime dateTime);
+
+  void showErrorMessage(String errorMessage);
 }

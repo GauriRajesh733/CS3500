@@ -7,6 +7,7 @@ import model.CalendarModel;
 import model.EventProperty;
 import model.Location;
 import model.Status;
+import view.CalendarView;
 
 public class EditSingleEvent implements CalendarCommand {
   private final EventProperty propertyToEdit;
@@ -25,7 +26,7 @@ public class EditSingleEvent implements CalendarCommand {
   }
 
   @Override
-  public void go(CalendarModel m) {
+  public void go(CalendarModel m, CalendarView v) {
     m.editSingleEvent(this.propertyToEdit, this.startDate, this.endDate, this.subject, this.newProperty);
   }
 }

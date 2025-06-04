@@ -2,14 +2,15 @@ package model;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public interface CalendarModel {
   void addEvent(AEvent event);
 
-  List<AEvent> printEventsForDate(LocalDate date);
+  ArrayList<AEvent> printEventsForDate(LocalDate date);
 
-  List<AEvent> printEventsUsingInterval(LocalDateTime start, LocalDateTime end);
+  ArrayList<AEvent> printEventsUsingInterval(LocalDateTime start, LocalDateTime end);
 
   void editSingleEvent(EventProperty propertyToEdit, LocalDateTime startDate, LocalDateTime endDate, String subject, String newProperty);
 

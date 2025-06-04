@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import control.CalendarCommand;
 import model.CalendarModel;
 import model.EventProperty;
+import view.CalendarView;
 
 public class EditSeries implements CalendarCommand {
   private final EventProperty propertyToEdit;
@@ -20,7 +21,7 @@ public class EditSeries implements CalendarCommand {
   }
 
   @Override
-  public void go(CalendarModel m) {
+  public void go(CalendarModel m, CalendarView v) {
     m.editSeries(this.propertyToEdit, this.subject, this.startDate, this.newProperty);
   }
 }

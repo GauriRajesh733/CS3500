@@ -17,6 +17,9 @@ public class SingleEvent extends AEvent {
 
     // add event to all dates in between if multiday event
     while (!currentDate.isAfter(this.endDateTime.toLocalDate())) {
+      if (!calendar.containsKey(currentDate)) {
+        calendar.put(currentDate, new ArrayList<>());
+      }
       calendar.get(currentDate).add(this);
       currentDate = currentDate.plusDays(1);
     }
