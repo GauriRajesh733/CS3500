@@ -1,8 +1,14 @@
 package control.commands;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 import control.CalendarCommand;
 import control.CommandFactory;
 
+/**
+ * Factory class to create print commands based on user input.
+ */
 public class PrintCommandFactory implements CommandFactory {
   @Override
   public CalendarCommand createCalendarCommand(String input) {
@@ -20,9 +26,11 @@ public class PrintCommandFactory implements CommandFactory {
 
     String eventDate = input.substring(onIndex + 3);
 
+    LocalDate date = LocalDate.parse(eventDate);
+
     //get the lists of events along with their start time, end time, and location (if any)
 
-
+    return new PrintEvents(date);
   }
 
   private CalendarCommand printEventsWithInterval(String input) {
@@ -32,9 +40,16 @@ public class PrintCommandFactory implements CommandFactory {
     String eventStartDateTime = input.substring(fromIndex + 5, toIndex - 1);
     String eventEndDateTime = input.substring(toIndex + 3);
 
+    LocalDateTime startDateTime = LocalDateTime.parse(eventStartDateTime);
+    LocalDateTime endDateTime = LocalDateTime.parse(eventEndDateTime);
+
+    if (startDateTime.isAfter(endDateTime)) {
+      throw new IllegalArgumentException("Start date cannot be after end date");
+    }
+
     //gets list of all events in the given interval including their start time and end time and location
 
-    return null;
+    return new PrintEventsUsingInterval(startDateTime, endDateTime);
   }
 
 
