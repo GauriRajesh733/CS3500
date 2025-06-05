@@ -1,6 +1,12 @@
 package control.commands;
 import org.junit.Test;
 
+<<<<<<< HEAD
+=======
+import control.ACommandFactoryTest;
+import control.commands.PrintCommandFactory;
+
+>>>>>>> f21da3497da71b175d0e1dcc0fd521c33e21df77
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
