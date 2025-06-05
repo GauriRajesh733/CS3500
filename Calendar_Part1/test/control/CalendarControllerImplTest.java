@@ -1,7 +1,14 @@
 package control;
 
+<<<<<<< HEAD
 import org.junit.Test;
 
+=======
+import org.junit.Before;
+import org.junit.Test;
+
+import java.io.ByteArrayInputStream;
+>>>>>>> f21da3497da71b175d0e1dcc0fd521c33e21df77
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -17,6 +24,9 @@ import view.CalendarViewImpl;
 import static org.junit.Assert.assertEquals;
 
 
+/**
+ * This is a test class for the CalendarControllerImpl.
+ */
 public class CalendarControllerImplTest {
   private CalendarController c;
   private CalendarModel m;
@@ -24,6 +34,20 @@ public class CalendarControllerImplTest {
   private PrintStream s;
   private OutputStream os;
 
+<<<<<<< HEAD
+=======
+  private void setInput(String input) {
+    this.inputStream = new ByteArrayInputStream(input.getBytes());
+    this.controller = new CalendarControllerImpl(this.inputStream);
+  }
+
+  @Before
+  public void setUp() {
+    this.outputStream = new ByteArrayOutputStream();
+    this.mockView = new CalendarViewImpl(new PrintStream(this.outputStream));
+    this.mockModel = new CalendarModelImpl();
+  }
+>>>>>>> f21da3497da71b175d0e1dcc0fd521c33e21df77
 
   // test invalid file input without exit command
   @Test
