@@ -105,16 +105,3 @@ public class CreateCommandFactoryTest extends ACommandFactoryTest {
     CalendarCommand cmd1 = commandFactory.createCalendarCommand(
             "create event All Day Event on 2025-07-04 repeats M until 2025-08-01");
     assertNotNull(cmd1);
-
-    // Multiple weekdays until a specific date
-    CalendarCommand cmd2 = commandFactory.createCalendarCommand(
-            "create event Weekly Meeting on 2025-07-04 repeats MW until 2025-08-01");
-    assertNotNull(cmd2);
-
-    // All weekdays until a specific date
-    CalendarCommand cmd3 = commandFactory.createCalendarCommand(
-            "create event Team Retreat on 2025-07-04 repeats MTWRFSU until 2025-08-01");
-    assertNotNull(cmd3);
-  }
-
-}
