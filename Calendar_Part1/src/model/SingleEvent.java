@@ -25,22 +25,6 @@ public class SingleEvent extends AEvent {
     }
   }
 
-  public void editSingleEvent(EventProperty propertyToEdit, String newProperty) {
-    switch (propertyToEdit) {
-      // if not editing start or end date call super method
-      case SUBJECT:
-      case DESCRIPTION:
-      case LOCATION:
-      case STATUS:
-      case END:
-        super.editSingleEvent(propertyToEdit, newProperty);
-        break;
-        // if editing start or end date update this event
-      case START:
-        this.startDateTime = LocalDateTime.parse(newProperty);
-    }
-  }
-
   @Override
   public void editSeriesEvent(EventProperty propertyToEdit, String newProperty) {
     this.editSingleEvent(propertyToEdit, newProperty);
@@ -49,6 +33,14 @@ public class SingleEvent extends AEvent {
   @Override
   public void editEvents(EventProperty propertyToEdit, String newProperty) {
     this.editSingleEvent(propertyToEdit, newProperty);
+  }
+
+  @Override
+  public ArrayList<AEvent> getEvents() {
+    ArrayList<AEvent> events = new ArrayList<>();
+    events.add(this);
+
+    return events;
   }
 
 

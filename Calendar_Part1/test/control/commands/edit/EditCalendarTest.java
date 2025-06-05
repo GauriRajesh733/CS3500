@@ -38,10 +38,6 @@ public class EditCalendarTest {
     this.view = new CalendarViewImpl(new PrintStream(stream));
   }
 
-  // NOTE: no actual date/subject to edit for each type!!
-
-
-
   // SINGLE EVENT TESTS
   // NOTE: all edit commands produce same outputs for single events
 
@@ -254,6 +250,7 @@ public class EditCalendarTest {
 
 
   // SERIES EVENT TESTS
+
   @Test
   public void testSeriesEventEditEventCommand() {
     // add event to calendar
@@ -298,30 +295,40 @@ public class EditCalendarTest {
   @Test
   public void testSeriesEventEditEventsCommand() {
     // add event to calendar
-    String input1 = "create event title from 2025-06-04T21:19 to 2025-06-04T21:19";
+    String input1 = "create event title on 2019-09-09 repeats MW for 6 times";
     CalendarCommand createCmd = new CalendarCommandFactory().createCalendarCommand(input1);
     createCmd.go(this.model, this.view);
 
     // verify event added to calendar
-    String input2 = "print events on 2025-06-04";
+    String input2 = "print events from 2019-09-09T00:00 to 2019-11-09T00:00";
     CalendarCommand printCmd1 = new PrintCommandFactory().createCalendarCommand(input2);
     printCmd1.go(this.model, this.view);
-    assertEquals("Events on 2025-06-04:" + System.lineSeparator()
-                    + "- title: 2025-06-04T21:19 to 2025-06-04T21:19" + System.lineSeparator(),
+    assertEquals("Events from 2019-09-09T00:00 to 2019-11-09T00:00:" + System.lineSeparator() +
+                    "- title: 2019-09-30T08:00 to 2019-09-30T17:00" + System.lineSeparator() +
+                    "- title: 2019-09-09T08:00 to 2019-09-09T17:00" + System.lineSeparator() +
+                    "- title: 2019-09-25T08:00 to 2019-09-25T17:00" + System.lineSeparator() +
+                    "- title: 2019-09-23T08:00 to 2019-09-23T17:00" + System.lineSeparator() +
+                    "- title: 2019-09-18T08:00 to 2019-09-18T17:00" + System.lineSeparator() +
+                    "- title: 2019-09-16T08:00 to 2019-09-16T17:00" + System.lineSeparator(),
             this.stream.toString());
     this.resetStream();
 
-    // edit events command
-    String input3 = "edit events location title from 2025-06-04T21:19 with physical";
+    // edit event command for event in middle of series
+    String input3 = "edit events location title from 2019-09-25T08:00 with physical";
     CalendarCommand cmd = this.editCommandFactory.createCalendarCommand(input3);
     cmd.go(this.model, this.view);
 
-    // verify event edited in calendar
+    // verify only single event in series edited in calendar
     String input4 = "print events on 2025-06-04";
     CalendarCommand printCmd2 = new PrintCommandFactory().createCalendarCommand(input2);
     printCmd2.go(this.model, this.view);
-    assertEquals("Events on 2025-06-04:" + System.lineSeparator()
-                    + "- title (physical): 2025-06-04T21:19 to 2025-06-04T21:19" + System.lineSeparator(),
+    assertEquals("Events from 2019-09-09T00:00 to 2019-11-09T00:00:" + System.lineSeparator() +
+                    "- title (physical): 2019-09-30T08:00 to 2019-09-30T17:00" + System.lineSeparator() +
+                    "- title: 2019-09-09T08:00 to 2019-09-09T17:00" + System.lineSeparator() +
+                    "- title (physical): 2019-09-25T08:00 to 2019-09-25T17:00" + System.lineSeparator() +
+                    "- title: 2019-09-23T08:00 to 2019-09-23T17:00" + System.lineSeparator() +
+                    "- title: 2019-09-18T08:00 to 2019-09-18T17:00" + System.lineSeparator() +
+                    "- title: 2019-09-16T08:00 to 2019-09-16T17:00" + System.lineSeparator(),
             this.stream.toString());
   }
 
@@ -329,30 +336,40 @@ public class EditCalendarTest {
   @Test
   public void testSeriesEventEditSeriesCommand() {
     // add event to calendar
-    String input1 = "create event title from 2025-06-04T21:19 to 2025-06-04T21:19";
+    String input1 = "create event title on 2019-09-09 repeats MW for 6 times";
     CalendarCommand createCmd = new CalendarCommandFactory().createCalendarCommand(input1);
     createCmd.go(this.model, this.view);
 
     // verify event added to calendar
-    String input2 = "print events on 2025-06-04";
+    String input2 = "print events from 2019-09-09T00:00 to 2019-11-09T00:00";
     CalendarCommand printCmd1 = new PrintCommandFactory().createCalendarCommand(input2);
     printCmd1.go(this.model, this.view);
-    assertEquals("Events on 2025-06-04:" + System.lineSeparator()
-                    + "- title: 2025-06-04T21:19 to 2025-06-04T21:19" + System.lineSeparator(),
+    assertEquals("Events from 2019-09-09T00:00 to 2019-11-09T00:00:" + System.lineSeparator() +
+                    "- title: 2019-09-30T08:00 to 2019-09-30T17:00" + System.lineSeparator() +
+                    "- title: 2019-09-09T08:00 to 2019-09-09T17:00" + System.lineSeparator() +
+                    "- title: 2019-09-25T08:00 to 2019-09-25T17:00" + System.lineSeparator() +
+                    "- title: 2019-09-23T08:00 to 2019-09-23T17:00" + System.lineSeparator() +
+                    "- title: 2019-09-18T08:00 to 2019-09-18T17:00" + System.lineSeparator() +
+                    "- title: 2019-09-16T08:00 to 2019-09-16T17:00" + System.lineSeparator(),
             this.stream.toString());
     this.resetStream();
 
-    // edit series command
-    String input3 = "edit series location title from 2025-06-04T21:19 with physical";
+    // edit series command for all events in series
+    String input3 = "edit series location title from 2019-09-25T08:00 with physical";
     CalendarCommand cmd = this.editCommandFactory.createCalendarCommand(input3);
     cmd.go(this.model, this.view);
 
-    // verify event edited in calendar
-    String input4 = "print events on 2025-06-04";
+    // verify all events in series updated
+    String input4 = "print events from 2019-09-09T00:00 to 2019-11-09T00:00";
     CalendarCommand printCmd2 = new PrintCommandFactory().createCalendarCommand(input2);
     printCmd2.go(this.model, this.view);
-    assertEquals("Events on 2025-06-04:" + System.lineSeparator()
-                    + "- title (physical): 2025-06-04T21:19 to 2025-06-04T21:19" + System.lineSeparator(),
+    assertEquals("Events from 2019-09-09T00:00 to 2019-11-09T00:00:" + System.lineSeparator() +
+                    "- title (physical): 2019-09-30T08:00 to 2019-09-30T17:00" + System.lineSeparator() +
+                    "- title (physical): 2019-09-09T08:00 to 2019-09-09T17:00" + System.lineSeparator() +
+                    "- title (physical): 2019-09-25T08:00 to 2019-09-25T17:00" + System.lineSeparator() +
+                    "- title (physical): 2019-09-23T08:00 to 2019-09-23T17:00" + System.lineSeparator() +
+                    "- title (physical): 2019-09-18T08:00 to 2019-09-18T17:00" + System.lineSeparator() +
+                    "- title (physical): 2019-09-16T08:00 to 2019-09-16T17:00" + System.lineSeparator(),
             this.stream.toString());
   }
 

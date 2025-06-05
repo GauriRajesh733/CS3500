@@ -68,6 +68,14 @@ public class CalendarModelImpl implements CalendarModel {
     }
   }
 
+  private void removeSeries(AEvent eventToRemove) {
+    ArrayList<AEvent> eventsToRemove = eventToRemove.getEvents();
+
+    for (AEvent event : eventsToRemove) {
+      this.removeEvent(event);
+    }
+  }
+
   @Override
   public void editEvents(EventProperty propertyToEdit, String subject, LocalDateTime startDate, String newProperty) {
     // find event or events if single multiday event
@@ -143,7 +151,7 @@ public class CalendarModelImpl implements CalendarModel {
       // if editing start date
       else {
         // remove event from calendar
-        this.removeEvent(event);
+        this.removeSeries(event);
         // update event
         event.editSeriesEvent(propertyToEdit, newProperty);
         // add event back to calendar
