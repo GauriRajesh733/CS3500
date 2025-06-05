@@ -1,300 +1,366 @@
-package control;
+package control.commands.create;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeParseException;
-import java.time.DayOfWeek;
+import org.junit.Test;
 
-import control.commands.CalendarCommand;
-import control.commands.CreateEventSeries;
-import control.commands.CreateSingleEvent;
+import control.ACommandFactory;
+import control.ACommandFactoryTest;
+import control.CalendarCommand;
+import control.commands.CreateCommandFactory;
+
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThrows;
 
 /**
- * Factory for creating calendar commands to add events to the calendar.
- * This factory handles various types of event creation commands.
+ * This is a test class for the CreateCommandFactory.
+ * It extends ACommandFactoryTest to test the specific functionality of CreateCommandFactory.
  */
 
-final class CreateCommandFactory extends ACommandFactory {
+public class CreateCommandFactoryTest extends ACommandFactoryTest {
 
-  public CalendarCommand createCalendarCommand(String input) {
-    // create single event
-    if (input.contains("from") && !input.contains("repeats")) {
-      return this.createSingleEvent(input);
-    }
-    // create event series on specific weekdays that repeats N times
-    else if (input.contains("from") && input.contains("repeats")
-            && input.contains("times")) {
-      return this.createNEventSeries(input);
-    }
-    // create event series on specific weekdays until specific end date and time
-    else if (input.contains("from") && input.contains("repeats")
-            && input.contains(" until ")) {
-      return this.createEventsWithEndDate(input);
-    }
-    // create a series of all day events until a specific date (inclusive)
-    else if (input.contains(" on ") && input.contains("repeats")
-            && input.contains(" until ")) {
-      return this.createAllDayEventsWithEndDate(input);
-    }
-    // create a series of all day events that repeat N times on specific weekdays
-    else if (input.contains("on") && input.contains("repeats")
-            && input.contains("for")) {
-      return this.createAllDayEvents(input);
-    }
-    // create a single all day event
-    else if (input.contains("on")) {
-      return this.createAllDayEvent(input);
-    }
-    throw new IllegalArgumentException("Invalid create event command: " + input);
+  @Override
+  public ACommandFactory makeFactory() {
+    return new CreateCommandFactory();
   }
 
-  private CreateCommandBuilder builder() {
-    return new CreateCommandBuilder();
+  @Test
+  public void testCreateCommand() {
+    // Test to ensure that the CreateCommandFactory can create a valid command
+    ACommandFactory factory = makeFactory();
+    String input = "create event test on 2025-05-05";
+    CalendarCommand cmd = factory.createCalendarCommand(input);
+
+    assertNotNull(cmd); // Ensure command is created
+
+    // Multi-word subject with quotes
+    CalendarCommand cmd2 = commandFactory.createCalendarCommand(
+            "create event \"Team Standup\" from 2025-06-04T09:00 to 2025-06-04T09:30");
+    assertNotNull(cmd2);
+
+    // Multi-day event
+    CalendarCommand cmd3 = commandFactory.createCalendarCommand(
+            "create event Conference from 2025-06-04T08:00 to 2025-06-06T17:00");
+    assertNotNull(cmd3);
   }
 
-  private CalendarCommand createSingleEvent(String input) {
-    int fromIndex = this.searchKeywordIndex(input, "from");
-    int toIndex = this.searchKeywordIndex(input, "to");
+  @Test
+  public void testCreateEventSeriesWithTimes() {
+    // Single weekday, N times
+    CalendarCommand cmd1 = commandFactory.createCalendarCommand(
+            "create event Standup from 2025-06-04T09:00 to 2025-06-04T09:30 repeats M for " +
+                    "5 times");
+    assertNotNull(cmd1);
 
-    String eventSubject = this.search(input, 13, fromIndex - 1, "Calendar command missing event subject");
-    String startDateTime = this.search(input, fromIndex + 5, toIndex - 1, "Calendar command missing start date");
-    String endDateTime = this.search(input, toIndex + 3, input.length(), "Calendar command missing end date");
+    // Multiple weekdays, N times
+    CalendarCommand cmd2 = commandFactory.createCalendarCommand(
+            "create event Team Meeting from 2025-06-04T10:00 to 2025-06-04T11:00 repeats " +
+                    "MW for 10 times");
+    assertNotNull(cmd2);
 
-    return this.builder().subject(eventSubject).startDateTime(startDateTime)
-            .endDateTime(endDateTime).build();
+    // All weekdays
+    CalendarCommand cmd3 = commandFactory.createCalendarCommand(
+            "create event Workout from 2025-06-04T07:00 to 2025-06-04T08:00 repeats " +
+                    "MTWRFSU for 2 times");
+    assertNotNull(cmd3);
+
+    // Various weekday combinations
+    CalendarCommand cmd4 = commandFactory.createCalendarCommand(
+            "create event Class from 2025-06-04T14:00 to 2025-06-04T15:30 repeats " +
+                    "TR for 15 times");
+    assertNotNull(cmd4);
   }
 
-  //"create event <eventSubject> from <dateStringTtimeString> to <dateStringTtimeString> repeats
-  // <weekdays> for <N> times"
-  private CalendarCommand createNEventSeries(String input) {
-    int fromIndex = searchKeywordIndex(input, "from");
-    int repeatIndex = searchKeywordIndex(input, "repeats");
-    int toIndex = searchKeywordIndex(input, "to");
-    int forIndex = searchKeywordIndex(input, "for");
-    int timesIndex = searchKeywordIndex(input, "times");
+  @Test
+  public void testCreateEventSeriesUntilDate() {
+    // Single weekday until a specific date
+    CalendarCommand cmd1 = commandFactory.createCalendarCommand(
+            "create event Standup from 2025-06-04T09:00 to 2025-06-04T09:30 repeats " +
+                    "M until 2025-07-01");
+    assertNotNull(cmd1);
 
-    String eventSubject = this.search(input, 13, fromIndex - 1, "Calendar command missing event subject");
-    String startDateTime = this.search(input, fromIndex + 5, toIndex - 1, "Calendar command missing start date");
-    String endDateTime = this.search(input, toIndex + 3, repeatIndex - 1, "Calendar command missing end date");
-    String weekDays = this.search(input, repeatIndex + 8, forIndex - 1, "Calendar command missing week days");
-    String occurrences = this.search(input, forIndex + 4, timesIndex - 1, "Calendar command missing occurences");
+    // Multiple weekdays until a specific date
+    CalendarCommand cmd2 = commandFactory.createCalendarCommand(
+            "create event Team Meeting from 2025-06-04T10:00 to 2025-06-04T11:00 repeats " +
+                    "MW until 2025-07-01");
+    assertNotNull(cmd2);
 
-    return this.builder().subject(eventSubject).startDateTime(startDateTime)
-            .endDateTime(endDateTime).daysOfWeek(weekDays).occurrences(occurrences).build();
+    // All weekdays until a specific date
+    CalendarCommand cmd3 = commandFactory.createCalendarCommand(
+            "create event Workout from 2025-06-04T07:00 to 2025-06-04T08:00 repeats " +
+                    "MTWRFSU until 2025-07-01");
+    assertNotNull(cmd3);
   }
 
-  private CalendarCommand createEventsWithEndDate(String input) {
-    int fromIndex = this.searchKeywordIndex(input, "from");
-    int toIndex = this.searchKeywordIndex(input, "to");
-    ;
-    int repeatIndex = this.searchKeywordIndex(input, "repeats");
-    ;
-    int forIndex = this.searchKeywordIndex(input, "for");
-    ;
-    int untilIndex = this.searchKeywordIndex(input, "until");
-    ;
+  @Test
+  public void testCreatSingleAllDayEvent() {
+    // Single word subject
+    CalendarCommand cmd1 = commandFactory.createCalendarCommand(
+            "create event Holiday on 2025-07-04");
+    assertNotNull(cmd1);
 
-    String eventSubject = this.search(input, 13, fromIndex - 1, "Calendar command missing event subject");
-    String startDateTime = this.search(input, fromIndex + 5, toIndex - 1, "Calendar command missing start date");
-    String endDateTime = this.search(input, toIndex + 3, repeatIndex - 1, "Calendar command missing end date");
-    String weekDays = this.search(input, repeatIndex + 8, untilIndex - 1, "Calendar command missing week days");
-    String endDate = this.search(input, untilIndex + 6, input.length(), "Calendar command missing end date");
+    // Multiple word subject
+    CalendarCommand cmd2 = commandFactory.createCalendarCommand(
+            "create event Summer Vacation Yay on 2025-07-04");
+    assertNotNull(cmd2);
 
-    return this.builder().subject(eventSubject).startDateTime(startDateTime)
-            .endDateTime(endDateTime).daysOfWeek(weekDays).endDate(endDate).build();
+    // Multi-word subject with quotes
+    CalendarCommand cmd3 = commandFactory.createCalendarCommand(
+            "create event Independence Day on 2025-07-04");
+    assertNotNull(cmd3);
+
+    //using keyword 'on' for all-day event
+    CalendarCommand cmd4 = commandFactory.createCalendarCommand(
+            "create event Exam on Monday on 2025-07-04");
+    assertNotNull(cmd4);
   }
 
-  private CalendarCommand createAllDayEvents(String input) {
-    int onIndex = this.searchKeywordIndex(input, "on");
-    int repeatIndex = this.searchKeywordIndex(input, "repeats");
-    int forIndex = this.searchKeywordIndex(input, "for");
-    int timesIndex = this.searchKeywordIndex(input, "times");
+  @Test
+  public void testCreateAllDayEventSeriesForNTimes() {
+    //Single weekday
+    CalendarCommand cmd1 = commandFactory.createCalendarCommand(
+            "create event All Day Event on 2025-07-04 repeats M for 8 times");
+    assertNotNull(cmd1);
 
-    String eventSubject = this.search(input, 13, onIndex - 1, "Calendar command missing event subject");
-    String startDate = this.search(input, onIndex + 3, repeatIndex - 1, "Calendar command missing start date");
-    String weekdays = this.search(input, repeatIndex + 8, forIndex - 1, "Calendar command missing week days");
-    String occurrences = this.search(input, forIndex + 4, timesIndex - 1, "Calendar command missing occurences");
+    //Multiple weekdays
+    CalendarCommand cmd2 = commandFactory.createCalendarCommand(
+            "create event Weekly Meeting on 2025-07-04 repeats MW for 6 times");
+    assertNotNull(cmd2);
 
-    return this.builder().subject(eventSubject).startDate(startDate)
-            .daysOfWeek(weekdays).occurrences(occurrences).build();
+    //All weekdays
+    CalendarCommand cmd3 = commandFactory.createCalendarCommand(
+            "create event Team Retreat on 2025-07-04 repeats MTWRFSU for 4 times");
+    assertNotNull(cmd3);
   }
 
-  private CalendarCommand createAllDayEventsWithEndDate(String input) {
-    int onIndex = this.searchKeywordIndex(input, "on");
-    int repeatIndex = this.searchKeywordIndex(input, "repeats");
-    int untilIndex = this.searchKeywordIndex(input, "until");
+  @Test
+  public void testCreateAllDayEventSeriesUntilDate() {
+    // Single weekday until a specific date
+    CalendarCommand cmd1 = commandFactory.createCalendarCommand(
+            "create event All Day Event on 2025-07-04 repeats M until 2025-08-01");
+    assertNotNull(cmd1);
 
-    String eventSubject = this.search(input, 13, onIndex - 1, "Calendar command missing event subject");
-    String startDate = this.search(input, onIndex + 3, repeatIndex - 1, "Calendar command start date");
-    String daysOfWeek = this.search(input, repeatIndex + 8, untilIndex - 1, "Calendar command missing week days");
-    String endDate = this.search(input, untilIndex + 6, input.length(), "Calendar command missing end date");
+    // Multiple weekdays until a specific date
+    CalendarCommand cmd2 = commandFactory.createCalendarCommand(
+            "create event Weekly Meeting on 2025-07-04 repeats MW until 2025-08-01");
+    assertNotNull(cmd2);
 
-    return this.builder().subject(eventSubject).startDate(startDate).endDate(endDate)
-            .daysOfWeek(daysOfWeek).build();
+    // All weekdays until a specific date
+    CalendarCommand cmd3 = commandFactory.createCalendarCommand(
+            "create event Team Retreat on 2025-07-04 repeats MTWRFSU until 2025-08-01");
+    assertNotNull(cmd3);
   }
 
-  private CalendarCommand createAllDayEvent(String input) {
-    int onIndex = this.searchKeywordIndex(input, "on");
-
-    String eventSubject = this.search(input, 13, onIndex - 1, "Calendar command missing event subject");
-    String startDate = this.search(input, onIndex + 3, input.length(), "Calendar command missing start date");
-
-    return this.builder().subject(eventSubject).startDate(startDate).build();
+  @Test
+  public void testValidEdgeCases() {
+    // Minimum repetition count
+    CalendarCommand cmd1 = commandFactory.createCalendarCommand(
+            "create event Test from 2025-06-04T10:00 to 2025-06-04T11:00 repeats M for 1 " +
+                    "times");
+    assertNotNull(cmd1);
   }
 
-  private static class CreateCommandBuilder {
-    private String subject;
-    private LocalDateTime startDateTime; // YYYY-MM-DD-HH-MM
-    private LocalDateTime endDateTime; // YYYY-MM-DD-HH-MM
-    private LocalDate startDate; // YYYY-MM-DD
-    private LocalDate endDate; // YYYY-MM-DD
-    private Integer occurrences; // repeats N times
-    private DayOfWeek[] daysOfWeek;
+  @Test
+  public void testInvalidCreateCommandSingleEvent() {
+    // Invalid command formats for single event
+    String[] invalidCommands = {
+            "create event on 2025-05-05", // missing subject
+            "create event test on 2025-13-05", // invalid month
+            "create event test on 2025-05-32", // invalid day
+            "create event test on 2025-05-05T25:00", // invalid hour
+            "create event test on 2025-05-05T10:60" // invalid minute
+    };
 
-    private CreateCommandBuilder() {
-      this.subject = null;
-      this.startDateTime = null;
-      this.endDateTime = null;
-      this.startDate = null;
-      this.endDate = null;
-      this.occurrences = null;
-      this.daysOfWeek = null;
-    }
-
-    private CreateCommandBuilder subject(String subject) {
-      this.subject = subject;
-      return this;
-    }
-
-    private void dateTime(String dateTime, boolean isStartDate) {
-      try {
-        if (isStartDate) {
-          this.startDateTime = LocalDateTime.parse(dateTime);
-        }
-        else {
-          this.endDateTime = LocalDateTime.parse(dateTime);
-        }
-      }
-      catch (DateTimeParseException e) {
-        throw new IllegalArgumentException("Invalid date: " + dateTime);
-      }
-    }
-
-    private CreateCommandBuilder startDateTime(String startDateTime) {
-      this.dateTime(startDateTime, true);
-      return this;
-    }
-
-    private CreateCommandBuilder endDateTime(String endDateTime) {
-      this.dateTime(endDateTime, false);
-      return this;
-    }
-
-    private void date(String date, boolean isStartDate) {
-      try {
-        if (isStartDate) {
-          this.startDate = LocalDate.parse(date);
-        } else {
-          this.endDate = LocalDate.parse(date);
-        }
-      } catch (DateTimeParseException e) {
-        throw new IllegalArgumentException("Invalid date: " + date);
-      }
-    }
-
-    private CreateCommandBuilder startDate(String startDate) {
-      this.date(startDate, true);
-      return this;
-    }
-
-    private CreateCommandBuilder endDate(String endDate) {
-      this.date(endDate, false);
-      return this;
-    }
-
-    // NOTE: check with TAs if okay to do general exception with custom error message?
-    private CreateCommandBuilder occurrences(String occurrences) {
-      try {
-        int n = Integer.parseInt(occurrences);
-
-        if (n < 0) {
-          throw new IllegalArgumentException("Invalid occurrences: " + occurrences);
-        }
-
-        this.occurrences = n;
-      } catch (Exception e) {
-        throw new IllegalArgumentException("Invalid occurrences: " + occurrences);
-      }
-
-      return this;
-    }
-
-    private CreateCommandBuilder daysOfWeek(String dayOfWeek) {
-      String[] weekdays = dayOfWeek.split("");
-      this.daysOfWeek = new DayOfWeek[dayOfWeek.length()];
-
-      for (int i = 0; i < weekdays.length; i++) {
-        this.daysOfWeek[i] = toWeekday(weekdays[i]);
-      }
-
-      return this;
-    }
-
-    private static DayOfWeek toWeekday(String input) {
-      switch(input) {
-        case "M": return DayOfWeek.MONDAY;
-        case "T": return DayOfWeek.TUESDAY;
-        case "W": return DayOfWeek.WEDNESDAY;
-        case "R": return DayOfWeek.THURSDAY;
-        case "F": return DayOfWeek.FRIDAY;
-        case "S": return DayOfWeek.SATURDAY;
-        case "U": return DayOfWeek.SUNDAY;
-        default:
-          throw new IllegalArgumentException("Invalid weekday: " + input);
-      }
-    }
-
-
-
-    private CalendarCommand build() {
-      // create single all day event
-      if (this.daysOfWeek == null && this.startDate != null &&
-              this.startDateTime == null && this.endDateTime == null) {
-        return new CreateSingleEvent(subject, startDate);
-      }
-      // error if no start or end dates provided
-      if (this.daysOfWeek == null && (this.startDateTime == null || this.endDateTime == null)) {
-        throw new IllegalArgumentException("No start and/or end date provided");
-      }
-
-      // create single event (single day or multiple days)
-      if (this.daysOfWeek == null) {
-        return new CreateSingleEvent(subject, startDateTime, endDateTime);
-      }
-
-      if (occurrences != null && startDate != null && endDate == null) {
-        // create a series of all day events that repeat N times on specific weekdays
-        return new CreateEventSeries(subject, daysOfWeek, occurrences, startDate);
-      }
-      // endDate == null
-      if (occurrences != null && startDate == null && endDate == null) {
-        // create event series on specific weekdays that repeats N times
-        return new CreateEventSeries(subject, daysOfWeek, occurrences, startDateTime, endDateTime);
-
-      }
-
-      // create event series on specific weekdays until specific end date and time
-      if (endDate != null && startDate == null) {
-        return new CreateEventSeries(subject, daysOfWeek, startDateTime, endDateTime, endDate);
-      }
-
-
-      // create a series of all day events until a specific date (inclusive)
-      if (startDate != null && endDate != null) {
-        return new CreateEventSeries(subject, daysOfWeek, startDate, endDate);
-      }
-
-      throw new IllegalArgumentException("Invalid inputs to create event series.");
+    for (String command : invalidCommands) {
+      assertThrows("Should throw exception for: " + command,
+              IllegalArgumentException.class,
+              () -> commandFactory.createCalendarCommand(command));
     }
   }
+
+  @Test
+  public void testInvalidCreateCommandSeriesNTimes() {
+    String[] invalidCommands = {
+            "create event test from 2025-05-05 to 2025-05-06 repeats M for 0 times", // zero times
+            "create event test from 2025-05-05 to 2025-05-06 repeats M for -1" +
+                    " times", // negative times
+            "create event test from 2025-05-05 to 2025-05-06 repeats M for 1", // missing 'times'
+            "create event test from 2025-05-05 to 2025-05-06 repeats M", // missing repeat count
+            "create event test from 2025-05-05 to 2025-05-06 repeats", // missing repeat type
+            "create event test from 2025-05-05 to 2025-05-06", // missing repeats
+            "create event test from 2025-05-05 to 2025-05-06 repeats M for 1 times " +
+                    "extra", // extra text
+            "create event test from 2025-05-05 to 2025-05-06 repeats M for 1 times until " +
+                    "2025-04-01", // until date before start date
+            "create event test from 2025-05-05 to 2025-04-06 repeats M for 1 times until " +
+                    "2025-06-01", // to date before start date
+    };
+
+    for (String command : invalidCommands) {
+      assertThrows("Should throw exception for: " + command,
+              IllegalArgumentException.class,
+              () -> commandFactory.createCalendarCommand(command));
+    }
+  }
+
+  @Test
+  public void testInvalidCreateCommandSeriesUntilDate() {
+    String[] invalidCommands = {
+            "create event test on 2025-05-05 repeats M until " +
+                    "2025-04-01", // until date before start date
+            "create event test on 2025-05-05 repeats M until 2025-06-01 for 1 " +
+                    "times", // invalid format
+            "create event test on 2025-05-05 repeats M until 2025-13-01", // invalid month
+            "create event test on 2025-05-05 repeats M until 2025-05-32", // invalid day
+            "create event test on 2025-05-05 repeats M until 2025-05-05T25:00", // invalid hour
+            "create event test on 2025-05-05 repeats M until 2025-05-05T10:60", // invalid minute
+            "create event test on 2025-05-05 repeats M until", // missing until date
+            "create event test on 2025-05-05 repeats M", // missing until
+            "create event test on 2025-05-05 repeats", // missing repeat type
+
+    };
+
+    for (String command : invalidCommands) {
+      assertThrows("Should throw exception for: " + command,
+              IllegalArgumentException.class,
+              () -> commandFactory.createCalendarCommand(command));
+    }
+  }
+
+  @Test
+  public void testSingleAllDayEventInvalid() {
+    // Invalid command formats for single all-day event
+    String[] invalidCommands = {
+            "create event on 2025-05-05", // missing subject
+            "create event test on 2025-13-05", // invalid month
+            "create event test on 2025-05-32", // invalid day
+            "create event test on 2025-05-05T25:00", // invalid hour
+            "create event test on 2025-05-05T10:60", // invalid minute
+            "create", // incomplete command
+            "creat event test" // incomplete command
+    };
+
+    for (String command : invalidCommands) {
+      assertThrows("Should throw exception for: " + command,
+              IllegalArgumentException.class,
+              () -> commandFactory.createCalendarCommand(command));
+    }
+  }
+
+  @Test
+  public void testAllDayEventSeriesInvalidN() {
+    // Invalid command formats for all-day event series
+    String[] invalidCommands = {
+            "create event on 2025-05-05 repeats M for 0 times", // zero times
+            "create event on 2025-05-05 repeats M for -1 times", // negative times
+            "create event on 2025-05-05 repeats M until 2025-04-01", // until date before start date
+            "create event on 2025-05-05 repeats M until 2025-06-01 for 1 times", // invalid format
+            "create event on 2025-05-05 repeats M until", // missing until date
+            "create event on 2025-05-05 repeats", // missing repeat type
+    };
+
+    for (String command : invalidCommands) {
+      assertThrows("Should throw exception for: " + command,
+              IllegalArgumentException.class,
+              () -> commandFactory.createCalendarCommand(command));
+    }
+  }
+
+  @Test
+  public void testAllDayEventSeriesInvalidUntilDate() {
+    // Invalid command formats for all-day event series until date
+    String[] invalidCommands = {
+            "create event on 2025-05-05 repeats M until 2025-04-01", // until date before start date
+            "create event on 2025-05-05 repeats M until 2025-13-01", // invalid month
+            "create event on 2025-05-05 repeats M until 2025-05-32", // invalid day
+            "create event on 2025-05-05 repeats M until 2025-05-05T25:00", // invalid hour
+            "create event on 2025-05-05 repeats M until 2025-05-05T10:60", // invalid minute
+            "create event on 2025-05-05 repeats M until", // missing until date
+            "create event on 2025-05-05 repeats M", // missing until
+            "create event on 2025-05-05 repeats", // missing repeat type
+            "create event on 2025-05-05 repeats M until 2025-06-01 for 1 times extra" // extra text
+
+    };
+
+    for (String command : invalidCommands) {
+      assertThrows("Should throw exception for: " + command,
+              IllegalArgumentException.class,
+              () -> commandFactory.createCalendarCommand(command));
+    }
+  }
+
+  @Test
+  public void testInvalidEdgeCases() {
+    assertThrows(NullPointerException.class,
+            () -> commandFactory.createCalendarCommand(null));
+
+    assertThrows(IllegalArgumentException.class,
+            () -> commandFactory.createCalendarCommand(
+                    "create event Test from 2025-06-04T10:00 to 2025-06-04T11:00 " +
+                            "repeats X for 5 times"));
+
+    assertThrows(IllegalArgumentException.class,
+            () -> commandFactory.createCalendarCommand(""));
+
+    // Multiple keywords in command
+    assertThrows(IllegalArgumentException.class, () -> {
+      commandFactory.createCalendarCommand(
+              "create event Future on 2030-01-01 from 2030-01-01T00:00 to 2030-01-02T00:00");
+    });
+
+    assertThrows(IllegalArgumentException.class, () -> {
+      commandFactory.createCalendarCommand(
+              "create event Test on 2025-01-01 from 2025-01-01T10:00 to 2025-01-01T11:00 " +
+                      "repeats M for 5 times");
+    });
+
+    assertThrows(IllegalArgumentException.class, () -> {
+      commandFactory.createCalendarCommand(
+              "create event Test on 2025-01-01 from 2025-01-01T10:00 to 2025-01-01T11:00 " +
+                      "repeats M until 2025-02-01");
+    });
+
+    assertThrows(IllegalArgumentException.class, () -> {
+      commandFactory.createCalendarCommand(
+              "create event Test from 2025-01-01T10:00 to 2025-01-01T11:00 repeats M for 5 " +
+                      "times until 2025-02-01")
+      ;});
+
+  assertThrows(IllegalArgumentException.class, () -> {
+      commandFactory.createCalendarCommand(
+              "create event Test on 2025-01-01 repeats M for 5 times until 2025-02-01");
+    });
+
+    assertThrows(IllegalArgumentException.class, () -> {
+      commandFactory.createCalendarCommand(
+              "create event Test on 2025-01-01 repeats M for 5 times until 2025-02-01");});
+
+  }
+
+  @Test
+  public void testKeywordsInSubjects() {
+    // These should be VALID - keywords are part of subject
+    String[] validCommands = {
+            "create event Meeting on Monday from 2025-06-04T10:00 to 2025-06-04T11:00",
+            "create event Conference from Boston on 2025-06-04",
+            "create event Training for beginners on 2025-06-04",
+            "create event Talk to parents from 2025-06-04T19:00 to 2025-06-04T20:00"
+    };
+
+    for (String command : validCommands) {
+      CalendarCommand cmd = commandFactory.createCalendarCommand(command);
+      assertNotNull("Should accept keyword in subject: " + command, cmd);
+    }
+
+    // These should be INVALID - actual structural conflicts
+    String[] invalidCommands = {
+            "create event Test on 2025-06-04 from 2025-06-04T10:00 to 2025-06-04T11:00",
+            "create event Test from 2025-06-04T10:00 to 2025-06-04T11:00 repeats M for 5 times until 2025-08-01"
+    };
+
+    for (String command : invalidCommands) {
+      assertThrows("Should reject structural conflicts: " + command,
+              IllegalArgumentException.class,
+              () -> commandFactory.createCalendarCommand(command));
+    }
+  }
+
 }
