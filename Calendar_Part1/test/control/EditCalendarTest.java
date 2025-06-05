@@ -1,4 +1,4 @@
-package control.commands.edit;
+package control;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -7,10 +7,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
 import control.commands.CalendarCommand;
-import control.commands.CommandFactory;
-import control.commands.CalendarCommandFactory;
-import control.commands.EditCommandFactory;
-import control.commands.PrintCommandFactory;
 import model.CalendarModel;
 import model.CalendarModelImpl;
 import view.CalendarView;

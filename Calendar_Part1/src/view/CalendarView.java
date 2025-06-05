@@ -7,9 +7,9 @@ import java.util.ArrayList;
 import model.AEvent;
 
 public interface CalendarView {
-  void showEventsOnDate(ArrayList<AEvent> events, LocalDate day);
+  void showEventsOnDate(ArrayList<String> events, LocalDate day);
 
-  void showEventsInRange(ArrayList<AEvent> events, LocalDateTime start, LocalDateTime end);
+  void showEventsInRange(ArrayList<String> events, LocalDateTime start, LocalDateTime end);
 
   void showStatus(boolean status, LocalDateTime dateTime);
 

@@ -6,7 +6,7 @@ import model.CalendarModel;
 import model.EventProperty;
 import view.CalendarView;
 
-class EditSingleEvent implements CalendarCommand {
+public class EditSingleEvent implements CalendarCommand {
   private final EventProperty propertyToEdit;
   private final LocalDateTime startDate;
   private final LocalDateTime endDate;

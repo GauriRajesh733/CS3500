@@ -1,7 +1,9 @@
-package control.commands;
+package control;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import control.commands.CalendarCommand;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;

@@ -1,10 +1,10 @@
 package model;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class CalendarModelImpl implements CalendarModel {
@@ -15,15 +15,27 @@ public class CalendarModelImpl implements CalendarModel {
   }
 
   @Override
-  public void addEvent(AEvent event) {
+  public void addSingleEvent(String subject, LocalDateTime startDateTime, LocalDateTime endDateTime) {
     // check if event already exists in calendar
-    if (this.findSingleEvent(event.getStartDate(), event.getEndDate(), event.getSubject()).isEmpty()) {
-      event.addToCalendar(this.calendar);
+    if (this.findSingleEvent(startDateTime, endDateTime, subject).isEmpty()) {
+      new SingleEvent(subject, startDateTime, endDateTime).addToCalendar(this.calendar);
+    }
+    else {
+      throw new IllegalArgumentException("Given event with start date, end date, and subject " +
+              "already exists in calendar");
+    }
+  }
+
+  public void addSeriesEvent(String subject, DayOfWeek[] daysOfWeek, int occurrences,
+                             LocalDateTime startDateTime, LocalDateTime endDateTime) {
+    // check if event already exists in calendar
+    if (this.findSingleEvent(startDateTime, endDateTime, subject).isEmpty()) {
+      new SeriesEvent(subject, daysOfWeek, occurrences, startDateTime, endDateTime)
+              .addToCalendar(this.calendar);
     }
     else {
       throw new IllegalArgumentException("Given event with start date, end date, and subject already exists in calendar");
     }
-
   }
 
   @Override
@@ -104,15 +116,15 @@ public class CalendarModelImpl implements CalendarModel {
 
   //MULTIDAY EVENTS :(
   @Override
-  public ArrayList<AEvent> printEventsForDate(LocalDate date) {
-    ArrayList<AEvent> events = new ArrayList<>();
+  public ArrayList<String> printEventsForDate(LocalDate date) {
+    ArrayList<String> events = new ArrayList<>();
     for (ArrayList<AEvent> eventList : this.calendar.values()) {
       for (AEvent event : eventList) {
         LocalDate eventStartDate = event.getStartDate().toLocalDate();
         LocalDate eventEndDate = event.getEndDate().toLocalDate();
         // check if date falls within range and event not already added (multiday events)
-        if (!date.isBefore(eventStartDate) && !date.isAfter(eventEndDate) && !events.contains(event)) {
-          events.add(event);
+        if (!date.isBefore(eventStartDate) && !date.isAfter(eventEndDate) && !events.contains(event.toString())) {
+          events.add(event.toString());
         }
       }
     }
@@ -121,14 +133,14 @@ public class CalendarModelImpl implements CalendarModel {
 
   //location
   @Override
-  public ArrayList<AEvent> printEventsUsingInterval(LocalDateTime start, LocalDateTime end) {
-    ArrayList<AEvent> events = new ArrayList<>();
+  public ArrayList<String> printEventsUsingInterval(LocalDateTime start, LocalDateTime end) {
+    ArrayList<String> events = new ArrayList<>();
     for (ArrayList<AEvent> eventList: this.calendar.values()) {
       for (AEvent event : eventList) {
         LocalDateTime eventStartDateTime = event.getStartDate();
         LocalDateTime eventEndDateTime = event.getEndDate();
-        if (!eventStartDateTime.isBefore(start) && !eventEndDateTime.isAfter(end) && !events.contains(event)) {
-          events.add(event);
+        if (!eventStartDateTime.isBefore(start) && !eventEndDateTime.isAfter(end) && !events.contains(event.toString())) {
+          events.add(event.toString());
         }
       }
     }
@@ -162,7 +174,6 @@ public class CalendarModelImpl implements CalendarModel {
   }
   @Override
   public boolean showCalendarStatus(LocalDateTime dateTime) {
-
     for (ArrayList<AEvent> eventList: this.calendar.values()) {
       for (AEvent event: eventList) {
         LocalDateTime eventStartDate = event.getStartDate();
@@ -177,7 +188,7 @@ public class CalendarModelImpl implements CalendarModel {
   }
 
   private ArrayList<AEvent> findSingleEvent(LocalDateTime startDate, LocalDateTime endDate, String subject) {
-    ArrayList<AEvent> singleEvent = new ArrayList<AEvent>();
+    ArrayList<AEvent> singleEvent = new ArrayList<>();
 
     if (!this.calendar.containsKey(startDate.toLocalDate())) {
       return singleEvent;
@@ -199,7 +210,7 @@ public class CalendarModelImpl implements CalendarModel {
   }
 
   private ArrayList<AEvent> findSeries(LocalDateTime startDate, String subject) {
-    ArrayList<AEvent> seriesEvent = new ArrayList<AEvent>();
+    ArrayList<AEvent> seriesEvent = new ArrayList<>();
 
     ArrayList<AEvent> dayEvents = this.calendar.get(startDate.toLocalDate());
 

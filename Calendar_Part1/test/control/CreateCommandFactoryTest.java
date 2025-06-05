@@ -1,6 +1,8 @@
-package control.commands;
+package control;
 
 import org.junit.Test;
+
+import control.commands.CalendarCommand;
 
 import static org.junit.Assert.assertNotNull;
 

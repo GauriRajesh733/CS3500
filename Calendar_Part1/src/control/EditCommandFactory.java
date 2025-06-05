@@ -1,11 +1,15 @@
-package control.commands;
+package control;
 
 
 import java.time.LocalDateTime;
 
+import control.commands.CalendarCommand;
+import control.commands.EditEvents;
+import control.commands.EditSeries;
+import control.commands.EditSingleEvent;
 import model.EventProperty;
 
-public final class EditCommandFactory extends ACommandFactory {
+final class EditCommandFactory extends ACommandFactory {
 
   @Override
   public CalendarCommand createCalendarCommand(String input) {

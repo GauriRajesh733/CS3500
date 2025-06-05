@@ -1,9 +1,13 @@
-package control.commands;
+package control;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.time.DayOfWeek;
+
+import control.commands.CalendarCommand;
+import control.commands.CreateEventSeries;
+import control.commands.CreateSingleEvent;
 
 /**
  * Factory for creating calendar commands to add events to the calendar.
