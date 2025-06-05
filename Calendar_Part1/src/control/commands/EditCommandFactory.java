@@ -13,6 +13,11 @@ public final class EditCommandFactory extends ACommandFactory {
 
   @Override
   public CalendarCommand createCalendarCommand(String input) {
+    // check if no information provided beyond "edit" or "edit event"
+    if (input.length() < 12) {
+      throw new IllegalArgumentException("Edit calendar command missing inputs: " + input);
+    }
+
 
     // Change the property of the given event (irrespective of whether it is single or part of a series).
     if (input.contains("event") && input.contains("from") && input.contains("to") && input.contains("with")) {
@@ -23,7 +28,7 @@ public final class EditCommandFactory extends ACommandFactory {
     int withIndex = searchKeywordIndex(input, "with");
 
     // get property to edit
-    int propertyToEditEndIndex = searchKeywordIndex(input.substring(12), " ");
+    int propertyToEditEndIndex = searchKeywordIndex(input.substring(12), " ") + 12;
     EventProperty propertyToEdit = EventProperty.fromInput(search(input, 12, propertyToEditEndIndex, "Calendar command missing property to edit"));
 
     // get event subject
@@ -31,7 +36,7 @@ public final class EditCommandFactory extends ACommandFactory {
 
     // get start date
     String startDateStr = search(input, fromIndex + 5, withIndex - 1, "Calendar command missing start date");
-    if (validDateTime(startDateStr)) {
+    if (!validDateTime(startDateStr)) {
       throw new IllegalArgumentException("Invalid start date provided: " + startDateStr);
     }
     LocalDateTime startDate = LocalDateTime.parse(startDateStr);
@@ -64,14 +69,14 @@ public final class EditCommandFactory extends ACommandFactory {
     // get subject to edit
     String subject = search(input, eventSubjectIndex, fromIndex - 1, "Calendar command missing event subject");
     // get start date and verify
-    String startDateStr = search(input, fromIndex + 2, toIndex - 1, "Calendar command missing start date");
-    if (validDateTime(startDateStr)) {
+    String startDateStr = search(input, fromIndex + 5, toIndex - 1, "Calendar command missing start date");
+    if (!validDateTime(startDateStr)) {
       throw new IllegalArgumentException("Invalid start date provided: " + startDateStr);
     }
     LocalDateTime startDate = LocalDateTime.parse(startDateStr);
     // get end date and verify
     String endDateStr = search(input, toIndex + 3, withIndex - 1, "Calendar command missing end date");
-    if (validDateTime(endDateStr)) {
+    if (!validDateTime(endDateStr)) {
       throw new IllegalArgumentException("Invalid end date provided: " + endDateStr);
     }
     LocalDateTime endDate = LocalDateTime.parse(endDateStr);
