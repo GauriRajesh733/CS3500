@@ -22,7 +22,6 @@ public class PrintEvents implements CalendarCommand {
     this.date = date;
   }
 
-  //no events found in the view
   @Override
   public void go(CalendarModel m, CalendarView v) {
     v.showEventsOnDate(m.printEventsForDate(this.date), this.date);

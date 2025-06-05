@@ -14,7 +14,7 @@ abstract public class ACommandFactory implements CommandFactory {
   protected int searchKeywordIndex(String input, String command) throws IllegalArgumentException {
     int index;
     try {
-      index = input.indexOf(command);
+      index = input.lastIndexOf(command);
     } catch (StringIndexOutOfBoundsException e) {
       throw new IllegalArgumentException("Calendar command missing keyword " + command);
     }

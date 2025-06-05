@@ -8,6 +8,11 @@ import java.time.DayOfWeek;
 import control.ACommandFactory;
 import control.CalendarCommand;
 
+/**
+ * Factory for creating calendar commands to add events to the calendar.
+ * This factory handles various types of event creation commands.
+ */
+
 public final class CreateCommandFactory extends ACommandFactory {
 
   public CalendarCommand createCalendarCommand(String input) {
@@ -22,12 +27,12 @@ public final class CreateCommandFactory extends ACommandFactory {
     }
     // create event series on specific weekdays until specific end date and time
     else if (input.contains("from") && input.contains("repeats")
-            && input.contains("until")) {
+            && input.contains(" until ")) {
       return this.createEventsWithEndDate(input);
     }
     // create a series of all day events until a specific date (inclusive)
-    else if (input.contains("on") && input.contains("repeats")
-            && input.contains("until")) {
+    else if (input.contains(" on ") && input.contains("repeats")
+            && input.contains(" until ")) {
       return this.createAllDayEventsWithEndDate(input);
     }
     // create a series of all day events that repeat N times on specific weekdays
