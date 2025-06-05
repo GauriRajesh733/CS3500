@@ -7,6 +7,7 @@ import model.EventProperty;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
 
@@ -80,5 +81,36 @@ public abstract class ACommandFactoryTest {
     assertTrue(commandFactory.validNewProperty(validSubject, EventProperty.SUBJECT));
     assertTrue(commandFactory.validNewProperty(validLocation, EventProperty.LOCATION));
     assertFalse(commandFactory.validNewProperty(invalidLocation, EventProperty.LOCATION));
+  }
+
+  @Test
+  public void testValidStartAndEndTime() {
+    String validStart = "2025-05-05T10:00";
+    String validEnd = "2025-05-05T12:00";
+    String invalidStart = "2025-05-05T13:00";
+    String invalidEnd = "2025-05-04T09:00"; // end before start
+
+    assertTrue(commandFactory.validStartAndEndTime(validStart, validEnd));
+    assertFalse(commandFactory.validStartAndEndTime(invalidStart, validEnd));
+    assertFalse(commandFactory.validStartAndEndTime(validStart, invalidEnd));
+  }
+
+  @Test
+  public void testValidateKeywords() {
+    String validInput1 = "create event test on 2025-05-05";
+    String validInput2 = "print events from 2025-05-05 to 2025-05-06";
+
+    // Valid cases
+    commandFactory.validateKeywords(validInput1);
+    commandFactory.validateKeywords(validInput2);
+
+    // Invalid cases
+    assertThrows(IllegalArgumentException.class, () -> {
+      commandFactory.validateKeywords("create event test on 2025-05-05 from 2025-05-06");
+    });
+
+    assertThrows(IllegalArgumentException.class, () -> {
+      commandFactory.validateKeywords("print events until 3 times");
+    });
   }
 }
