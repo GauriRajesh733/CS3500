@@ -7,15 +7,12 @@ import java.time.DayOfWeek;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import control.ACommandFactory;
-import control.CalendarCommand;
-
 /**
  * Factory for creating calendar commands to add events to the calendar.
  * This factory handles various types of event creation commands.
  */
 
-public final class CreateCommandFactory extends ACommandFactory {
+final class CreateCommandFactory extends ACommandFactory {
 
   public CalendarCommand createCalendarCommand(String input) {
     validateKeywords(input);
@@ -326,7 +323,6 @@ public final class CreateCommandFactory extends ACommandFactory {
 
 
     private CalendarCommand build() {
-
       // create single all day event
       if (this.daysOfWeek == null && this.startDate != null &&
               this.startDateTime == null && this.endDateTime == null) {

@@ -1,17 +1,14 @@
 package control.commands;
 
 import java.time.LocalDate;
-import java.util.List;
 
-import control.CalendarCommand;
-import model.AEvent;
 import model.CalendarModel;
 import view.CalendarView;
 
 /**
  * Command to print events for a specific date.
  */
-public class PrintEvents implements CalendarCommand {
+class PrintEvents implements CalendarCommand {
   private final LocalDate date;
   /**
    * Constructor for the PrintEvents command.

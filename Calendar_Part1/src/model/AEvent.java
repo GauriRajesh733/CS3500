@@ -61,6 +61,9 @@ public abstract class AEvent implements Event {
       case END:
         this.endDateTime = LocalDateTime.parse(newProperty);
         break;
+      case START:
+        this.startDateTime = LocalDateTime.parse(newProperty);
+        break;
     }
   }
 
@@ -88,6 +91,19 @@ public abstract class AEvent implements Event {
     return " (" + this.location.toInput() + "): ";
   }
 
+  public abstract ArrayList<AEvent> getEvents();
+
+  public String getDescription() {
+    return this.description;
+  }
+
+  public Location getLocation() {
+    return this.location;
+  }
+
+  public Status getStatus() {
+    return this.status;
+  }
 
 }
 

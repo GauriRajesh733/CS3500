@@ -29,7 +29,7 @@ public class CalendarViewImplTest {
   public void setUp() {
     this.stream = new ByteArrayOutputStream();
     this.view = new CalendarViewImpl(new PrintStream(this.stream));
-    this.single = new SingleEvent("Gym Class", LocalDateTime.of(2025, 5, 2, 11, 20), LocalDateTime.of(2025, 5, 2, 12, 20));
+    this.single = new SingleEvent("Gym", LocalDateTime.of(2025, 5, 2, 11, 20), LocalDateTime.of(2025, 5, 2, 12, 20));
     this.multiday = new SingleEvent("Project", LocalDateTime.of(2025, 5, 3, 11, 20), LocalDateTime.of(2025, 5, 4, 11, 20));
     this.series = new SeriesEvent("Class", LocalDateTime.of(2025, 5, 4, 11, 20), LocalDateTime.of(2025, 5, 4, 2, 20));
   }
@@ -123,5 +123,14 @@ public class CalendarViewImplTest {
     this.resetStream();
     view.showStatus(true, LocalDateTime.of(2025, 5, 2, 0, 0));
     assertEquals("Busy on 2025-05-02T00:00" + System.lineSeparator(), this.stream.toString());
+  }
+
+  // test if view displays error message
+  @Test
+  public void showErrorMessage() {
+    // error message
+    view.showErrorMessage("Something went wrong");
+    assertEquals("Something went wrong" + System.lineSeparator()
+            + "Please enter a new command" + System.lineSeparator(), this.stream.toString());
   }
 }

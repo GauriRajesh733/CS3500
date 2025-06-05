@@ -5,6 +5,10 @@ import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.OutputStream;
 import java.io.PrintStream;
 
 import model.CalendarModel;
@@ -14,20 +18,16 @@ import view.CalendarViewImpl;
 
 import static org.junit.Assert.assertEquals;
 
+
 /**
  * This is a test class for the CalendarControllerImpl.
  */
 public class CalendarControllerImplTest {
-  ByteArrayOutputStream outputStream;
-  ByteArrayInputStream inputStream;
-  CalendarControllerImpl controller;
-  CalendarModel mockModel;
-  CalendarView mockView;
-
-  private void resetStream() {
-    this.outputStream = new ByteArrayOutputStream();
-    this.mockView = new CalendarViewImpl(new PrintStream(this.outputStream));
-  }
+  private CalendarController c;
+  private CalendarModel m;
+  private CalendarView v;
+  private PrintStream s;
+  private OutputStream os;
 
   private void setInput(String input) {
     this.inputStream = new ByteArrayInputStream(input.getBytes());
@@ -41,21 +41,16 @@ public class CalendarControllerImplTest {
     this.mockModel = new CalendarModelImpl();
   }
 
+  // test invalid file input without exit command
   @Test
-  public void testSingleValidCommand() {
-    String input = "create event test on 2025-05-05" + System.lineSeparator() +
-            "print events on 2025-05-05" + System.lineSeparator() +
-            "exit" + System.lineSeparator();
-
-    this.setInput(input);
-    controller.go(mockModel, mockView);
-
-    String output = outputStream.toString();
-
-    assertEquals("""
-            Events on 2025-05-05:
-            - test: 2025-05-05T08:00 to 2025-05-05T17:00
-            """, output);
+  public void testFileInputNoExit() throws FileNotFoundException {
+    os = new ByteArrayOutputStream();
+    s = new PrintStream(os);
+    FileInputStream invalidFileInput = new FileInputStream("C:\\Users\\gauri\\Documents\\GitHub\\CS3500\\Calendar_Part1\\inputs\\commandsNoQuit");
+    c = new CalendarControllerImpl(invalidFileInput);
+    c.go(new CalendarModelImpl(), new CalendarViewImpl(s));
+    assertEquals("", os.toString());
   }
 
+  // test valid file input with exit command
 }
