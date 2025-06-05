@@ -11,6 +11,12 @@ import view.CalendarView;
 import java.time.DayOfWeek;
 
 // NOTE: CATCH IF MULTIDAY SERIES EVENT!
+
+/**
+ * Command to create a series of events that occur on specific weekdays.
+ * This command can create events that repeat a specified number of times or until a certain date.
+ */
+
 public class CreateEventSeries implements CalendarCommand {
   private final SeriesEvent firstEvent;
 
