@@ -92,6 +92,19 @@ public abstract class AEvent implements Event {
   }
 
   public abstract ArrayList<AEvent> getEvents();
+
+  public String getDescription() {
+    return this.description;
+  }
+
+  public Location getLocation() {
+    return this.location;
+  }
+
+  public Status getStatus() {
+    return this.status;
+  }
+
 }
 
 

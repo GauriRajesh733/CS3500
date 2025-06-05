@@ -5,10 +5,16 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Map;
 
-public interface Event {
+interface Event {
   void addToCalendar(Map<LocalDate, ArrayList<AEvent>> calendar);
 
   String getSubject();
+
+  Location getLocation();
+
+  String getDescription();
+
+  Status getStatus();
 
   LocalDateTime getStartDate();
 

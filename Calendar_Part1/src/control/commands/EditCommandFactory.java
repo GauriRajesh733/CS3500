@@ -2,11 +2,7 @@ package control.commands;
 
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeParseException;
 
-import control.ACommandFactory;
-import control.CalendarCommand;
-import control.CommandFactory;
 import model.EventProperty;
 
 public final class EditCommandFactory extends ACommandFactory {

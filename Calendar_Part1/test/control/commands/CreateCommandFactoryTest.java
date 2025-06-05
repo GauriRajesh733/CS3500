@@ -2,10 +2,6 @@ package control.commands;
 
 import org.junit.Test;
 
-import control.ACommandFactory;
-import control.ACommandFactoryTest;
-import control.CalendarCommand;
-
 import static org.junit.Assert.assertNotNull;
 
 /**

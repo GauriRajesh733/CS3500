@@ -3,7 +3,6 @@ package control.commands;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import control.CalendarCommand;
 import model.CalendarModel;
 import model.SeriesEvent;
 import view.CalendarView;
@@ -24,6 +23,10 @@ public class CreateEventSeries implements CalendarCommand {
   public CreateEventSeries(
           String subject, DayOfWeek[] daysOfWeek, Integer occurrences, LocalDateTime startDateTime,
           LocalDateTime endDateTime) {
+    // start and end dates for series event must be on same day
+    if (!startDateTime.toLocalDate().equals(endDateTime.toLocalDate())) {
+      throw new IllegalArgumentException("Start date and end date must be the same for series event");
+    }
     this.firstEvent = new SeriesEvent(subject, daysOfWeek, occurrences, startDateTime, endDateTime);
   }
 
@@ -31,6 +34,10 @@ public class CreateEventSeries implements CalendarCommand {
   public CreateEventSeries(
           String subject, DayOfWeek[] daysOfWeek, LocalDateTime startDateTime,
           LocalDateTime endDateTime, LocalDate seriesEndDate) {
+    // start and end dates for series event must be on same day
+    if (!startDateTime.toLocalDate().equals(endDateTime.toLocalDate())) {
+      throw new IllegalArgumentException("Start date and end date must be the same for series event");
+    }
     this.firstEvent = new SeriesEvent(subject, daysOfWeek, this.calculateOccurrences(startDateTime, seriesEndDate.atStartOfDay(), daysOfWeek), startDateTime, endDateTime);
   }
 

@@ -2,14 +2,11 @@ package control.commands;
 
 import java.time.LocalDateTime;
 
-import control.CalendarCommand;
 import model.CalendarModel;
 import model.EventProperty;
-import model.Location;
-import model.Status;
 import view.CalendarView;
 
-public class EditSingleEvent implements CalendarCommand {
+class EditSingleEvent implements CalendarCommand {
   private final EventProperty propertyToEdit;
   private final LocalDateTime startDate;
   private final LocalDateTime endDate;

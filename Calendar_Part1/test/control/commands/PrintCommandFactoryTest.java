@@ -1,8 +1,6 @@
 package control.commands;
 import org.junit.Test;
 
-import control.ACommandFactoryTest;
-
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 

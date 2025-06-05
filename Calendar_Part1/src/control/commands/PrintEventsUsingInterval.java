@@ -1,17 +1,14 @@
 package control.commands;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
-import control.CalendarCommand;
-import model.AEvent;
 import model.CalendarModel;
 import view.CalendarView;
 
 /**
  * Command to print events within a specified time interval.
  */
-public class PrintEventsUsingInterval implements CalendarCommand {
+class PrintEventsUsingInterval implements CalendarCommand {
   private final LocalDateTime start;
   private final LocalDateTime end;
 

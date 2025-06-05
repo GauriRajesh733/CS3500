@@ -5,15 +5,12 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.time.DayOfWeek;
 
-import control.ACommandFactory;
-import control.CalendarCommand;
-
 /**
  * Factory for creating calendar commands to add events to the calendar.
  * This factory handles various types of event creation commands.
  */
 
-public final class CreateCommandFactory extends ACommandFactory {
+final class CreateCommandFactory extends ACommandFactory {
 
   public CalendarCommand createCalendarCommand(String input) {
     // create single event
@@ -256,7 +253,6 @@ public final class CreateCommandFactory extends ACommandFactory {
 
 
     private CalendarCommand build() {
-
       // create single all day event
       if (this.daysOfWeek == null && this.startDate != null &&
               this.startDateTime == null && this.endDateTime == null) {

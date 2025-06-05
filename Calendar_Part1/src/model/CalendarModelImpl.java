@@ -57,7 +57,7 @@ public class CalendarModelImpl implements CalendarModel {
    *
    * @param eventToRemove represents the event to remove.
    */
-  private void removeEvent(AEvent eventToRemove) {
+  public void removeEvent(AEvent eventToRemove) {
     LocalDate dateToRemoveFrom = eventToRemove.getStartDate().toLocalDate();
     ArrayList<AEvent> dayToRemoveEvent = this.calendar.get(dateToRemoveFrom);
     dayToRemoveEvent.remove(eventToRemove);
@@ -68,7 +68,7 @@ public class CalendarModelImpl implements CalendarModel {
     }
   }
 
-  private void removeSeries(AEvent eventToRemove) {
+  public void removeSeries(AEvent eventToRemove) {
     ArrayList<AEvent> eventsToRemove = eventToRemove.getEvents();
 
     for (AEvent event : eventsToRemove) {
@@ -110,7 +110,8 @@ public class CalendarModelImpl implements CalendarModel {
       for (AEvent event : eventList) {
         LocalDate eventStartDate = event.getStartDate().toLocalDate();
         LocalDate eventEndDate = event.getEndDate().toLocalDate();
-        if (!date.isBefore(eventStartDate) && !date.isAfter(eventEndDate)) {
+        // check if date falls within range and event not already added (multiday events)
+        if (!date.isBefore(eventStartDate) && !date.isAfter(eventEndDate) && !events.contains(event)) {
           events.add(event);
         }
       }
@@ -126,7 +127,7 @@ public class CalendarModelImpl implements CalendarModel {
       for (AEvent event : eventList) {
         LocalDateTime eventStartDateTime = event.getStartDate();
         LocalDateTime eventEndDateTime = event.getEndDate();
-        if (!eventStartDateTime.isBefore(start) && !eventEndDateTime.isAfter(end)) {
+        if (!eventStartDateTime.isBefore(start) && !eventEndDateTime.isAfter(end) && !events.contains(event)) {
           events.add(event);
         }
       }

@@ -26,8 +26,8 @@ public class SeriesEvent extends AEvent {
 
     while (eventCount < occurrences - 1) {
       DayOfWeek currentDayOfWeek = daysOfWeek[eventCount % daysOfWeek.length];
-      LocalDateTime nextStartDate = nextDayOfWeekDate(currentDayOfWeek, currentEvent.getStartDate());
-      LocalDateTime nextEndDate = nextDayOfWeekDate(currentDayOfWeek, currentEvent.getEndDate());
+      LocalDateTime nextStartDate = getNextWeekDate(daysOfWeek, currentEvent, true);
+      LocalDateTime nextEndDate = getNextWeekDate(daysOfWeek, currentEvent, false);
       nextEvent = new SeriesEvent(subject, nextStartDate, nextEndDate);
 
       currentEvent.setNext(nextEvent);
@@ -48,6 +48,35 @@ public class SeriesEvent extends AEvent {
     super(subject, startDateTime, endDateTime);
     this.next = null;
     this.prev = null;
+  }
+
+  protected LocalDateTime getNextWeekDate(DayOfWeek[] daysOfWeek, AEvent currentEvent, boolean startDate) {
+    LocalDateTime[] dates = new LocalDateTime[daysOfWeek.length];
+
+    // get all possible next dates based on weekdays
+    for (int i = 0; i < daysOfWeek.length; i++) {
+      DayOfWeek dayOfWeek = daysOfWeek[i];
+      LocalDateTime nextDate;
+      if (startDate) {
+        nextDate = nextDayOfWeekDate(dayOfWeek, currentEvent.getStartDate());
+      }
+      else {
+        nextDate = nextDayOfWeekDate(dayOfWeek, currentEvent.getEndDate());
+      }
+
+      dates[i] = nextDate;
+    }
+
+    // get closest next date
+    LocalDateTime closestDate = dates[0];
+
+    for (LocalDateTime date : dates) {
+      if (date.isBefore(closestDate)) {
+        closestDate = date;
+      }
+    }
+
+    return closestDate;
   }
 
   @Override
@@ -78,8 +107,15 @@ public class SeriesEvent extends AEvent {
       // if editing start date update this event and unlink from series
       case START:
         this.startDateTime = LocalDateTime.parse(newProperty);
-        this.prev.setNext(this.next);
-        this.next.setPrev(this.prev);
+        // unlink this event from series
+        if (this.hasPrev()) {
+          this.prev.setNext(this.next);
+        }
+        if (this.hasNext()) {
+          this.next.setPrev(this.prev);
+        }
+        this.prev = null;
+        this.next = null;
     }
   }
 
@@ -160,7 +196,10 @@ public class SeriesEvent extends AEvent {
       // if editing start date update this event and following events in series; unlink first from previous
       case START:
         this.startDateTime = LocalDateTime.parse(newProperty);
-        this.prev.setNext(null);
+        if (this.hasPrev()) {
+          this.prev.setNext(null);
+          this.setPrev(null);
+        }
         if (this.hasNext()) {
           long daysToNext = this.daysBetween(this.next);
           // calculate updated start date for following series event
@@ -253,22 +292,22 @@ public class SeriesEvent extends AEvent {
 
       // calculate updated start date for following series event
       LocalDateTime nextStartDate = LocalDateTime.parse(newProperty).minusDays(daysAfterPrev);
-      this.next.editPrevEventsStart(propertyToEdit, nextStartDate.toString());
+      this.prev.editPrevEventsStart(propertyToEdit, nextStartDate.toString());
     }
   }
 
   protected ArrayList<AEvent> getSeriesEvents() {
     ArrayList<AEvent> eventsInSeries = new ArrayList<>();
+    eventsInSeries.add(this);
 
     if (this.hasNext()) {
       eventsInSeries.add(this.next());
+      eventsInSeries.addAll(this.next.getNextSeriesEvents());
     }
     if (this.hasPrev()) {
       eventsInSeries.add(this.prev());
+      eventsInSeries.addAll(this.prev.getPrevSeriesEvents());
     }
-
-    eventsInSeries.addAll(this.next.getNextSeriesEvents());
-    eventsInSeries.addAll(this.prev.getPrevSeriesEvents());
 
     return eventsInSeries;
   }
@@ -278,9 +317,9 @@ public class SeriesEvent extends AEvent {
 
     if (this.hasNext()) {
       eventsInSeries.add(this.next());
+      eventsInSeries.addAll(this.next.getNextSeriesEvents());
     }
 
-    eventsInSeries.addAll(this.next.getNextSeriesEvents());
 
     return eventsInSeries;
   }
@@ -290,9 +329,9 @@ public class SeriesEvent extends AEvent {
 
     if (this.hasPrev()) {
       eventsInSeries.add(this.prev());
+      eventsInSeries.addAll(this.prev.getPrevSeriesEvents());
     }
 
-    eventsInSeries.addAll(this.prev.getPrevSeriesEvents());
 
     return eventsInSeries;
   }
