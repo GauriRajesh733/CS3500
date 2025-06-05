@@ -1,4 +1,4 @@
-package control;
+package control.commands;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -14,7 +14,12 @@ abstract public class ACommandFactory implements CommandFactory {
   protected int searchKeywordIndex(String input, String command) throws IllegalArgumentException {
     int index;
     try {
-      index = input.lastIndexOf(command);
+      if (command.equals(" ")) {
+        index = input.indexOf(command);
+      }
+      else {
+        index = input.lastIndexOf(command);
+      }
     } catch (StringIndexOutOfBoundsException e) {
       throw new IllegalArgumentException("Calendar command missing keyword " + command);
     }

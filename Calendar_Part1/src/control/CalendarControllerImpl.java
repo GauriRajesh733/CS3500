@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.util.Objects;
 import java.util.Scanner;
 
+import control.commands.CalendarCommand;
 import control.commands.CalendarCommandFactory;
 import model.CalendarModel;
 import view.CalendarView;
@@ -15,7 +16,7 @@ import view.CalendarView;
 public class CalendarControllerImpl implements CalendarController {
   private final InputStream in;
 
-/**
+  /**
    * Constructs a CalendarControllerImpl with the given InputStream.
    *
    * @param in the InputStream to read commands from
@@ -25,7 +26,7 @@ public class CalendarControllerImpl implements CalendarController {
     this.in = in;
   }
 
-/**
+  /**
    * Starts the controller to process commands from the input stream.
    *
    * @param m the CalendarModel to interact with
@@ -35,12 +36,11 @@ public class CalendarControllerImpl implements CalendarController {
   public void go(CalendarModel m, CalendarView v) {
     Objects.requireNonNull(m);
     Scanner s = new Scanner(this.in);
-
     while (s.hasNext()) {
       String input = s.nextLine();
 
       if (input.equals("exit")) {
-        return;
+        System.exit(0);
       }
 
       try {
@@ -52,7 +52,9 @@ public class CalendarControllerImpl implements CalendarController {
         this.go(m, v);
       }
     }
-  }
 
+    // display error message if finished parsing commands in file input without exit command
+     v.showErrorMessage("File input must end with exit command");
+  }
 }
 

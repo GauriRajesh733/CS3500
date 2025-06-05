@@ -53,6 +53,6 @@ public class CalendarViewImpl implements CalendarView {
   @Override
   public void showErrorMessage(String errorMessage) {
     out.println(errorMessage);
-    out.println("Try again");
+    out.println("Please enter a new command");
   }
 }

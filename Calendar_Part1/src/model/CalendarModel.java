@@ -19,4 +19,8 @@ public interface CalendarModel {
   void editSeries(EventProperty propertyToEdit, String subject, LocalDateTime startDate, String newProperty);
 
   boolean showCalendarStatus(LocalDateTime date);
+
+  void removeEvent(AEvent eventToRemove);
+
+  void removeSeries(AEvent eventToRemove);
 }

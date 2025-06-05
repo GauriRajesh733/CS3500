@@ -3,12 +3,11 @@ package control.commands;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import control.CalendarCommand;
 import model.CalendarModel;
 import model.SingleEvent;
 import view.CalendarView;
 
-public class CreateSingleEvent implements CalendarCommand {
+class CreateSingleEvent implements CalendarCommand {
   private final LocalDateTime startDate;
   private final LocalDateTime endDate;
   private final String subject;
