@@ -1,4 +1,4 @@
-package control;
+package control.commands;
 
 import org.junit.Before;
 import org.junit.Test;
