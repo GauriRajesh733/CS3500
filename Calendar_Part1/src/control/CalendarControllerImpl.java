@@ -15,9 +15,22 @@ import view.CalendarView;
 public class CalendarControllerImpl implements CalendarController {
   private final InputStream in;
 
+/**
+   * Constructs a CalendarControllerImpl with the given InputStream.
+   *
+   * @param in the InputStream to read commands from
+   */
+
   public CalendarControllerImpl(InputStream in) {
     this.in = in;
   }
+
+/**
+   * Starts the controller to process commands from the input stream.
+   *
+   * @param m the CalendarModel to interact with
+   * @param v the CalendarView to display results and errors
+   */
 
   public void go(CalendarModel m, CalendarView v) {
     Objects.requireNonNull(m);

@@ -4,7 +4,7 @@ package control.commands;
 import control.ACommandFactory;
 import control.CalendarCommand;
 
-public final class CalendarCommandFactory extends ACommandFactory {
+public final class CalendarCommandFactory {
 
   public CalendarCommand createCalendarCommand(String input) {
     // create CreateCalendarEvent command
