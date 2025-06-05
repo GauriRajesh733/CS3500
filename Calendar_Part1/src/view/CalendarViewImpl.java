@@ -15,20 +15,20 @@ public class CalendarViewImpl implements CalendarView {
   }
 
   @Override
-  public void showEventsOnDate(ArrayList<AEvent> events, LocalDate day) {
+  public void showEventsOnDate(ArrayList<String> events, LocalDate day) {
     if (events.isEmpty()) {
       out.println("No events on " + day);
       return;
     }
 
     out.println("Events on " + day + ":");
-    for (AEvent event : events) {
+    for (String event : events) {
       out.println(event);
     }
   }
 
   @Override
-  public void showEventsInRange(ArrayList<AEvent> events, LocalDateTime start, LocalDateTime end) {
+  public void showEventsInRange(ArrayList<String> events, LocalDateTime start, LocalDateTime end) {
     if (events.isEmpty()) {
       out.println("No events from " + start + " to " + end + "");
       return;
@@ -36,7 +36,7 @@ public class CalendarViewImpl implements CalendarView {
 
     out.println("Events from " + start + " to " + end + ":");
 
-    for (AEvent event : events) {
+    for (String event : events) {
       out.println(event);
     }
   }

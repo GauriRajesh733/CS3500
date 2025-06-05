@@ -1,16 +1,19 @@
 package model;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.List;
 
 public interface CalendarModel {
-  void addEvent(AEvent event);
+  void addSingleEvent(String subject, LocalDateTime startDateTime, LocalDateTime endDateTime);
 
-  ArrayList<AEvent> printEventsForDate(LocalDate date);
+  void addSeriesEvent(String subject, DayOfWeek[] daysOfWeek, int occurrences,
+                      LocalDateTime startDateTime, LocalDateTime endDateTime);
 
-  ArrayList<AEvent> printEventsUsingInterval(LocalDateTime start, LocalDateTime end);
+  ArrayList<String> printEventsForDate(LocalDate date);
+
+  ArrayList<String> printEventsUsingInterval(LocalDateTime start, LocalDateTime end);
 
   void editSingleEvent(EventProperty propertyToEdit, LocalDateTime startDate, LocalDateTime endDate, String subject, String newProperty);
 

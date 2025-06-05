@@ -4,12 +4,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import model.CalendarModel;
-import model.SeriesEvent;
 import view.CalendarView;
 
 import java.time.DayOfWeek;
-
-// NOTE: CATCH IF MULTIDAY SERIES EVENT!
 
 /**
  * Command to create a series of events that occur on specific weekdays.
@@ -17,55 +14,76 @@ import java.time.DayOfWeek;
  */
 
 public class CreateEventSeries implements CalendarCommand {
-  private final SeriesEvent firstEvent;
+  private final String subject;
+  private final DayOfWeek[] daysOfWeek;
+  private final Integer occurrences;
+  private final LocalDateTime startDateTime;
+  private final LocalDateTime endDateTime;
 
   // create event series on specific weekdays that repeats N times
   public CreateEventSeries(
           String subject, DayOfWeek[] daysOfWeek, Integer occurrences, LocalDateTime startDateTime,
           LocalDateTime endDateTime) {
+
     // start and end dates for series event must be on same day
     if (!startDateTime.toLocalDate().equals(endDateTime.toLocalDate())) {
       throw new IllegalArgumentException("Start date and end date must be the same for series event");
     }
-    this.firstEvent = new SeriesEvent(subject, daysOfWeek, occurrences, startDateTime, endDateTime);
+    this.subject = subject;
+    this.daysOfWeek = daysOfWeek;
+    this.occurrences = occurrences;
+    this.startDateTime = startDateTime;
+    this.endDateTime = endDateTime;
   }
 
   // create event series on specific weekdays until specific end date and time
   public CreateEventSeries(
           String subject, DayOfWeek[] daysOfWeek, LocalDateTime startDateTime,
           LocalDateTime endDateTime, LocalDate seriesEndDate) {
+
     // start and end dates for series event must be on same day
     if (!startDateTime.toLocalDate().equals(endDateTime.toLocalDate())) {
       throw new IllegalArgumentException("Start date and end date must be the same for series event");
     }
-    this.firstEvent = new SeriesEvent(subject, daysOfWeek, this.calculateOccurrences(startDateTime, seriesEndDate.atStartOfDay(), daysOfWeek), startDateTime, endDateTime);
+
+    this.subject = subject;
+    this.daysOfWeek = daysOfWeek;
+    this.occurrences = this.calculateOccurrences(startDateTime, seriesEndDate.atStartOfDay(),
+            daysOfWeek);
+    this.startDateTime = startDateTime;
+    this.endDateTime = endDateTime;
   }
 
   // create a series of all day events that repeat N times on specific weekdays
   public CreateEventSeries(
           String subject, DayOfWeek[] daysOfWeek, Integer occurrences, LocalDate startDate) {
-    LocalDateTime startDateTime = LocalDateTime.of(startDate.getYear(), startDate.getMonthValue(),
+
+    this.startDateTime = LocalDateTime.of(startDate.getYear(), startDate.getMonthValue(),
             startDate.getDayOfMonth(), 8, 0);
-    LocalDateTime endDateTime = LocalDateTime.of(startDate.getYear(), startDate.getMonthValue(),
+    this.endDateTime = LocalDateTime.of(startDate.getYear(), startDate.getMonthValue(),
             startDate.getDayOfMonth(), 17, 0);
-    this.firstEvent = new SeriesEvent(subject, daysOfWeek, occurrences, startDateTime, endDateTime);
+    this.daysOfWeek = daysOfWeek;
+    this.occurrences = occurrences;
+    this.subject = subject;
   }
 
   // create a series of all day events until a specific date (inclusive)
   public CreateEventSeries(
           String subject, DayOfWeek[] daysOfWeek, LocalDate startDate,
           LocalDate seriesEndDate) {
-    LocalDateTime startDateTime = LocalDateTime.of(startDate.getYear(), startDate.getMonthValue(),
+
+    this.startDateTime = LocalDateTime.of(startDate.getYear(), startDate.getMonthValue(),
             startDate.getDayOfMonth(), 8, 0);
-    LocalDateTime endDateTime = LocalDateTime.of(startDate.getYear(), startDate.getMonthValue(),
+    this.endDateTime = LocalDateTime.of(startDate.getYear(), startDate.getMonthValue(),
             startDate.getDayOfMonth(), 17, 0);
-    this.firstEvent = new SeriesEvent(subject, daysOfWeek,
-            this.calculateOccurrences(startDateTime, seriesEndDate.atStartOfDay(), daysOfWeek), startDateTime, endDateTime);
+    this.daysOfWeek = daysOfWeek;
+    this.subject = subject;
+    this.occurrences = this.calculateOccurrences(startDateTime, seriesEndDate.atStartOfDay(), daysOfWeek);
   }
 
   @Override
   public void go(CalendarModel m, CalendarView v) {
-    m.addEvent(this.firstEvent);
+    m.addSeriesEvent(subject, daysOfWeek, occurrences, startDateTime, endDateTime);
   }
 
   private LocalDateTime nextDayOfWeekDate(DayOfWeek dayOfWeek, LocalDateTime startDate) {

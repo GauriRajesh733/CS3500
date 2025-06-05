@@ -8,7 +8,7 @@ import view.CalendarView;
 /**
  * Command to print events within a specified time interval.
  */
-class PrintEventsUsingInterval implements CalendarCommand {
+public class PrintEventsUsingInterval implements CalendarCommand {
   private final LocalDateTime start;
   private final LocalDateTime end;
 

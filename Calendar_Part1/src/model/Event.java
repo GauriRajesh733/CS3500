@@ -20,11 +20,11 @@ interface Event {
 
   LocalDateTime getEndDate();
 
-  void editSingleEvent(EventProperty propertyToEdit, String newProperty);
+  AEvent editSingleEvent(EventProperty propertyToEdit, String newProperty);
 
-  void editSeriesEvent(EventProperty propertyToEdit, String newProperty);
+  AEvent editSeriesEvent(EventProperty propertyToEdit, String newProperty);
 
-  void editEvents(EventProperty propertyToEdit, String newProperty);
+  AEvent editEvents(EventProperty propertyToEdit, String newProperty);
 
   boolean sameEvent(String subject, LocalDateTime startDate, LocalDateTime endDate);
 

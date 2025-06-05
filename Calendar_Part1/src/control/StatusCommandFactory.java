@@ -1,14 +1,15 @@
-package control.commands;
+package control;
 
 import java.time.LocalDateTime;
 
+import control.commands.CalendarCommand;
 import model.CalendarModel;
 import view.CalendarView;
 
 /**
  * Class to show the status of a calendar event on a specific date.
  */
-class ShowCalendarStatus extends ACommandFactory {
+class StatusCommandFactory extends ACommandFactory {
 
   @Override
   public CalendarCommand createCalendarCommand(String input) {

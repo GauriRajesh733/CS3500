@@ -5,7 +5,6 @@ import java.util.Objects;
 import java.util.Scanner;
 
 import control.commands.CalendarCommand;
-import control.commands.CalendarCommandFactory;
 import model.CalendarModel;
 import view.CalendarView;
 

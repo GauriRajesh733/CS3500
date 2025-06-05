@@ -1,12 +1,13 @@
-package control.commands;
+package control;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 
+import control.commands.CalendarCommand;
 import model.EventProperty;
 
-abstract public class ACommandFactory implements CommandFactory {
+abstract class ACommandFactory implements CommandFactory {
 
   @Override
   abstract public CalendarCommand createCalendarCommand(String input);

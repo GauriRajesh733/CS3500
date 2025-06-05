@@ -1,12 +1,16 @@
-package control.commands;
+package control;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import control.commands.CalendarCommand;
+import control.commands.PrintEvents;
+import control.commands.PrintEventsUsingInterval;
+
 /**
  * Factory class to create print commands based on user input.
  */
-public class PrintCommandFactory extends ACommandFactory {
+class PrintCommandFactory extends ACommandFactory {
   @Override
   public CalendarCommand createCalendarCommand(String input) {
     if (input.contains("on")) {

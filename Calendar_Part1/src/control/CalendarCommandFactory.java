@@ -1,7 +1,9 @@
-package control.commands;
+package control;
 
 
-public final class CalendarCommandFactory {
+import control.commands.CalendarCommand;
+
+final class CalendarCommandFactory {
 
   public CalendarCommand createCalendarCommand(String input) {
     // create CreateCalendarEvent command
@@ -18,7 +20,7 @@ public final class CalendarCommandFactory {
     }
     // create ShowStatus command
     else if (input.startsWith("show status")) {
-      return new ShowCalendarStatus().createCalendarCommand(input);
+      return new StatusCommandFactory().createCalendarCommand(input);
     }
     // throw exception for invalid calendar event command
     throw new IllegalArgumentException("Invalid calendar event command: " + input);

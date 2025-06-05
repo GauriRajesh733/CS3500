@@ -8,7 +8,7 @@ import view.CalendarView;
 /**
  * Command to print events for a specific date.
  */
-class PrintEvents implements CalendarCommand {
+public class PrintEvents implements CalendarCommand {
   private final LocalDate date;
   /**
    * Constructor for the PrintEvents command.

@@ -7,14 +7,18 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Map;
 
-public class SeriesEvent extends AEvent {
+class SeriesEvent extends AEvent {
   private SeriesEvent next;
   private SeriesEvent prev;
 
+  public SeriesEvent(String subject, LocalDateTime startDateTime, LocalDateTime endDateTime,
+                     String description, Location location, Status status) {
+    super(subject, startDateTime, endDateTime, description, location, status);
+  }
 
   public SeriesEvent(String subject, DayOfWeek[] daysOfWeek, int occurrences,
                      LocalDateTime startDateTime, LocalDateTime endDateTime) {
-    super(subject, startDateTime, endDateTime);
+    super(subject, startDateTime, endDateTime, null, null, null);
 
     int eventCount = 0;
     this.prev = null;
@@ -44,8 +48,9 @@ public class SeriesEvent extends AEvent {
     }
   }
 
+
   public SeriesEvent(String subject, LocalDateTime startDateTime, LocalDateTime endDateTime) {
-    super(subject, startDateTime, endDateTime);
+    super(subject, startDateTime, endDateTime, null, null, null);
     this.next = null;
     this.prev = null;
   }
@@ -59,8 +64,7 @@ public class SeriesEvent extends AEvent {
       LocalDateTime nextDate;
       if (startDate) {
         nextDate = nextDayOfWeekDate(dayOfWeek, currentEvent.getStartDate());
-      }
-      else {
+      } else {
         nextDate = nextDayOfWeekDate(dayOfWeek, currentEvent.getEndDate());
       }
 
@@ -94,33 +98,33 @@ public class SeriesEvent extends AEvent {
   }
 
   @Override
-  public void editSingleEvent(EventProperty propertyToEdit, String newProperty) {
+  public AEvent editSingleEvent(EventProperty propertyToEdit, String newProperty) throws
+          IllegalArgumentException {
     switch (propertyToEdit) {
       // if not editing start or end date call super method
       case SUBJECT:
+        return new SeriesEvent(newProperty, this.startDateTime, this.endDateTime, this.description
+                , this.location, this.status);
       case DESCRIPTION:
+        return new SeriesEvent(this.subject, this.startDateTime, this.endDateTime, newProperty
+                , this.location, this.status);
       case LOCATION:
+        return new SeriesEvent(this.subject, this.startDateTime, this.endDateTime, this.description
+                , Location.fromInput(newProperty), this.status);
       case STATUS:
+        return new SeriesEvent(this.subject, this.startDateTime, this.endDateTime, this.description
+                , this.location, Status.fromInput(newProperty));
       case END:
-        super.editSingleEvent(propertyToEdit, newProperty);
-        break;
-      // if editing start date update this event and unlink from series
+        return new SeriesEvent(this.subject, this.startDateTime, LocalDateTime.parse(newProperty));
       case START:
-        this.startDateTime = LocalDateTime.parse(newProperty);
-        // unlink this event from series
-        if (this.hasPrev()) {
-          this.prev.setNext(this.next);
-        }
-        if (this.hasNext()) {
-          this.next.setPrev(this.prev);
-        }
-        this.prev = null;
-        this.next = null;
+        return new SingleEvent(newProperty, LocalDateTime.parse(newProperty), this.endDateTime);
+      default:
+        throw new IllegalArgumentException("Unsupported property: " + propertyToEdit);
     }
   }
 
   @Override
-  public void editSeriesEvent(EventProperty propertyToEdit, String newProperty) {
+  public SeriesEvent editSeriesEvent(EventProperty propertyToEdit, String newProperty) {
     switch (propertyToEdit) {
       // if not editing start or end date call super method
       case SUBJECT:
@@ -335,6 +339,5 @@ public class SeriesEvent extends AEvent {
 
     return eventsInSeries;
   }
-
 
 }

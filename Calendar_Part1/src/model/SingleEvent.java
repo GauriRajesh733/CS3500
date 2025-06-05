@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Map;
 
-public class SingleEvent extends AEvent {
+class SingleEvent extends AEvent {
 
   public SingleEvent(String subject, LocalDateTime startDate, LocalDateTime endDate) {
     super(subject, startDate, endDate);

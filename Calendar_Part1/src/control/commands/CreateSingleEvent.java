@@ -4,10 +4,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import model.CalendarModel;
-import model.SingleEvent;
 import view.CalendarView;
 
-class CreateSingleEvent implements CalendarCommand {
+public class CreateSingleEvent implements CalendarCommand {
   private final LocalDateTime startDate;
   private final LocalDateTime endDate;
   private final String subject;
@@ -31,6 +30,6 @@ class CreateSingleEvent implements CalendarCommand {
 
   @Override
   public void go(CalendarModel m, CalendarView v) {
-    m.addEvent(new SingleEvent(this.subject, this.startDate, this.endDate));
+    m.addSingleEvent(this.subject, this.startDate, this.endDate);
   }
 }
