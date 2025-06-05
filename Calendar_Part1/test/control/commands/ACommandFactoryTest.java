@@ -1,4 +1,4 @@
-package control.commands.edit;
+package control.commands;
 
 import org.junit.Test;
 
