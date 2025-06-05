@@ -1,7 +1,6 @@
 package control;
 
 import java.io.InputStream;
-import java.time.format.DateTimeParseException;
 import java.util.Objects;
 import java.util.Scanner;
 
@@ -42,6 +41,5 @@ public class CalendarControllerImpl implements CalendarController {
     }
   }
 
-  // add methods here for displaying view output or does view do that??
 }
 
