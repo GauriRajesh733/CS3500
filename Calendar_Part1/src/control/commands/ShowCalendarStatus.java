@@ -39,7 +39,7 @@ class ShowCalendarStatus extends ACommandFactory {
   private static class ShowStatus implements CalendarCommand {
     LocalDateTime dateTime;
 
-    public ShowStatus(LocalDateTime dateTime) {
+    private ShowStatus(LocalDateTime dateTime) {
       this.dateTime = dateTime;
     }
 
