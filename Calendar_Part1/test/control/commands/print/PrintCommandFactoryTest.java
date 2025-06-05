@@ -1,7 +1,8 @@
-package control.commands;
+package control.commands.print;
 import org.junit.Test;
 
 import control.ACommandFactoryTest;
+import control.commands.PrintCommandFactory;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;

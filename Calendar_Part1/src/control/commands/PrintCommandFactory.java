@@ -12,6 +12,9 @@ import control.CalendarCommand;
 public class PrintCommandFactory extends ACommandFactory {
   @Override
   public CalendarCommand createCalendarCommand(String input) {
+
+    validateKeywords(input);
+
     if (input.contains("on")) {
       return this.printEvents(input);
     } else if (input.contains("from") && input.contains("to")) {
@@ -59,7 +62,7 @@ public class PrintCommandFactory extends ACommandFactory {
     LocalDateTime startDateTime = LocalDateTime.parse(eventStartDateTime);
     LocalDateTime endDateTime = LocalDateTime.parse(eventEndDateTime);
 
-    if (startDateTime.isAfter(endDateTime)) {
+    if (!validStartAndEndTime(eventStartDateTime, eventEndDateTime)) {
       throw new IllegalArgumentException("Start date cannot be after end date");
     }
 

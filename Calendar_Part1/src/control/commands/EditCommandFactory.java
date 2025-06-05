@@ -18,6 +18,7 @@ public final class EditCommandFactory extends ACommandFactory {
       throw new IllegalArgumentException("Edit calendar command missing inputs: " + input);
     }
 
+    validateKeywords(input);
 
     // Change the property of the given event (irrespective of whether it is single or part of a series).
     if (input.contains("event") && input.contains("from") && input.contains("to") && input.contains("with")) {
@@ -78,6 +79,9 @@ public final class EditCommandFactory extends ACommandFactory {
     String endDateStr = search(input, toIndex + 3, withIndex - 1, "Calendar command missing end date");
     if (!validDateTime(endDateStr)) {
       throw new IllegalArgumentException("Invalid end date provided: " + endDateStr);
+    }
+    if (!validStartAndEndTime(startDateStr, endDateStr)) {
+      throw new IllegalArgumentException("Start date cannot be after end date");
     }
     LocalDateTime endDate = LocalDateTime.parse(endDateStr);
     // get new property value and check if it matches the property to edit type

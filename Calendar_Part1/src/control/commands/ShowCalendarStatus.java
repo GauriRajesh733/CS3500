@@ -14,6 +14,7 @@ public class ShowCalendarStatus extends ACommandFactory {
 
   @Override
   public CalendarCommand createCalendarCommand(String input) {
+    validateKeywords(input);
     if (input.contains("on")) {
       return this.showStatus(input);
     } else {
