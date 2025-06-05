@@ -1,116 +1,99 @@
 package control;
 
-import org.junit.Before;
-import org.junit.Test;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import model.EventProperty;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThrows;
-import static org.junit.Assert.assertTrue;
+abstract public class ACommandFactory implements CommandFactory {
 
+  @Override
+  abstract public CalendarCommand createCalendarCommand(String input);
 
-/**
- * This is an abstract test class for ACommandFactory.
- * It provides common tests for command factories that extend ACommandFactory.
- */
-
-public abstract class ACommandFactoryTest {
-
-  protected ACommandFactory commandFactory;
-
-  /**
-   * Factory method to create a specific command factory for testing.
-   * Subclasses must implement this method to return an instance of their command factory.
-   */
-
-  public abstract ACommandFactory makeFactory();
-
-  @Before
-  public void setUp() {
-    this.commandFactory = makeFactory();
+  protected int searchKeywordIndex(String input, String command) throws IllegalArgumentException {
+    int index;
+    try {
+      index = input.lastIndexOf(command);
+    } catch (StringIndexOutOfBoundsException e) {
+      throw new IllegalArgumentException("Calendar command missing keyword " + command);
+    }
+    return index;
   }
 
-  @Test
-  public void testSearchKeywordIndexValid() {
-    String input = "create event test on 2025-05-05";
-    String command = "event";// index of 'e' in "event"
+  protected String search(String input, int startIndex, int endIndex, String errorMessage) throws IllegalArgumentException {
+    String keyword;
+    try {
+      keyword = input.substring(startIndex, endIndex);
+    } catch (StringIndexOutOfBoundsException e) {
+      throw new IllegalArgumentException(errorMessage);
+    }
 
-    int actualIndex = commandFactory.searchKeywordIndex(input, command);
-
-    assertEquals(7, actualIndex); // "create " has 7 characters
+    return keyword;
   }
 
-  @Test
-  public void testSearch() {
-    String input = "create event test on 2025-05-05";
-    int startIndex = 7; // index of 'e' in "event"
-    int endIndex = 12; // index after "event"
-
-    String expectedKeyword = "event";
-    String actualKeyword = commandFactory.search(input, startIndex, endIndex, "Keyword not found");
-
-    assertEquals(expectedKeyword, actualKeyword);
+  protected String searchDateTimeWithRegex(String input) {
+    Pattern pattern = Pattern.compile("(\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2})");
+    Matcher matcher = pattern.matcher(input);
+    if (matcher.find()) {
+      return matcher.group(0); // returns the first match
+    } else {
+      throw new IllegalArgumentException("Invalid date-time format in input: " + input);
+    }
   }
 
-  @Test
-  public void testValidDateTime() {
-    String validDateTime = "2025-05-05T10:00";
-    String invalidDateTime = "2025-05-05 10:00"; // invalid format
-
-    assertTrue(commandFactory.validDateTime(validDateTime));
-    assertFalse(commandFactory.validDateTime(invalidDateTime));
+  protected boolean validDateTime(String input) throws IllegalArgumentException {
+    try {
+      LocalDateTime.parse(input);
+    } catch (DateTimeParseException e) {
+      return false;
+    }
+    return true;
   }
 
-  @Test
-  public void testValidDate() {
-    String validDate = "2025-05-05";
-    String invalidDate = "2025/05/05"; // invalid format
-
-    assertTrue(commandFactory.validDate(validDate));
-    assertFalse(commandFactory.validDate(invalidDate));
+  protected boolean validDate(String input) throws IllegalArgumentException {
+    try {
+      LocalDate.parse(input);
+    } catch (DateTimeParseException e) {
+      return false;
+    }
+    return true;
   }
 
-  @Test
-  public void testValidNewProperty() {
-    String validSubject = "Meeting";
-    String validLocation = "online";
-    String invalidLocation = "hybrid"; // invalid location
-
-    assertTrue(commandFactory.validNewProperty(validSubject, EventProperty.SUBJECT));
-    assertTrue(commandFactory.validNewProperty(validLocation, EventProperty.LOCATION));
-    assertFalse(commandFactory.validNewProperty(invalidLocation, EventProperty.LOCATION));
+  protected boolean validStartAndEndTime(String startInput, String endInput) throws IllegalArgumentException {
+    if (!validDateTime(startInput) || !validDateTime(endInput)) {
+      return false;
+    }
+    LocalDateTime startDateTime = LocalDateTime.parse(startInput);
+    LocalDateTime endDateTime = LocalDateTime.parse(endInput);
+    return !startDateTime.isAfter(endDateTime); // start time must be before end time
   }
 
-  @Test
-  public void testValidStartAndEndTime() {
-    String validStart = "2025-05-05T10:00";
-    String validEnd = "2025-05-05T12:00";
-    String invalidStart = "2025-05-05T13:00";
-    String invalidEnd = "2025-05-04T09:00"; // end before start
-
-    assertTrue(commandFactory.validStartAndEndTime(validStart, validEnd));
-    assertFalse(commandFactory.validStartAndEndTime(invalidStart, validEnd));
-    assertFalse(commandFactory.validStartAndEndTime(validStart, invalidEnd));
+  protected void validateKeywords(String input) {
+    if (input.contains("on") && input.contains("from")) {
+      throw new IllegalArgumentException("Cannot mix 'on' and 'from/to' keywords: " + input);
+    }
+    if (input.contains("times") && input.contains("until")) {
+      throw new IllegalArgumentException("Cannot mix 'for X times' and 'until date' keywords: " + input);
+    }
   }
 
-  @Test
-  public void testValidateKeywords() {
-    String validInput1 = "create event test on 2025-05-05";
-    String validInput2 = "print events from 2025-05-05 to 2025-05-06";
-
-    // Valid cases
-    commandFactory.validateKeywords(validInput1);
-    commandFactory.validateKeywords(validInput2);
-
-    // Invalid cases
-    assertThrows(IllegalArgumentException.class, () -> {
-      commandFactory.validateKeywords("create event test on 2025-05-05 from 2025-05-06");
-    });
-
-    assertThrows(IllegalArgumentException.class, () -> {
-      commandFactory.validateKeywords("print events until 3 times");
-    });
+  protected boolean validNewProperty(String input, EventProperty propertyToEdit) {
+    switch (propertyToEdit) {
+      case SUBJECT:
+      case DESCRIPTION:
+        return true;
+      case LOCATION:
+        return input.equals("physical") || input.equals("online");
+      case START:
+      case END:
+        return validDateTime(input);
+      case STATUS:
+        return input.equals("public") || input.equals("private");
+      default:
+        throw new IllegalArgumentException("Invalid property to edit for event");
+    }
   }
 }
