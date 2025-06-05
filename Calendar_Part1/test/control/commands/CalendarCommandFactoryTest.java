@@ -27,7 +27,6 @@ public class CalendarCommandFactoryTest extends TestCase {
   @Test(expected =  IllegalArgumentException.class)
   public void testInvalidCommand() {
       factory.createCalendarCommand("invalidCommand");
-
   }
 
 }
