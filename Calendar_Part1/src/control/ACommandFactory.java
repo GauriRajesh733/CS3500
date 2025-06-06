@@ -133,7 +133,7 @@ abstract public class ACommandFactory implements CommandFactory {
     }
     LocalDateTime startDateTime = LocalDateTime.parse(startInput);
     LocalDateTime endDateTime = LocalDateTime.parse(endInput);
-    return startDateTime.isBefore(endDateTime);
+    return !startDateTime.isAfter(endDateTime);
   }
 
   protected boolean validNewProperty(String input, EventProperty propertyToEdit) {
