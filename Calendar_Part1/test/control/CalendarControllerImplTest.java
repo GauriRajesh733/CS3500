@@ -43,7 +43,7 @@ public class CalendarControllerImplTest {
     this.os = new ByteArrayOutputStream();
     this.s = new PrintStream(os);
     this.c = new CalendarControllerImpl(is);
-    this.c.go(new CalendarModelImpl(), new CalendarViewImpl(s));
+    this.c.run(new CalendarModelImpl(), new CalendarViewImpl(s));
     String correctOutput = "Events from 2025-05-05T10:00 to 2025-05-21T11:00:" + System.lineSeparator() +
             "- First: 2025-05-14T10:00 to 2025-05-14T11:00" + System.lineSeparator() +
             "- First: 2025-05-12T10:00 to 2025-05-12T11:00" + System.lineSeparator() +
@@ -96,7 +96,7 @@ public class CalendarControllerImplTest {
     this.os = new ByteArrayOutputStream();
     this.s = new PrintStream(os);
     this.c = new CalendarControllerImpl(is);
-    this.c.go(new CalendarModelImpl(), new CalendarViewImpl(s));
+    this.c.run(new CalendarModelImpl(), new CalendarViewImpl(s));
     assertEquals("Invalid calendar event command: blah blah blah" + System.lineSeparator() +
             "Please enter a new command" + System.lineSeparator() +
             "File input must end with exit command" + System.lineSeparator() +

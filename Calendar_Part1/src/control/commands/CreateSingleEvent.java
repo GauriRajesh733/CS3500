@@ -29,7 +29,7 @@ public class CreateSingleEvent implements CalendarCommand {
   }
 
   @Override
-  public void go(CalendarModel m, CalendarView v) {
+  public void run(CalendarModel m, CalendarView v) {
     m.addSingleEvent(this.subject, this.startDate, this.endDate);
   }
 }

@@ -19,13 +19,13 @@ public class Main {
 
       // run interactive mode
       if (args[0].equals("--mode") && args[1].equals("interactive")) {
-        new CalendarControllerImpl(System.in).go(model, view);
+        new CalendarControllerImpl(System.in).run(model, view);
       }
       // run headless mode
       else if (args[0].equals("--mode") && args[1].equals("headless")) {
         File file = new File(args[3]);
         try (InputStream stream = new FileInputStream(file)) {
-          new CalendarControllerImpl(stream).go(model, view);
+          new CalendarControllerImpl(stream).run(model, view);
         }
         catch (FileNotFoundException e) {
           throw new IllegalArgumentException("File not found");

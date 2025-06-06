@@ -82,7 +82,7 @@ public class CreateEventSeries implements CalendarCommand {
   }
 
   @Override
-  public void go(CalendarModel m, CalendarView v) {
+  public void run(CalendarModel m, CalendarView v) {
     m.addSeriesEvent(subject, daysOfWeek, occurrences, startDateTime, endDateTime);
   }
 

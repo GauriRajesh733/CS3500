@@ -23,7 +23,7 @@ public class EditSingleEvent implements CalendarCommand {
   }
 
   @Override
-  public void go(CalendarModel m, CalendarView v) {
+  public void run(CalendarModel m, CalendarView v) {
     m.editSingleEvent(this.propertyToEdit, this.startDate, this.endDate, this.subject, this.newProperty);
   }
 }

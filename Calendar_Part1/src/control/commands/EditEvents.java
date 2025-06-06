@@ -20,7 +20,7 @@ public class EditEvents implements CalendarCommand {
   }
 
   @Override
-  public void go(CalendarModel m, CalendarView v) {
+  public void run(CalendarModel m, CalendarView v) {
     m.editEvents(propertyToEdit, subject, startDate, newProperty);
   }
 }

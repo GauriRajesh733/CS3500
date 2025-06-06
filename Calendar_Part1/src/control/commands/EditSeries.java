@@ -20,7 +20,7 @@ public class EditSeries implements CalendarCommand {
   }
 
   @Override
-  public void go(CalendarModel m, CalendarView v) {
+  public void run(CalendarModel m, CalendarView v) {
     m.editSeries(this.propertyToEdit, this.subject, this.startDate, this.newProperty);
   }
 }
