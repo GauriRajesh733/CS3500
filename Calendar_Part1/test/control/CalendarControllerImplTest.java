@@ -106,7 +106,7 @@ public class CalendarControllerImplTest {
             "Invalid date format." + System.lineSeparator() +
             "Please enter a new command" + System.lineSeparator() +
             "File input must end with exit command" + System.lineSeparator() +
-            "Calendar command missing event subject" + System.lineSeparator() +
+            "Missing time specification (expected 'from DATETIME' or 'on DATE')" + System.lineSeparator() +
             "Please enter a new command" + System.lineSeparator() +
             "File input must end with exit command" + System.lineSeparator() +
             "Start date and end date must be the same for series event" + System.lineSeparator() +
