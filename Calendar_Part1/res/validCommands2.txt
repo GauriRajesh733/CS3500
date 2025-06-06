@@ -1,0 +1,10 @@
+create event lab from 2025-06-02T09:50 to 2025-06-02T11:20 repeats MW for 9 times
+print events from 2025-06-02T09:50 to 2025-06-30T11:20
+show status on 2025-06-02T09:50
+show status on 2025-06-01T09:50
+create event allDay on 2025-06-05
+print events on 2025-06-05
+edit series subject lab from 2025-06-30T09:50 with oodLab
+print events from 2025-06-02T09:50 to 2025-06-30T11:20
+edit events location oodLab from 2025-06-18T09:50 with physical
+print events from 2025-06-02T09:50 to 2025-06-30T11:20

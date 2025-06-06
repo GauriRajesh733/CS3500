@@ -319,16 +319,18 @@ public class CreateCommandFactoryTest extends ACommandFactoryTest {
       commandFactory.createCalendarCommand(
               "create event Test from 2025-01-01T10:00 to 2025-01-01T11:00 repeats M for 5 " +
                       "times until 2025-02-01")
-      ;});
+      ;
+    });
 
-  assertThrows(IllegalArgumentException.class, () -> {
+    assertThrows(IllegalArgumentException.class, () -> {
       commandFactory.createCalendarCommand(
               "create event Test on 2025-01-01 repeats M for 5 times until 2025-02-01");
     });
 
     assertThrows(IllegalArgumentException.class, () -> {
       commandFactory.createCalendarCommand(
-              "create event Test on 2025-01-01 repeats M for 5 times until 2025-02-01");});
+              "create event Test on 2025-01-01 repeats M for 5 times until 2025-02-01");
+    });
 
   }
 
@@ -350,7 +352,8 @@ public class CreateCommandFactoryTest extends ACommandFactoryTest {
     // These should be INVALID - actual structural conflicts
     String[] invalidCommands = {
             "create event Test on 2025-06-04 from 2025-06-04T10:00 to 2025-06-04T11:00",
-            "create event Test from 2025-06-04T10:00 to 2025-06-04T11:00 repeats M for 5 times until 2025-08-01"
+            "create event Test from 2025-06-04T10:00 " +
+                    "to 2025-06-04T11:00 repeats M for 5 times until 2025-08-01"
     };
 
     for (String command : invalidCommands) {

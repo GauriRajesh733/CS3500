@@ -5,16 +5,21 @@ import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.DayOfWeek;
 
-import control.commands.PrintEvents;
 import model.CalendarModel;
+import control.commands.PrintEventsUsingInterval;
 import model.CalendarModelImpl;
 import view.CalendarView;
 import view.CalendarViewImpl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+
+/**
+ * Test class for PrintEventUsingInterval command.
+ */
 
 public class PrintEventsUsingIntervalTest {
   private ByteArrayOutputStream outputStream;
@@ -31,24 +36,75 @@ public class PrintEventsUsingIntervalTest {
 
   @Test
   public void testPrintEventsConstructor() {
-    LocalDate testDate = LocalDate.of(2025, 5, 5);
-    PrintEvents command = new PrintEvents(testDate);
-
+    LocalDateTime startDateTime =  LocalDateTime.of(2025, 5, 5, 10,0);
+    LocalDateTime endDateTime =  LocalDateTime.of(2025, 5, 5, 15,0);
+    PrintEventsUsingInterval command = new PrintEventsUsingInterval(startDateTime, endDateTime);
     assertNotNull(command);
   }
 
   @Test
-  public void testPrintEventsModelAndView() {
-    LocalDate testDate = LocalDate.of(2025, 5, 5);
-    PrintEvents command = new PrintEvents(testDate);
+  public void testPrintDaysWithNoEvents() {
+    LocalDateTime startDateTime =  LocalDateTime.of(2025, 5, 5, 10,0);
+    LocalDateTime endDateTime =  LocalDateTime.of(2025, 5, 5, 15,0);
+    PrintEventsUsingInterval command = new PrintEventsUsingInterval(startDateTime, endDateTime);
 
     command.run(mockModel, mockView);
 
-    assertNotNull(mockModel.printEventsForDate(testDate));
-    assertNotNull(mockView);
+    String expectedOutput = "No events from 2025-05-05T10:00 to 2025-05-05T15:00"
+            + System.lineSeparator();
+    assertEquals(expectedOutput, outputStream.toString());
+  }
 
-    // Check that the output stream has been populated
-    String output = outputStream.toString();
-    assertEquals("No events on 2025-05-05" + System.lineSeparator(), output);
+  @Test
+  public void testPrintDaysWithOneEvent() {
+    LocalDateTime startDateTime =  LocalDateTime.of(2025, 5, 5, 5,0);
+    LocalDateTime endDateTime =  LocalDateTime.of(2025, 5, 5, 15,0);
+
+    mockModel.addSingleEvent(
+            "Test Event", LocalDateTime.of(2025, 5, 5, 5, 5), LocalDateTime.of(2025, 5, 5, 5, 5));
+
+    PrintEventsUsingInterval command = new PrintEventsUsingInterval(startDateTime, endDateTime);
+    command.run(mockModel, mockView);
+
+    String expectedOutput = "Events from 2025-05-05T05:00 to 2025-05-05T15:00:"
+            + System.lineSeparator() +
+            "- Test Event: 2025-05-05T05:05 to 2025-05-05T05:05" + System.lineSeparator();
+    assertEquals(expectedOutput, outputStream.toString());
+  }
+
+  @Test
+  public void testPrintDaysWithEventSeries() {
+    LocalDateTime startDateTime = LocalDateTime.of(
+            2025, 5, 5, 5, 0);
+    LocalDateTime endDateTime = LocalDateTime.of(
+            2025, 5, 19, 15, 0);
+
+    DayOfWeek[] daysOfWeek = {DayOfWeek.MONDAY, DayOfWeek.WEDNESDAY, DayOfWeek.FRIDAY};
+
+    mockModel.addSeriesEvent("Test Series Event", daysOfWeek, 10,
+            LocalDateTime.of(2025, 5, 5, 5, 5),
+            LocalDateTime.of(2025, 5, 5, 6, 0));
+
+    PrintEventsUsingInterval command = new PrintEventsUsingInterval(startDateTime, endDateTime);
+    command.run(mockModel, mockView);
+
+    String expectedOutput = "Events from 2025-05-05T05:00 to 2025-05-19T15:00:" +
+            System.lineSeparator() +
+            "- Test Series Event: 2025-05-14T05:05 to 2025-05-14T06:00" +
+            System.lineSeparator() +
+            "- Test Series Event: 2025-05-12T05:05 to 2025-05-12T06:00" +
+            System.lineSeparator() +
+            "- Test Series Event: 2025-05-09T05:05 to 2025-05-09T06:00" +
+            System.lineSeparator() +
+            "- Test Series Event: 2025-05-07T05:05 to 2025-05-07T06:00" +
+            System.lineSeparator() +
+            "- Test Series Event: 2025-05-05T05:05 to 2025-05-05T06:00" +
+            System.lineSeparator() +
+            "- Test Series Event: 2025-05-19T05:05 to 2025-05-19T06:00" +
+            System.lineSeparator() +
+            "- Test Series Event: 2025-05-16T05:05 to 2025-05-16T06:00" +
+            System.lineSeparator();
+
+    assertEquals(expectedOutput, outputStream.toString());
   }
 }

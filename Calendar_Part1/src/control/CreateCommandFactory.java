@@ -5,8 +5,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.time.DayOfWeek;
 
-import javax.print.DocFlavor;
-
 import control.commands.CalendarCommand;
 import control.commands.CreateEventSeries;
 import control.commands.CreateSingleEvent;

@@ -5,8 +5,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-import model.AEvent;
-
 public class CalendarViewImpl implements CalendarView {
   private final PrintStream out;
 
@@ -52,6 +50,10 @@ public class CalendarViewImpl implements CalendarView {
 
   @Override
   public void showErrorMessage(String errorMessage) {
+    if (errorMessage == null) {
+      out.println("Something went wrong, please enter a new command");
+      return;
+    }
     out.println(errorMessage);
     if (!errorMessage.equals("File input must end with exit command")) {
       out.println("Please enter a new command");

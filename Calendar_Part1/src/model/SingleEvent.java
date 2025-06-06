@@ -40,7 +40,9 @@ class SingleEvent extends AEvent {
           throw new IllegalArgumentException("Start date cannot be after end date.");
         }
 
-        return new SingleEvent(this.subject, newStartDateTime, this.endDateTime, this.description, this.location, this.status);
+        return new SingleEvent(
+                this.subject, newStartDateTime, this.endDateTime,
+                this.description, this.location, this.status);
       case END:
         LocalDateTime newEndDate = LocalDateTime.parse(newProperty);
 
@@ -48,15 +50,25 @@ class SingleEvent extends AEvent {
           throw new IllegalArgumentException("End date cannot be before end date.");
         }
 
-        return new SingleEvent(this.subject, this.startDateTime, newEndDate, this.description, this.location, this.status);
+        return new SingleEvent(
+                this.subject, this.startDateTime, newEndDate,
+                this.description, this.location, this.status);
       case DESCRIPTION:
-        return new SingleEvent(this.subject, this.startDateTime, this.endDateTime, newProperty, this.location, this.status);
+        return new SingleEvent(
+                this.subject, this.startDateTime, this.endDateTime,
+                newProperty, this.location, this.status);
       case LOCATION:
-        return new SingleEvent(this.subject, this.startDateTime, this.endDateTime, this.description, Location.fromInput(newProperty), this.status);
+        return new SingleEvent(
+                this.subject, this.startDateTime, this.endDateTime,
+                this.description, Location.fromInput(newProperty), this.status);
       case STATUS:
-        return new SingleEvent(this.subject, this.startDateTime, this.endDateTime, this.description, this.location, Status.fromInput(newProperty));
+        return new SingleEvent(
+                this.subject, this.startDateTime, this.endDateTime,
+                this.description, this.location, Status.fromInput(newProperty));
       case SUBJECT:
-        return new SingleEvent(newProperty, this.startDateTime, this.endDateTime, this.description, this.location, this.status);
+        return new SingleEvent(
+                newProperty, this.startDateTime, this.endDateTime,
+                this.description, this.location, this.status);
       default:
         throw new IllegalArgumentException("Invalid property: " + propertyToEdit);
     }

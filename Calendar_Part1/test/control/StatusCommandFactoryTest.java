@@ -40,8 +40,6 @@ public class StatusCommandFactoryTest extends ACommandFactoryTest {
   public void testCreateShowStatus() {
     String input = "show status on 2025-05-05T10:00";
 
-    ACommandFactory factory = makeFactory();
-
     CalendarCommand command = commandFactory.createCalendarCommand(input);
     assertNotNull("Command should be created", command);
   }
@@ -77,7 +75,6 @@ public class StatusCommandFactoryTest extends ACommandFactoryTest {
 
   @Test
   public void testShowStatusAvailableExecution() {
-    LocalDateTime testDateTime = LocalDateTime.of(2025, 5, 5, 10, 0);
     String input = "show status on 2025-05-05T10:00";
 
     CalendarCommand cmd = commandFactory.createCalendarCommand(input);

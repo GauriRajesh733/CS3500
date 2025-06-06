@@ -91,9 +91,9 @@ public class EventTests {
   // NOTE: this also tests methods to get start date, end date, status, location, etc.
   @Test
   public void editSingleEvent() {
-    // edit single/multiday event
-    this.single.editSingleEvent(EventProperty.START, "2027-10-09T00:00");
-    assertEquals("2027-10-09T00:00", this.single.getStartDate().toString());
+    // edit single/multiday event 2025, 9, 9, 8, 0
+    this.single.editSingleEvent(EventProperty.START, "2025-09-09T09:30");
+    assertEquals("2025-09-09T09:30", this.single.getStartDate().toString());
 
     this.single.editSingleEvent(EventProperty.END, "2027-10-09T00:00");
     assertEquals("2027-10-09T00:00", this.single.getEndDate().toString());
@@ -143,8 +143,8 @@ public class EventTests {
   @Test
   public void editSeriesEvent() {
     // edit single/multiday event (editSeriesEvent has same effect as editSingleEvent)
-    this.single.editSeriesEvent(EventProperty.START, "2027-10-09T00:00");
-    assertEquals("2027-10-09T00:00", this.single.getStartDate().toString());
+    this.single.editSeriesEvent(EventProperty.START, "2025-09-09T09:30");
+    assertEquals("2025-09-09T09:30", this.single.getStartDate().toString());
 
     this.single.editSeriesEvent(EventProperty.END, "2027-10-09T00:00");
     assertEquals("2027-10-09T00:00", this.single.getEndDate().toString());
@@ -259,12 +259,12 @@ public class EventTests {
     assertEquals("- vacation: 2025-09-09T00:00 to 2025-09-16T00:00", this.multiday.toString());
     assertEquals("- lab: 2025-01-06T14:00 to 2025-01-06T16:30", this.series.toString());
 
-    AEvent invalidSingle1 = new SingleEvent(null, LocalDateTime.parse("2025-09-09T08:00"), LocalDateTime.now(), null, null, null);
+    AEvent invalidSingle1 = new SingleEvent(
+            null, LocalDateTime.parse("2025-09-09T08:00"), LocalDateTime.now(), null, null, null);
     try {
       String s = invalidSingle1.toString();
       fail("Should have thrown an exception");
-    }
-    catch (IllegalArgumentException e) {
+    } catch (IllegalArgumentException e) {
       assertEquals("Event is missing start date, end date, or subject", e.getMessage());
     }
 
@@ -272,17 +272,16 @@ public class EventTests {
     try {
       String s = invalidSingle2.toString();
       fail("Should have thrown an exception");
-    }
-    catch (IllegalArgumentException e) {
+    } catch (IllegalArgumentException e) {
       assertEquals("Event is missing start date, end date, or subject", e.getMessage());
     }
 
-    AEvent invalidSingle3 = new SingleEvent("subject", LocalDateTime.parse("2025-09-09T08:00"), null, null, null, null);
+    AEvent invalidSingle3 = new SingleEvent(
+            "subject", LocalDateTime.parse("2025-09-09T08:00"), null, null, null, null);
     try {
       String s = invalidSingle3.toString();
       fail("Should have thrown an exception");
-    }
-    catch (IllegalArgumentException e) {
+    } catch (IllegalArgumentException e) {
       assertEquals("Event is missing start date, end date, or subject", e.getMessage());
     }
   }
@@ -301,8 +300,14 @@ public class EventTests {
     ArrayList<AEvent> seriesEvents = this.series.getEvents();
 
     // get events should return a list with all the events in a series
-    assertTrue(seriesEvents.get(0).sameEvent("lab", LocalDateTime.of(2025, 1, 6, 14, 0), LocalDateTime.of(2025, 1, 6, 16, 30)));
-    assertTrue(seriesEvents.get(1).sameEvent("lab", LocalDateTime.of(2025, 1, 8, 14, 0), LocalDateTime.of(2025, 1, 8, 16, 30)));
+    assertTrue(
+            seriesEvents.get(0).sameEvent(
+                    "lab", LocalDateTime.of(2025, 1, 6, 14, 0),
+                    LocalDateTime.of(2025, 1, 6, 16, 30)));
+    assertTrue(
+            seriesEvents.get(1).sameEvent(
+                    "lab", LocalDateTime.of(2025, 1, 8, 14, 0),
+                    LocalDateTime.of(2025, 1, 8, 16, 30)));
     // check for correct number of events in series
     assertEquals(2, seriesEvents.size());
   }
