@@ -32,7 +32,7 @@ public class CalendarControllerImpl implements CalendarController {
    * @param v the CalendarView to display results and errors
    */
 
-  public void go(CalendarModel m, CalendarView v) {
+  public void run(CalendarModel m, CalendarView v) {
     Objects.requireNonNull(m);
     Scanner s = new Scanner(this.in);
     while (s.hasNext()) {
@@ -45,10 +45,10 @@ public class CalendarControllerImpl implements CalendarController {
       try {
         CalendarCommand cmd = new CalendarCommandFactory().createCalendarCommand(input);
 
-        cmd.go(m, v);
+        cmd.run(m, v);
       } catch (Exception e) {
         v.showErrorMessage(e.getMessage());
-        this.go(m, v);
+        this.run(m, v);
       }
     }
 

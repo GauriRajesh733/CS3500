@@ -44,7 +44,7 @@ class StatusCommandFactory extends ACommandFactory {
     }
 
     @Override
-    public void go(CalendarModel m, CalendarView v) {
+    public void run(CalendarModel m, CalendarView v) {
       v.showStatus(m.showCalendarStatus(this.dateTime), this.dateTime);
     }
   }

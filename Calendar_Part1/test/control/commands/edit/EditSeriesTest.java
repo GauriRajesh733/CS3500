@@ -5,6 +5,6 @@ import org.junit.Test;
 public class EditSeriesTest {
 
   @Test
-  public void go() {
+  public void run() {
   }
 }

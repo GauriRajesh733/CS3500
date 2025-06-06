@@ -42,7 +42,7 @@ public class PrintEventsUsingIntervalTest {
     LocalDate testDate = LocalDate.of(2025, 5, 5);
     PrintEvents command = new PrintEvents(testDate);
 
-    command.go(mockModel, mockView);
+    command.run(mockModel, mockView);
 
     assertNotNull(mockModel.printEventsForDate(testDate));
     assertNotNull(mockView);

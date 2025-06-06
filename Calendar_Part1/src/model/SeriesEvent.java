@@ -261,15 +261,15 @@ class SeriesEvent extends AEvent {
           this.prev.setNext(null);
           this.setPrev(null);
         }
-        int followingOccurrences = this.followingOccurrences();
-        return new SeriesEvent(this.subject, this.days, followingOccurrences, newStartDate,
+        int followinrunccurrences = this.followinrunccurrences();
+        return new SeriesEvent(this.subject, this.days, followinrunccurrences, newStartDate,
                 this.endDateTime, this.description, this.location, this.status);
       default:
         throw new IllegalArgumentException("Unsupported property: " + propertyToEdit);
     }
   }
 
-  protected int followingOccurrences() {
+  protected int followinrunccurrences() {
     int i = 1;
     SeriesEvent curr = new SeriesEvent(this.subject, this.startDateTime, this.endDateTime,
             this.description, this.location, this.status, this.prev, this.next, this.days);

@@ -24,7 +24,7 @@ public class PrintEventsUsingInterval implements CalendarCommand {
   }
 
   @Override
-  public void go(CalendarModel m, CalendarView v) {
+  public void run(CalendarModel m, CalendarView v) {
     v.showEventsInRange(m.printEventsUsingInterval(this.start, this.end), this.start, this.end);
   }
 }

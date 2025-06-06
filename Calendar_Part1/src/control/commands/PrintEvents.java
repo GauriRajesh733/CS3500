@@ -20,7 +20,7 @@ public class PrintEvents implements CalendarCommand {
   }
 
   @Override
-  public void go(CalendarModel m, CalendarView v) {
+  public void run(CalendarModel m, CalendarView v) {
     v.showEventsOnDate(m.printEventsForDate(this.date), this.date);
   }
 }
