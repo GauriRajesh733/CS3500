@@ -2,6 +2,7 @@ package control;
 
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 
 import control.commands.CalendarCommand;
 import control.commands.EditEvents;
@@ -13,11 +14,10 @@ final class EditCommandFactory extends ACommandFactory {
 
   @Override
   public CalendarCommand createCalendarCommand(String input) {
-    // check if no information provided beyond "edit" or "edit event"
+
     if (input.length() < 12) {
       throw new IllegalArgumentException("Edit calendar command missing inputs: " + input);
     }
-
 
     // Change the property of the given event (irrespective of whether it is single or part of a series).
     if (input.contains("event") && input.contains("from") && input.contains("to") && input.contains("with")) {

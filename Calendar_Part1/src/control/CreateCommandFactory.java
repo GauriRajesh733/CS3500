@@ -1,183 +1,151 @@
-package control.commands;
+package control;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.time.DayOfWeek;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import control.ACommandFactory;
-import control.CalendarCommand;
+import control.commands.CalendarCommand;
+import control.commands.CreateEventSeries;
+import control.commands.CreateSingleEvent;
 
 /**
  * Factory for creating calendar commands to add events to the calendar.
  * This factory handles various types of event creation commands.
  */
 
-public final class CreateCommandFactory extends ACommandFactory {
+final class CreateCommandFactory extends ACommandFactory {
 
-  public CalendarCommand createCalendarCommand(String input) {
-    validateKeywords(input);
+  @Override
+  public CalendarCommand createCalendarCommand(String input) throws IllegalArgumentException {
 
-    // create single event
-    if (input.contains("from") && !input.contains("repeats")) {
-      return this.createSingleEvent(input);
+    try {
+      String remaining = input.substring(13); // Remove "create event "
+      SubjectAndRest result = extractSubject(remaining);
+      String subject = result.subject;
+      String commandStructure = result.remaining;
+
+      String[] parts = commandStructure.trim().split("\\s+");
+
+      return createCommandFromPattern(subject, parts);
+
+    } catch (DateTimeParseException e) {
+      throw new IllegalArgumentException("Invalid date/time format in command: " + input, e);
+    } catch (NumberFormatException e) {
+      throw new IllegalArgumentException("Invalid number format in command: " + input, e);
+    } catch (Exception e) {
+      throw new IllegalArgumentException("Invalid create event command: " + input, e);
     }
-    // create event series on specific weekdays that repeats N times
-    else if (input.contains("from") && input.contains("repeats")
-            && input.contains("times")) {
-      return this.createNEventSeries(input);
+  }
+
+  private CalendarCommand createCommandFromPattern(String subject, String[] parts) {
+    int length = parts.length;
+
+    if (length == 0) {
+      throw new IllegalArgumentException("Create command must have at least an event subject.");
     }
-    // create event series on specific weekdays until specific end date and time
-    else if (input.contains("from") && input.contains("repeats")
-            && input.contains(" until ")) {
-      return this.createEventsWithEndDate(input);
+
+    // Single event creation
+    if (length == 4 && parts[0].equals("from") && parts[2].equals("to")) {
+      return createSingleEvent(subject, parts[1], parts[3]);
     }
-    // create a series of all day events until a specific date (inclusive)
-    else if (input.contains(" on ") && input.contains("repeats")
-            && input.contains(" until ")) {
-      return this.createAllDayEventsWithEndDate(input);
+
+    // N-event series creation
+    if (length == 9 && parts[0].equals("from") && parts[2].equals("to")
+            && parts[4].equals("repeats") && parts[6].equals("for") && parts[8].equals("times")) {
+      return createNEventSeries(subject, parts[1], parts[3], parts[5], parts[7]);
     }
-    // create a series of all day events that repeat N times on specific weekdays
-    else if (input.contains("on") && input.contains("repeats")
-            && input.contains("for")) {
-      return this.createAllDayEvents(input);
+
+    // Events with end date creation
+    if (length == 8 && parts[0].equals("from") && parts[2].equals("to")
+            && parts[4].equals("repeats") && parts[6].equals("until")) {
+      return createEventsWithEndDate(subject, parts[1], parts[3], parts[5], parts[7]);
     }
-    // create a single all day event
-    else if (input.contains("on")) {
-      return this.createAllDayEvent(input);
+
+    //All day event creation
+    if (length == 2 && parts[0].equals("on")) {
+      return createAllDayEvent(subject, parts[1]);
     }
-    throw new IllegalArgumentException("Invalid create event command: " + input);
+
+    //All day events repeats N times
+    if (length == 7 && parts[0].equals("on") && parts[2].equals("repeats")
+            && parts[4].equals("for") && parts[6].equals("times")) {
+      return createAllDayEvents(subject, parts[1], parts[3], parts[5]);
+    }
+
+    // All day events with end date
+    if (length == 6 && parts[0].equals("on") && parts[2].equals("repeats")
+            && parts[4].equals("until")) {
+      return createAllDayEventsWithEndDate(subject, parts[1], parts[3], parts[5]);
+    }
+
+    throw new IllegalArgumentException("Invalid create command format. Expected one of: " +
+            "'from DATETIME to DATETIME', " +
+            "'on DATE', " +
+            "'from DATETIME to DATETIME repeats DAYS for N times', " +
+            "'from DATETIME to DATETIME repeats DAYS until DATE', " +
+            "'on DATE repeats DAYS for N times', " +
+            "'on DATE repeats DAYS until DATE'");
   }
 
   private CreateCommandBuilder builder() {
     return new CreateCommandBuilder();
   }
 
-  private CalendarCommand createSingleEvent(String input) {
-    int fromIndex = this.searchKeywordIndex(input, "from");
-    int toIndex = this.searchKeywordIndex(input, "to");
 
-    String eventSubject = this.search(input, 13, fromIndex - 1, "Calendar command missing event subject");
-    String startDateTime = this.search(input, fromIndex + 5, toIndex - 1, "Calendar command missing start date");
-    String endDateTime = this.search(input, toIndex + 3, input.length(), "Calendar command missing end date");
+  private CalendarCommand createSingleEvent(String subject, String startDateTime, String endDateTime) {
+    validDateTimeRange(startDateTime, endDateTime);
 
-    if (!validDateTime(startDateTime)) {
-      throw new IllegalArgumentException("Invalid start date provided: " + startDateTime);
-    }
-
-    if (!validDateTime(endDateTime)) {
-      throw new IllegalArgumentException("Invalid end date provided: " + endDateTime);
-    }
-
-    if (!validStartAndEndTime(startDateTime, endDateTime)) {
-      throw new IllegalArgumentException("Start date cannot be after end date");
-    }
-
-    return this.builder().subject(eventSubject).startDateTime(startDateTime)
+    return this.builder().subject(subject).startDateTime(startDateTime)
             .endDateTime(endDateTime).build();
   }
 
   //"create event <eventSubject> from <dateStringTtimeString> to <dateStringTtimeString> repeats
   // <weekdays> for <N> times"
-  private CalendarCommand createNEventSeries(String input) {
-    int fromIndex = searchKeywordIndex(input, "from");
-    int repeatIndex = searchKeywordIndex(input, "repeats");
-    int toIndex = searchKeywordIndex(input, "to");
-    int forIndex = searchKeywordIndex(input, "for");
-    int timesIndex = searchKeywordIndex(input, "times");
+  private CalendarCommand createNEventSeries(
+          String subject, String startDateTime, String endDateTime,
+          String weekdays, String occurrences) {
 
-    String eventSubject = this.search(input, 13, fromIndex - 1, "Calendar command missing event subject");
-    String startDateTime = this.search(input, fromIndex + 5, toIndex - 1, "Calendar command missing start date");
-    String endDateTime = this.search(input, toIndex + 3, repeatIndex - 1, "Calendar command missing end date");
-    String weekDays = this.search(input, repeatIndex + 8, forIndex - 1, "Calendar command missing week days");
-    String occurrences = this.search(input, forIndex + 4, timesIndex - 1, "Calendar command missing occurences");
+    validDateTimeRange(startDateTime, endDateTime);
 
-    if (!validDateTime(startDateTime)) {
-      throw new IllegalArgumentException("Invalid start date provided: " + startDateTime);
+    if (!validOccurrencesNumber(occurrences)) {
+      throw new IllegalArgumentException("Invalid occurrences number: " + occurrences);
     }
 
-    if (!validDateTime(endDateTime)) {
-      throw new IllegalArgumentException("Invalid end date provided: " + endDateTime);
-    }
-
-    if (!validStartAndEndTime(startDateTime, endDateTime)) {
-      throw new IllegalArgumentException("Start date cannot be after end date");
-    }
-
-    return this.builder().subject(eventSubject).startDateTime(startDateTime)
-            .endDateTime(endDateTime).daysOfWeek(weekDays).occurrences(occurrences).build();
+    return this.builder().subject(subject).startDateTime(startDateTime)
+            .endDateTime(endDateTime).daysOfWeek(weekdays).occurrences(occurrences).build();
   }
 
-  private CalendarCommand createEventsWithEndDate(String input) {
-    int fromIndex = this.searchKeywordIndex(input, "from");
-    int toIndex = this.searchKeywordIndex(input, "to");
-    int repeatIndex = this.searchKeywordIndex(input, "repeats");
-    int untilIndex = this.searchKeywordIndex(input, "until");
+  private CalendarCommand createEventsWithEndDate(
+          String subject, String startDateTime, String endDateTime,
+          String weekdays, String endDate) {
 
-    String eventSubject = this.search(input, 13, fromIndex - 1, "Calendar command missing event subject");
-    String startDateTime = this.search(input, fromIndex + 5, toIndex - 1, "Calendar command missing start date");
-    String endDateTime = this.search(input, toIndex + 3, repeatIndex - 1, "Calendar command missing end date");
-    String weekDays = this.search(input, repeatIndex + 8, untilIndex - 1, "Calendar command missing week days");
-    String endDate = this.search(input, untilIndex + 6, input.length(), "Calendar command missing end date");
+    validDateTimeRange(startDateTime, endDateTime);
 
-      if (!validDateTime(startDateTime)) {
-        throw new IllegalArgumentException("Invalid start date provided: " + startDateTime);
-      }
+    if (!validDate(endDate)) {
+      throw new IllegalArgumentException("Invalid end date provided: " + endDate);
+    }
 
-      if (!validDateTime(endDateTime)) {
-        throw new IllegalArgumentException("Invalid end date provided: " + endDateTime);
-      }
-
-      if (!validDate(endDate)) {
-        throw new IllegalArgumentException("Invalid end date provided: " + endDate);
-      }
-
-      if (!validStartAndEndTime(startDateTime, endDateTime)) {
-        throw new IllegalArgumentException("Start date cannot be after end date");
-      }
-
-      LocalDate date = LocalDate.parse(endDate);
-      LocalDateTime endDateTimeParsed = LocalDateTime.parse(endDateTime);
-
-      if (endDateTimeParsed.toLocalDate().isAfter(date)) {
-        throw new IllegalArgumentException("End date time cannot be after the specified end date");
-      }
-
-      return this.builder().subject(eventSubject).startDateTime(startDateTime)
-              .endDateTime(endDateTime).daysOfWeek(weekDays).endDate(endDate).build();
+    return this.builder().subject(subject).startDateTime(startDateTime)
+            .endDateTime(endDateTime).daysOfWeek(weekdays).endDate(endDate).build();
   }
 
-  private CalendarCommand createAllDayEvents(String input) {
-    int onIndex = this.searchKeywordIndex(input, "on");
-    int repeatIndex = this.searchKeywordIndex(input, "repeats");
-    int forIndex = this.searchKeywordIndex(input, "for");
-    int timesIndex = this.searchKeywordIndex(input, "times");
-
-    String eventSubject = this.search(input, 13, onIndex - 1, "Calendar command missing event subject");
-    String startDate = this.search(input, onIndex + 3, repeatIndex - 1, "Calendar command missing start date");
-    String weekdays = this.search(input, repeatIndex + 8, forIndex - 1, "Calendar command missing week days");
-    String occurrences = this.search(input, forIndex + 4, timesIndex - 1, "Calendar command missing occurrences");
-
+  private CalendarCommand createAllDayEvents(
+          String subject, String startDate, String weekdays, String occurrences) {
     if (!validDate(startDate)) {
       throw new IllegalArgumentException("Invalid start date provided: " + startDate);
     }
 
-    return this.builder().subject(eventSubject).startDate(startDate)
+    if (!validOccurrencesNumber(occurrences)) {
+      throw new IllegalArgumentException("Invalid occurrences number: " + occurrences);
+    }
+
+    return this.builder().subject(subject).startDate(startDate)
             .daysOfWeek(weekdays).occurrences(occurrences).build();
   }
 
-  private CalendarCommand createAllDayEventsWithEndDate(String input) {
-    int onIndex = this.searchKeywordIndex(input, "on");
-    int repeatIndex = this.searchKeywordIndex(input, "repeats");
-    int untilIndex = this.searchKeywordIndex(input, "until");
-
-    String eventSubject = this.search(input, 13, onIndex - 1, "Calendar command missing event subject");
-    String startDate = this.search(input, onIndex + 3, repeatIndex - 1, "Calendar command start date");
-    String weekdays = this.search(input, repeatIndex + 8, untilIndex - 1, "Calendar command missing week days");
-    String endDate = this.search(input, untilIndex + 6, input.length(), "Calendar command missing end date");
-
+  private CalendarCommand createAllDayEventsWithEndDate(
+          String subject, String startDate, String weekdays, String endDate) {
     if (!validDate(startDate)) {
       throw new IllegalArgumentException("Invalid start date provided: " + startDate);
     }
@@ -190,21 +158,16 @@ public final class CreateCommandFactory extends ACommandFactory {
       throw new IllegalArgumentException("End date cannot be before start date");
     }
 
-    return this.builder().subject(eventSubject).startDate(startDate).endDate(endDate)
+    return this.builder().subject(subject).startDate(startDate).endDate(endDate)
             .daysOfWeek(weekdays).build();
   }
 
-  private CalendarCommand createAllDayEvent(String input) {
-    int onIndex = this.searchKeywordIndex(input, "on");
-
-    String eventSubject = this.search(input, 13, onIndex - 1, "Calendar command missing event subject");
-    String startDate = this.search(input, onIndex + 3, input.length(), "Calendar command missing start date");
-
+  private CalendarCommand createAllDayEvent(String subject, String startDate) {
     if (!validDate(startDate)) {
       throw new IllegalArgumentException("Invalid start date provided: " + startDate);
     }
 
-    return this.builder().subject(eventSubject).startDate(startDate).build();
+    return this.builder().subject(subject).startDate(startDate).build();
   }
 
   private static class CreateCommandBuilder {
@@ -297,33 +260,11 @@ public final class CreateCommandFactory extends ACommandFactory {
       this.daysOfWeek = new DayOfWeek[dayOfWeek.length()];
 
       for (int i = 0; i < weekdays.length; i++) {
-        this.daysOfWeek[i] = toWeekday(weekdays[i]);
+        this.daysOfWeek[i] = charToWeekday(weekdays[i].charAt(0));
       }
 
       return this;
     }
-
-    private static DayOfWeek toWeekday(String input) {
-      switch (input) {
-        case "M":
-          return DayOfWeek.MONDAY;
-        case "T":
-          return DayOfWeek.TUESDAY;
-        case "W":
-          return DayOfWeek.WEDNESDAY;
-        case "R":
-          return DayOfWeek.THURSDAY;
-        case "F":
-          return DayOfWeek.FRIDAY;
-        case "S":
-          return DayOfWeek.SATURDAY;
-        case "U":
-          return DayOfWeek.SUNDAY;
-        default:
-          throw new IllegalArgumentException("Invalid weekday: " + input);
-      }
-    }
-
 
     private CalendarCommand build() {
 
