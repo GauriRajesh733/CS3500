@@ -40,7 +40,8 @@ public class CalendarViewImplTest {
     singleDayEvents.add("- Gym: 2025-05-02T11:20 to 2025-05-02T12:20");
     view.showEventsOnDate(singleDayEvents, LocalDate.of(2025, 5, 2));
     assertEquals("Events on 2025-05-02:" + System.lineSeparator() +
-            "- Gym: 2025-05-02T11:20 to 2025-05-02T12:20" + System.lineSeparator(), this.stream.toString());
+            "- Gym: 2025-05-02T11:20 to 2025-05-02T12:20" +
+            System.lineSeparator(), this.stream.toString());
 
     // list of dates with 1 single multiday event
     this.resetStream();
@@ -48,7 +49,8 @@ public class CalendarViewImplTest {
     singleDayEvents.add("- Project: 2025-05-03T11:20 to 2025-05-04T11:20");
     view.showEventsOnDate(singleDayEvents, LocalDate.of(2025, 5, 3));
     assertEquals("Events on 2025-05-03:" + System.lineSeparator() +
-            "- Project: 2025-05-03T11:20 to 2025-05-04T11:20" + System.lineSeparator(), this.stream.toString());
+            "- Project: 2025-05-03T11:20 to 2025-05-04T11:20" +
+            System.lineSeparator(), this.stream.toString());
 
     // list of dates with 1 single series event
     this.resetStream();
@@ -56,7 +58,8 @@ public class CalendarViewImplTest {
     singleDayEvents.add("- Class: 2025-05-04T11:20 to 2025-05-04T02:20");
     view.showEventsOnDate(singleDayEvents, LocalDate.of(2025, 5, 3));
     assertEquals("Events on 2025-05-03:" + System.lineSeparator() +
-            "- Class: 2025-05-04T11:20 to 2025-05-04T02:20" + System.lineSeparator(), this.stream.toString());
+            "- Class: 2025-05-04T11:20 to 2025-05-04T02:20" +
+            System.lineSeparator(), this.stream.toString());
 
     // list of dates with locations
     this.resetStream();
@@ -66,7 +69,8 @@ public class CalendarViewImplTest {
     view.showEventsOnDate(singleDayEvents, LocalDate.of(2025, 5, 3));
     assertEquals("Events on 2025-05-03:" + System.lineSeparator() +
             "- Gym (physical): 2025-05-02T11:20 to 2025-05-02T12:20" + System.lineSeparator() +
-            "- Project (online): 2025-05-03T11:20 to 2025-05-04T11:20" + System.lineSeparator(), stream.toString());
+            "- Project (online): 2025-05-03T11:20 to 2025-05-04T11:20" +
+            System.lineSeparator(), stream.toString());
   }
 
   // test if view displays event in range
@@ -74,19 +78,23 @@ public class CalendarViewImplTest {
   public void showEventsInRange() {
     // no events in range
     ArrayList<String> eventsInRange = new ArrayList<>();
-    view.showEventsInRange(eventsInRange, LocalDateTime.of(2025, 5, 2, 0, 0), LocalDateTime.of(2025, 5, 4, 0, 0));
-    assertEquals("No events from 2025-05-02T00:00 to 2025-05-04T00:00" + System.lineSeparator(), this.stream.toString());
+    view.showEventsInRange(
+            eventsInRange, LocalDateTime.of(2025, 5, 2, 0, 0), LocalDateTime.of(2025, 5, 4, 0, 0));
+    assertEquals("No events from 2025-05-02T00:00 to 2025-05-04T00:00" +
+            System.lineSeparator(), this.stream.toString());
 
     // multiple events without locations
     this.resetStream();
     eventsInRange.add("- Gym: 2025-05-02T11:20 to 2025-05-02T12:20");
     eventsInRange.add("- Project: 2025-05-03T11:20 to 2025-05-04T11:20");
     eventsInRange.add("- Class: 2025-05-04T11:20 to 2025-05-04T02:20");
-    view.showEventsInRange(eventsInRange, LocalDateTime.of(2025, 5, 2, 0, 0), LocalDateTime.of(2025, 5, 4, 0, 0));
+    view.showEventsInRange(
+            eventsInRange, LocalDateTime.of(2025, 5, 2, 0, 0), LocalDateTime.of(2025, 5, 4, 0, 0));
     assertEquals("Events from 2025-05-02T00:00 to 2025-05-04T00:00:" + System.lineSeparator()
             + "- Gym: 2025-05-02T11:20 to 2025-05-02T12:20" + System.lineSeparator()
             + "- Project: 2025-05-03T11:20 to 2025-05-04T11:20" + System.lineSeparator()
-            + "- Class: 2025-05-04T11:20 to 2025-05-04T02:20" + System.lineSeparator(), this.stream.toString());
+            + "- Class: 2025-05-04T11:20 to 2025-05-04T02:20" +
+            System.lineSeparator(), this.stream.toString());
 
     // multiple events with locations
     this.resetStream();
@@ -94,11 +102,13 @@ public class CalendarViewImplTest {
     eventsInRange.add("- Gym (physical): 2025-05-02T11:20 to 2025-05-02T12:20");
     eventsInRange.add("- Project (online): 2025-05-03T11:20 to 2025-05-04T11:20");
     eventsInRange.add("- Class (physical): 2025-05-04T11:20 to 2025-05-04T02:20");
-    view.showEventsInRange(eventsInRange, LocalDateTime.of(2025, 5, 2, 0, 0), LocalDateTime.of(2025, 5, 4, 0, 0));
+    view.showEventsInRange(
+            eventsInRange, LocalDateTime.of(2025, 5, 2, 0, 0), LocalDateTime.of(2025, 5, 4, 0, 0));
     assertEquals("Events from 2025-05-02T00:00 to 2025-05-04T00:00:" + System.lineSeparator()
             + "- Gym (physical): 2025-05-02T11:20 to 2025-05-02T12:20" + System.lineSeparator()
             + "- Project (online): 2025-05-03T11:20 to 2025-05-04T11:20" + System.lineSeparator()
-            + "- Class (physical): 2025-05-04T11:20 to 2025-05-04T02:20" + System.lineSeparator(), this.stream.toString());
+            + "- Class (physical): 2025-05-04T11:20 to 2025-05-04T02:20" +
+            System.lineSeparator(), this.stream.toString());
 
 
   }

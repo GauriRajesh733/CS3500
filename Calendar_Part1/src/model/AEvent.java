@@ -6,7 +6,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Map;
 
-// NOTE: add builder pattern!
 public abstract class AEvent implements Event {
   protected final LocalDateTime startDateTime;
   protected final LocalDateTime endDateTime;

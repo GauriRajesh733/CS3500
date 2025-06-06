@@ -53,7 +53,7 @@ public class CalendarControllerImpl implements CalendarController {
     }
 
     // display error message if finished parsing commands in file input without exit command
-     v.showErrorMessage("File input must end with exit command");
+    v.showErrorMessage("File input must end with exit command");
   }
 }
 

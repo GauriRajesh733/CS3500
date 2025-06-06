@@ -2,7 +2,6 @@ package control;
 
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeParseException;
 
 import control.commands.CalendarCommand;
 import control.commands.EditEvents;

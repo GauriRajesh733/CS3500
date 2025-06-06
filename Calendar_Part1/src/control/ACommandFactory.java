@@ -27,7 +27,9 @@ abstract public class ACommandFactory implements CommandFactory {
     return index;
   }
 
-  protected String search(String input, int startIndex, int endIndex, String errorMessage) throws IllegalArgumentException {
+  protected String search(
+          String input, int startIndex, int endIndex, String errorMessage)
+          throws IllegalArgumentException {
     String keyword;
     try {
       keyword = input.substring(startIndex, endIndex);
@@ -45,7 +47,8 @@ abstract public class ACommandFactory implements CommandFactory {
       throw new IllegalArgumentException("Event subject cannot be empty");
     }
 
-    int structuralFromIndex = findStructuralKeyword(remaining, " from ", "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}");
+    int structuralFromIndex = findStructuralKeyword(
+            remaining, " from ", "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}");
     int structuralOnIndex = findStructuralKeyword(remaining, " on ", "\\d{4}-\\d{2}-\\d{2}");
 
     int firstKeywordIndex;
@@ -67,7 +70,8 @@ abstract public class ACommandFactory implements CommandFactory {
       firstKeywordIndex = structuralOnIndex;
       keyword = " on ";
     } else {
-      throw new IllegalArgumentException("Missing time specification (expected 'from DATETIME' or 'on DATE')");
+      throw new IllegalArgumentException(
+              "Missing time specification (expected 'from DATETIME' or 'on DATE')");
     }
 
     String subject = remaining.substring(0, firstKeywordIndex).trim();
@@ -114,7 +118,8 @@ abstract public class ACommandFactory implements CommandFactory {
     return true;
   }
 
-  protected void validDateTimeRange(String startDateTime, String endDateTime) throws IllegalArgumentException {
+  protected void validDateTimeRange(
+          String startDateTime, String endDateTime) throws IllegalArgumentException {
     if (!validDateTime(startDateTime)) {
       throw new IllegalArgumentException("Invalid start date and time: " + startDateTime);
     }

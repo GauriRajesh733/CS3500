@@ -36,10 +36,13 @@ public class Main {
       }
       // invalid command line args
       else {
-        throw new IllegalArgumentException("Not enough arguments, specify mode and file with commands if running headless mode");
+        throw new IllegalArgumentException(
+                "Not enough arguments, specify mode and " +
+                        "file with commands if running headless mode");
       }
     } catch (ArrayIndexOutOfBoundsException e) {
-      throw new IllegalArgumentException("Not enough arguments, specify mode and file with commands if running headless mode");
+      throw new IllegalArgumentException(
+              "Not enough arguments, specify mode and file with commands if running headless mode");
     }
   }
 }
