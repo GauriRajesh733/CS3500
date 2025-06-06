@@ -8,7 +8,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import control.ACommandFactory;
-import control.CalendarCommand;
 
 /**
  * Factory for creating calendar commands to add events to the calendar.

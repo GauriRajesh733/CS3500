@@ -6,6 +6,7 @@ import java.time.format.DateTimeParseException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import control.commands.CalendarCommand;
 import model.EventProperty;
 
 abstract public class ACommandFactory implements CommandFactory {
