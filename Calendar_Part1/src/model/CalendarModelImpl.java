@@ -3,6 +3,7 @@ package model;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,9 +19,8 @@ public class CalendarModelImpl implements CalendarModel {
   public void addSingleEvent(String subject, LocalDateTime startDateTime, LocalDateTime endDateTime) {
     // check if event already exists in calendar
     if (this.findSingleEvent(startDateTime, endDateTime, subject).isEmpty()) {
-      new SingleEvent(subject, startDateTime, endDateTime).addToCalendar(this.calendar);
-    }
-    else {
+      new SingleEvent(subject, startDateTime, endDateTime, null, null, null).addToCalendar(this.calendar);
+    } else {
       throw new IllegalArgumentException("Given event with start date, end date, and subject " +
               "already exists in calendar");
     }
@@ -30,89 +30,133 @@ public class CalendarModelImpl implements CalendarModel {
                              LocalDateTime startDateTime, LocalDateTime endDateTime) {
     // check if event already exists in calendar
     if (this.findSingleEvent(startDateTime, endDateTime, subject).isEmpty()) {
-      new SeriesEvent(subject, daysOfWeek, occurrences, startDateTime, endDateTime)
-              .addToCalendar(this.calendar);
-    }
-    else {
+      new SeriesEvent(subject, daysOfWeek, occurrences,
+      startDateTime, endDateTime, null, null, null).addToCalendar(this.calendar);
+    } else {
       throw new IllegalArgumentException("Given event with start date, end date, and subject already exists in calendar");
     }
   }
 
   @Override
   public void editSingleEvent(EventProperty propertyToEdit, LocalDateTime startDate, LocalDateTime endDate, String subject, String newProperty) {
-    // find event or events if single multiday event
-    ArrayList<AEvent> eventToEdit = this.findSingleEvent(startDate, endDate, subject);
+    ArrayList<AEvent> eventsToEdit = this.findSingleEvent(startDate, endDate, subject);
 
-    if (eventToEdit.isEmpty()) {
+    if (eventsToEdit.isEmpty()) {
       throw new IllegalArgumentException("No events in calendar with given start date, end date, and subject");
     }
 
-    for (AEvent event : eventToEdit) {
-      // if not editing start date update event
-      if (propertyToEdit != EventProperty.START  && propertyToEdit != EventProperty.END) {
-        event.editSingleEvent(propertyToEdit, newProperty);
-      }
-      // if editing start date
-      else {
-        // remove event from calendar
-        this.removeEvent(event);
-        // update event
-        event.editSingleEvent(propertyToEdit, newProperty);
-        // add event back to calendar
-        event.addToCalendar(this.calendar);
-      }
+    for (AEvent event : eventsToEdit) {
+      // remove event from calendar
+      this.removeEvent(event);
+      // create updated event
+      AEvent newEvent = event.editSingleEvent(propertyToEdit, newProperty);
+      // add updated event back to calendar
+      newEvent.addSingleEventToCalendar(this.calendar);
     }
+  }
+
+
+  private LocalDate[] datesBetween(LocalDate start, LocalDate end) {
+    LocalDate[] dates = new LocalDate[(int) start.until(end, ChronoUnit.DAYS) + 1];
+    for (int i = 0; i < dates.length; i++) {
+      dates[i] = start.plusDays(i);
+    }
+    return dates;
   }
 
   /**
    * Remove the given event from this calendar and the date if there are no other events that day.
    *
    * @param eventToRemove represents the event to remove.
-   */
-  public void removeEvent(AEvent eventToRemove) {
-    LocalDate dateToRemoveFrom = eventToRemove.getStartDate().toLocalDate();
-    ArrayList<AEvent> dayToRemoveEvent = this.calendar.get(dateToRemoveFrom);
-    dayToRemoveEvent.remove(eventToRemove);
+   **/
 
-    // remove calendar date key if no events
-    if (dayToRemoveEvent.isEmpty()) {
-      this.calendar.remove(dateToRemoveFrom);
+  public void removeEvent(AEvent eventToRemove) {
+    LocalDate[] dateRange = this.datesBetween(eventToRemove.startDateTime.toLocalDate(),
+            eventToRemove.endDateTime.toLocalDate());
+
+    for (LocalDate dateToRemoveFrom : dateRange) {
+      ArrayList<AEvent> newDateEntries = new ArrayList<>();
+      ArrayList<AEvent> dayToRemoveEvent = this.calendar.get(dateToRemoveFrom);
+
+      for (AEvent event : dayToRemoveEvent) {
+        if (!eventToRemove.sameEvent(event.getSubject(), event.getStartDate(), event.getEndDate())) {
+          newDateEntries.add(event);
+        }
+      }
+
+      this.calendar.put(dateToRemoveFrom, newDateEntries);
+    }
+
+    // remove calendar date keys if no events
+    for (LocalDate date : dateRange) {
+      ArrayList<AEvent> dayToRemoveEvent = this.calendar.get(date);
+      if (dayToRemoveEvent.isEmpty()) {
+        this.calendar.remove(date);
+      }
     }
   }
 
-  public void removeSeries(AEvent eventToRemove) {
+
+  public void removeEvents(AEvent eventToRemove, boolean removeSeries) {
     ArrayList<AEvent> eventsToRemove = eventToRemove.getEvents();
 
     for (AEvent event : eventsToRemove) {
-      this.removeEvent(event);
+      LocalDate[] dateRange = this.datesBetween(event.startDateTime.toLocalDate(),
+              event.endDateTime.toLocalDate());
+
+      for (LocalDate dateToRemoveFrom : dateRange) {
+        ArrayList<AEvent> newDateEntries = new ArrayList<>();
+
+        if (!this.calendar.containsKey(dateToRemoveFrom)) {
+          continue;
+        }
+
+        ArrayList<AEvent> dayToRemoveEvent = this.calendar.get(dateToRemoveFrom);
+
+        for (AEvent dayEvent : dayToRemoveEvent) {
+          if (removeSeries && !eventToRemove.sameSubjectAndStart(dayEvent.getSubject(), dayEvent.getStartDate())) {
+            newDateEntries.add(dayEvent);
+          }
+          else if (!removeSeries && !event.sameEvent(dayEvent.getSubject(), dayEvent.getStartDate(), dayEvent.getEndDate())) {
+            newDateEntries.add(dayEvent);
+          }
+        }
+
+        this.calendar.put(dateToRemoveFrom, newDateEntries);
+      }
+
+      // remove calendar date keys if no events
+      for (LocalDate date : dateRange) {
+        if (!this.calendar.containsKey(date)) {
+          continue;
+        }
+
+        ArrayList<AEvent> dayToRemoveEvent = this.calendar.get(date);
+        if (dayToRemoveEvent.isEmpty()) {
+          this.calendar.remove(date);
+        }
+      }
     }
   }
 
   @Override
   public void editEvents(EventProperty propertyToEdit, String subject, LocalDateTime startDate, String newProperty) {
-    // find event or events if single multiday event
-    ArrayList<AEvent> eventToEdit = this.findSeries(startDate, subject);
+    ArrayList<AEvent> eventsToEdit = this.findSeries(startDate, subject);
 
-    if (eventToEdit.isEmpty()) {
+    if (eventsToEdit.isEmpty()) {
       throw new IllegalArgumentException("No events in calendar with given start date, end date, and subject");
     }
 
-    for (AEvent event : eventToEdit) {
-      // if editing start date update event
-      if (propertyToEdit != EventProperty.START && propertyToEdit != EventProperty.END) {
-        event.editEvents(propertyToEdit, newProperty);
-      }
-      // if editing start date
-      else {
-        // remove event from calendar
-        this.removeEvent(event);
-        // update event
-        event.editEvents(propertyToEdit, newProperty);
-        // add event back to calendar
-        event.addToCalendar(this.calendar);
-      }
+    for (AEvent event : eventsToEdit) {
+      // remove event from calendar
+      this.removeEvents(event, false);
+      // update event
+      AEvent newEvent = event.editEvents(propertyToEdit, newProperty);
+      // add event back to calendar
+      newEvent.addToCalendar(this.calendar);
     }
   }
+
 
   //MULTIDAY EVENTS :(
   @Override
@@ -122,8 +166,8 @@ public class CalendarModelImpl implements CalendarModel {
       for (AEvent event : eventList) {
         LocalDate eventStartDate = event.getStartDate().toLocalDate();
         LocalDate eventEndDate = event.getEndDate().toLocalDate();
-        // check if date falls within range and event not already added (multiday events)
-        if (!date.isBefore(eventStartDate) && !date.isAfter(eventEndDate) && !events.contains(event.toString())) {
+        // check if date falls within range
+        if (!date.isBefore(eventStartDate) && !date.isAfter(eventEndDate)) {
           events.add(event.toString());
         }
       }
@@ -135,11 +179,11 @@ public class CalendarModelImpl implements CalendarModel {
   @Override
   public ArrayList<String> printEventsUsingInterval(LocalDateTime start, LocalDateTime end) {
     ArrayList<String> events = new ArrayList<>();
-    for (ArrayList<AEvent> eventList: this.calendar.values()) {
+    for (ArrayList<AEvent> eventList : this.calendar.values()) {
       for (AEvent event : eventList) {
         LocalDateTime eventStartDateTime = event.getStartDate();
         LocalDateTime eventEndDateTime = event.getEndDate();
-        if (!eventStartDateTime.isBefore(start) && !eventEndDateTime.isAfter(end) && !events.contains(event.toString())) {
+        if (!eventStartDateTime.isBefore(start) && !eventEndDateTime.isAfter(end)) {
           events.add(event.toString());
         }
       }
@@ -157,25 +201,20 @@ public class CalendarModelImpl implements CalendarModel {
     }
 
     for (AEvent event : eventToEdit) {
-      // if not editing start date update event
-      if (propertyToEdit != EventProperty.START && propertyToEdit != EventProperty.END) {
-        event.editSeriesEvent(propertyToEdit, newProperty);
-      }
-      // if editing start date
-      else {
-        // remove event from calendar
-        this.removeSeries(event);
-        // update event
-        event.editSeriesEvent(propertyToEdit, newProperty);
-        // add event back to calendar
-        event.addToCalendar(this.calendar);
-      }
+      // remove event from calendar
+      this.removeEvents(event, true);
+      // update event
+      AEvent newEvent = event.editSeriesEvent(propertyToEdit, newProperty);
+      // add event back to calendar
+      newEvent.addToCalendar(this.calendar);
     }
   }
+
+
   @Override
   public boolean showCalendarStatus(LocalDateTime dateTime) {
-    for (ArrayList<AEvent> eventList: this.calendar.values()) {
-      for (AEvent event: eventList) {
+    for (ArrayList<AEvent> eventList : this.calendar.values()) {
+      for (AEvent event : eventList) {
         LocalDateTime eventStartDate = event.getStartDate();
         LocalDateTime eventEndDate = event.getEndDate();
 
@@ -194,14 +233,22 @@ public class CalendarModelImpl implements CalendarModel {
       return singleEvent;
     }
 
-    ArrayList<AEvent> dayEvents = this.calendar.get(startDate.toLocalDate());
+    LocalDate[] dateRange = datesBetween(startDate.toLocalDate(), endDate.toLocalDate());
 
-    for (AEvent event : dayEvents) {
-      if (event.sameEvent(subject, startDate, endDate)) {
-        singleEvent.add(event);
-        // if single day event return event
-        if (event.getStartDate().toLocalDate().equals(event.getEndDate().toLocalDate())) {
-          return singleEvent;
+    for (LocalDate date : dateRange) {
+      if (!calendar.containsKey(date)) {
+        continue;
+      }
+
+      ArrayList<AEvent> dayEvents = this.calendar.get(date);
+
+      for (AEvent event : dayEvents) {
+        if (event.sameEvent(subject, startDate, endDate)) {
+          singleEvent.add(event);
+          // if single day event return event
+          if (event.getStartDate().toLocalDate().equals(event.getEndDate().toLocalDate())) {
+            return singleEvent;
+          }
         }
       }
     }
@@ -210,21 +257,19 @@ public class CalendarModelImpl implements CalendarModel {
   }
 
   private ArrayList<AEvent> findSeries(LocalDateTime startDate, String subject) {
-    ArrayList<AEvent> seriesEvent = new ArrayList<>();
-
+    ArrayList<AEvent> seriesEvents = new ArrayList<>();
     ArrayList<AEvent> dayEvents = this.calendar.get(startDate.toLocalDate());
 
     for (AEvent event : dayEvents) {
       if (event.sameSubjectAndStart(subject, startDate)) {
-        seriesEvent.add(event);
-        // if single day event or series event return event, if multiday single event get other days
+        seriesEvents.add(event);
         if (event.getStartDate().toLocalDate().equals(event.getEndDate().toLocalDate())) {
-          return seriesEvent;
+          return seriesEvents;
         }
       }
     }
 
-    return seriesEvent;
+    return seriesEvents;
   }
 
 }

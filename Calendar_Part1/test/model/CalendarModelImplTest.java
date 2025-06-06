@@ -21,10 +21,10 @@ public class CalendarModelImplTest {
   @Before
   public void setUp() {
     this.m = new CalendarModelImpl();
-    this.single = new SingleEvent("single", LocalDateTime.of(2025, 6, 3, 8, 0), LocalDateTime.of(2025, 6, 3, 17, 0));
-    this.multiday = new SingleEvent("multiday", LocalDateTime.of(2025, 7, 3, 8, 0), LocalDateTime.of(2025, 7, 5, 17, 0));
+    this.single = new SingleEvent("single", LocalDateTime.of(2025, 6, 3, 8, 0), LocalDateTime.of(2025, 6, 3, 17, 0), null, null, null);
+    this.multiday = new SingleEvent("multiday", LocalDateTime.of(2025, 7, 3, 8, 0), LocalDateTime.of(2025, 7, 5, 17, 0), null, null, null);
     this.days = new DayOfWeek[]{DayOfWeek.SATURDAY, DayOfWeek.SUNDAY};
-    this.series = new SeriesEvent("series", days, 4, LocalDateTime.of(2025, 8, 1, 5, 0), LocalDateTime.of(2025, 8, 1, 6, 0));
+    this.series = new SeriesEvent("series", days, 4, LocalDateTime.of(2025, 8, 1, 5, 0), LocalDateTime.of(2025, 8, 1, 6, 0), null, null, null);
   }
 
   // NOTE: ADD REMOVE TESTS!
@@ -51,7 +51,7 @@ public class CalendarModelImplTest {
 
     // verify changes
     for (AEvent date : series.getEvents()) {
-      assertTrue(m.printEventsForDate(date.getStartDate().toLocalDate()).contains(date));
+      assertTrue(m.printEventsForDate(date.getStartDate().toLocalDate()).contains(date.toString()));
     }
 
     // check that duplicate event with same start date, end date, and subject cannot be added
@@ -86,7 +86,7 @@ public class CalendarModelImplTest {
   @Test
   public void printEventsUsingInterval() {
     // print events for date range with no events
-    assertEquals(new ArrayList<AEvent>(), this.m.printEventsUsingInterval(LocalDateTime.of(2025, 6, 3, 8, 0), LocalDateTime.of(2025, 6, 3, 17, 0)));
+    assertEquals(new ArrayList<String>(), this.m.printEventsUsingInterval(LocalDateTime.of(2025, 6, 3, 8, 0), LocalDateTime.of(2025, 6, 3, 17, 0)));
 
     // print events for date range with events
     this.m.addSingleEvent("single", LocalDateTime.of(2025, 6, 3, 8, 0), LocalDateTime.of(2025, 6, 3, 17, 0));

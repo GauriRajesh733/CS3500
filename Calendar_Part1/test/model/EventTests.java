@@ -17,12 +17,12 @@ public class EventTests {
   @Before
   public void setUp() {
     this.single = new SingleEvent("class", LocalDateTime.of(2025, 9, 9, 8, 0),
-            LocalDateTime.of(2025, 9, 9, 10, 0));
+            LocalDateTime.of(2025, 9, 9, 10, 0), null, null, null);
     this.multiday = new SingleEvent("vacation", LocalDateTime.of(2025, 9, 9, 0, 0),
-            LocalDateTime.of(2025, 9, 16, 0, 0));
+            LocalDateTime.of(2025, 9, 16, 0, 0), null, null, null);
     DayOfWeek[] days = {DayOfWeek.MONDAY, DayOfWeek.WEDNESDAY};
     this.series = new SeriesEvent("lab", days, 2, LocalDateTime.of(2025, 1, 6, 14, 0),
-            LocalDateTime.of(2025, 1, 6, 16, 30));
+            LocalDateTime.of(2025, 1, 6, 16, 30), null, null, null);
   }
 
   @Test
@@ -259,7 +259,7 @@ public class EventTests {
     assertEquals("- vacation: 2025-09-09T00:00 to 2025-09-16T00:00", this.multiday.toString());
     assertEquals("- lab: 2025-01-06T14:00 to 2025-01-06T16:30", this.series.toString());
 
-    AEvent invalidSingle1 = new SingleEvent(null, LocalDateTime.parse("2025-09-09T08:00"), LocalDateTime.now());
+    AEvent invalidSingle1 = new SingleEvent(null, LocalDateTime.parse("2025-09-09T08:00"), LocalDateTime.now(), null, null, null);
     try {
       String s = invalidSingle1.toString();
       fail("Should have thrown an exception");
@@ -268,7 +268,7 @@ public class EventTests {
       assertEquals("Event is missing start date, end date, or subject", e.getMessage());
     }
 
-    AEvent invalidSingle2 = new SingleEvent("subject", null, LocalDateTime.now());
+    AEvent invalidSingle2 = new SingleEvent("subject", null, LocalDateTime.now(), null, null, null);
     try {
       String s = invalidSingle2.toString();
       fail("Should have thrown an exception");
@@ -277,7 +277,7 @@ public class EventTests {
       assertEquals("Event is missing start date, end date, or subject", e.getMessage());
     }
 
-    AEvent invalidSingle3 = new SingleEvent("subject", LocalDateTime.parse("2025-09-09T08:00"), null);
+    AEvent invalidSingle3 = new SingleEvent("subject", LocalDateTime.parse("2025-09-09T08:00"), null, null, null, null);
     try {
       String s = invalidSingle3.toString();
       fail("Should have thrown an exception");
