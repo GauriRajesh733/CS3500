@@ -97,6 +97,22 @@ class SeriesEvent extends AEvent {
 
   @Override
   public void addToCalendar(Map<LocalDate, ArrayList<AEvent>> calendar) {
+    // first get to first event in series event
+    SeriesEvent currentEvent = this.firstEvent();
+
+    // add this single event to calendar
+    if (!calendar.containsKey(currentEvent.getStartDate().toLocalDate())) {
+      calendar.put(currentEvent.getStartDate().toLocalDate(), new ArrayList<AEvent>());
+    }
+    calendar.get(currentEvent.getStartDate().toLocalDate()).add(currentEvent);
+
+    // add other events in this series to calendar
+    if (currentEvent.hasNext()) {
+      currentEvent.next().addRestToCalendar(calendar);
+    }
+  }
+
+  protected void addRestToCalendar(Map<LocalDate, ArrayList<AEvent>> calendar) {
     // add this single event to calendar
     if (!calendar.containsKey(this.startDateTime.toLocalDate())) {
       calendar.put(this.startDateTime.toLocalDate(), new ArrayList<AEvent>());
@@ -105,7 +121,7 @@ class SeriesEvent extends AEvent {
 
     // add other events in this series to calendar
     if (this.hasNext()) {
-      this.next.addToCalendar(calendar);
+      this.next().addRestToCalendar(calendar);
     }
   }
 
@@ -239,6 +255,11 @@ class SeriesEvent extends AEvent {
         LocalDateTime newStartDate = LocalDateTime.parse(newProperty);
         if (newStartDate.isAfter(this.endDateTime)) {
           throw new IllegalArgumentException("Start date time must be before end date time");
+        }
+        // unlink from previous events
+        if (this.hasPrev()) {
+          this.prev.setNext(null);
+          this.setPrev(null);
         }
         int followingOccurrences = this.followingOccurrences();
         return new SeriesEvent(this.subject, this.days, followingOccurrences, newStartDate,

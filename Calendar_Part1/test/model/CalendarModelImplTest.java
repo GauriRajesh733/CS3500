@@ -76,11 +76,12 @@ public class CalendarModelImplTest {
 
     assertEquals(1, this.m.printEventsForDate(single.getStartDate().toLocalDate()).size());
 
-    this.m.addSingleEvent("multiday", LocalDateTime.of(2025, 7, 3, 8, 0), LocalDateTime.of(2025, 7, 5, 17, 0));
-    this.m.addSingleEvent("multiday", LocalDateTime.of(2025, 7, 3, 8, 0), LocalDateTime.of(2025, 7, 5, 17, 0).plusHours(2));
-    this.m.addSingleEvent("multiday", LocalDateTime.of(2025, 7, 3, 8, 0), LocalDateTime.of(2025, 7, 5, 17, 0).plusHours(4));
+    this.m.addSingleEvent("multiday1", LocalDateTime.of(2025, 7, 3, 8, 0), LocalDateTime.of(2025, 7, 5, 17, 0));
+    //this.m.addSingleEvent("multiday2", LocalDateTime.of(2025, 7, 3, 8, 0), LocalDateTime.of(2025, 7, 5, 17, 0).plusHours(2));
+    //this.m.addSingleEvent("multiday3", LocalDateTime.of(2025, 7, 3, 8, 0), LocalDateTime.of(2025, 7, 5, 17, 0).plusHours(4));
 
-    assertEquals(3, this.m.printEventsForDate(multiday.getStartDate().toLocalDate()).size());
+    // 3 multiday events that show up on
+    assertEquals(9, this.m.printEventsForDate(LocalDate.of(2025, 7, 3)));
   }
 
   @Test
@@ -138,17 +139,43 @@ public class CalendarModelImplTest {
     }
   }
 
+  // NOTE: testing only for changes visible in model output
   @Test
-  public void editEvents() {
+  public void editEventsForSingleEvents() {
+    LocalDateTime startDate = LocalDateTime.of(2025, 6, 3, 8, 0);
+    LocalDateTime endDate = LocalDateTime.of(2025, 6, 3, 17, 0);
+
     // add events to calendar model
+    this.m.addSingleEvent("single", startDate, endDate);
+
+    // verify change
+    ArrayList<String> singleEventOutput1 = new ArrayList<>();
+    singleEventOutput1.add("- single: 2025-06-03T08:00 to 2025-06-03T17:00");
+    assertEquals(singleEventOutput1, this.m.printEventsForDate(LocalDate.of(2025, 6, 3)));
+
+    // EDIT SUBJECT
 
     // edit single event based on date and subject
+    this.m.editSingleEvent(EventProperty.SUBJECT, startDate, endDate, "single", "new subject");
 
     // verify changes to event
+    ArrayList<String> singleEventOutput2 = new ArrayList<>();
+    singleEventOutput2.add("- new subject: 2025-06-03T08:00 to 2025-06-03T17:00");
+    assertEquals(singleEventOutput2, this.m.printEventsForDate(LocalDate.of(2025, 6, 3)));
 
-    // no events in calendar to edit
+    // EDIT DESCRIPTION
+    this.m.editSingleEvent(EventProperty.DESCRIPTION, startDate, endDate, "new subject", "new description");
+
+    // verify changes to event
+    ArrayList<String> singleEventOutput3 = new ArrayList<>();
+    singleEventOutput3.add("- new subject: 2025-06-03T08:00 to 2025-06-03T17:00");
+    assertEquals(singleEventOutput3, this.m.printEventsForDate(LocalDate.of(2025, 6, 3)));
+
+
 
   }
+
+  // add tests for edit events for series!
 
   @Test
   public void editSeries() {
