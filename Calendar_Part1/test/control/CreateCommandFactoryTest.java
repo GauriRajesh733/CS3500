@@ -5,7 +5,7 @@ import org.junit.Test;
 import control.ACommandFactory;
 import control.ACommandFactoryTest;
 import control.commands.CalendarCommand;
-import control.commands.CreateCommandFactory;
+import control.CreateCommandFactory;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThrows;

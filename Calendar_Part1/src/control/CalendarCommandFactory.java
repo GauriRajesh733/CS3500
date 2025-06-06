@@ -2,7 +2,7 @@ package control;
 
 
 import control.commands.CalendarCommand;
-import control.commands.CreateCommandFactory;
+import control.CreateCommandFactory;
 
 final class CalendarCommandFactory {
 
