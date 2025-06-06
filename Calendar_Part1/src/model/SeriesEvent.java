@@ -259,6 +259,7 @@ class SeriesEvent extends AEvent {
         // unlink from previous events
         if (this.hasPrev()) {
           this.prev.setNext(null);
+          this.setPrev(null);
         }
         int followingOccurrences = this.followingOccurrences();
         return new SeriesEvent(this.subject, this.days, followingOccurrences, newStartDate,

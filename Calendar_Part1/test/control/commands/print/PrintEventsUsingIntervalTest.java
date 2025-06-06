@@ -18,14 +18,13 @@ import static org.junit.Assert.assertNotNull;
 
 public class PrintEventsUsingIntervalTest {
   private ByteArrayOutputStream outputStream;
-  private PrintStream printStream;
   private CalendarModel mockModel;
   private CalendarView mockView;
 
   @Before
   public void setUp() {
     outputStream = new ByteArrayOutputStream();
-    printStream = new PrintStream(outputStream);
+    PrintStream printStream = new PrintStream(outputStream);
     mockModel = new CalendarModelImpl();
     mockView = new CalendarViewImpl(printStream);
   }
