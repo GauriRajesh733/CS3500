@@ -62,7 +62,7 @@ public class CalendarCommandFactoryTest {
 
     //null input
     assertThrows(
-            NullPointerException.class, () -> {
+            IllegalArgumentException.class, () -> {
               factory.createCalendarCommand(null);
             });
 

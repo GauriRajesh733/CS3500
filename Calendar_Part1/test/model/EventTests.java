@@ -16,7 +16,8 @@ public class EventTests {
 
   @Before
   public void setUp() {
-    this.single = new SingleEvent("class", LocalDateTime.of(2025, 9, 9, 8, 0),
+    this.single = new SingleEvent(
+            "class", LocalDateTime.of(2025, 9, 9, 8, 0),
             LocalDateTime.of(2025, 9, 9, 10, 0), null, null, null);
     this.multiday = new SingleEvent("vacation", LocalDateTime.of(2025, 9, 9, 0, 0),
             LocalDateTime.of(2025, 9, 16, 0, 0), null, null, null);
@@ -92,26 +93,26 @@ public class EventTests {
   @Test
   public void editSingleEvent() {
     // edit single/multiday event 2025, 9, 9, 8, 0
-    this.single.editSingleEvent(EventProperty.START, "2025-09-09T09:30");
+    this.single = this.single.editSingleEvent(EventProperty.START, "2025-09-09T09:30");
     assertEquals("2025-09-09T09:30", this.single.getStartDate().toString());
 
-    this.single.editSingleEvent(EventProperty.END, "2027-10-09T00:00");
+    this.single = this.single.editSingleEvent(EventProperty.END, "2027-10-09T00:00");
     assertEquals("2027-10-09T00:00", this.single.getEndDate().toString());
 
-    this.single.editSingleEvent(EventProperty.LOCATION, "online");
+    this.single = this.single.editSingleEvent(EventProperty.LOCATION, "online");
     assertEquals(Location.ONLINE, this.single.getLocation());
 
-    this.single.editSingleEvent(EventProperty.DESCRIPTION, "at the airport");
+    this.single = this.single.editSingleEvent(EventProperty.DESCRIPTION, "at the airport");
     assertEquals("at the airport", this.single.getDescription());
 
-    this.single.editSingleEvent(EventProperty.STATUS, "public");
+    this.single = this.single.editSingleEvent(EventProperty.STATUS, "public");
     assertEquals(Status.PUBLIC, this.single.getStatus());
 
-    this.single.editSingleEvent(EventProperty.SUBJECT, "shopping");
+    this.single = this.single.editSingleEvent(EventProperty.SUBJECT, "shopping");
     assertEquals("shopping", this.single.getSubject());
 
     // edit series event
-    this.series.editSingleEvent(EventProperty.START, "2027-10-09T00:00");
+    this.series = this.series.editSingleEvent(EventProperty.START, "2027-10-09T00:00");
     assertEquals("2027-10-09T00:00", this.series.getStartDate().toString());
     // verify series event unlinked if changing start date (2 events to 1 event in series)
     assertEquals(1, this.series.getEvents().size());
@@ -143,50 +144,49 @@ public class EventTests {
   @Test
   public void editSeriesEvent() {
     // edit single/multiday event (editSeriesEvent has same effect as editSingleEvent)
-    this.single.editSeriesEvent(EventProperty.START, "2025-09-09T09:30");
+    this.single = this.single.editSeriesEvent(EventProperty.START, "2025-09-09T09:30");
     assertEquals("2025-09-09T09:30", this.single.getStartDate().toString());
 
-    this.single.editSeriesEvent(EventProperty.END, "2027-10-09T00:00");
+    this.single = this.single.editSeriesEvent(EventProperty.END, "2027-10-09T00:00");
     assertEquals("2027-10-09T00:00", this.single.getEndDate().toString());
 
-    this.single.editSeriesEvent(EventProperty.LOCATION, "online");
+    this.single = this.single.editSeriesEvent(EventProperty.LOCATION, "online");
     assertEquals(Location.ONLINE, this.single.getLocation());
 
-    this.single.editSeriesEvent(EventProperty.DESCRIPTION, "at the airport");
+    this.single = this.single.editSeriesEvent(EventProperty.DESCRIPTION, "at the airport");
     assertEquals("at the airport", this.single.getDescription());
 
-    this.single.editSeriesEvent(EventProperty.STATUS, "public");
+    this.single = this.single.editSeriesEvent(EventProperty.STATUS, "public");
     assertEquals(Status.PUBLIC, this.single.getStatus());
 
-    this.single.editSeriesEvent(EventProperty.SUBJECT, "shopping");
+    this.single = this.single.editSeriesEvent(EventProperty.SUBJECT, "shopping");
     assertEquals("shopping", this.single.getSubject());
 
-    // edit series event
-    this.series.editSeriesEvent(EventProperty.START, "2027-10-09T00:00");
-    assertEquals("2027-10-09T00:00", this.series.getStartDate().toString());
-    // verify series event not unlinked since all series change start date
-    assertEquals(2, this.series.getEvents().size());
+    AEvent earlierSeries = this.series.editSeriesEvent(EventProperty.START, "2025-08-01T04:00");
+    assertEquals("2025-08-01T04:00", earlierSeries.getStartDate().toString());
+    assertEquals("2025-08-01T06:00", earlierSeries.getEndDate().toString()); // End unchanged
+    assertEquals(2, earlierSeries.getEvents().size());
 
     // verify series event not unlinked if not changing start date
     this.setUp();
     assertEquals(2, this.series.getEvents().size());
-    this.series.editSeriesEvent(EventProperty.END, "2027-10-09T00:00");
+    this.series = this.series.editSeriesEvent(EventProperty.END, "2027-10-09T00:00");
     assertEquals("2027-10-09T00:00", this.series.getEndDate().toString());
     assertEquals(2, this.series.getEvents().size());
 
-    this.series.editSeriesEvent(EventProperty.LOCATION, "online");
+    this.series = this.series.editSeriesEvent(EventProperty.LOCATION, "online");
     assertEquals(Location.ONLINE, this.series.getLocation());
     assertEquals(2, this.series.getEvents().size());
 
-    this.series.editSeriesEvent(EventProperty.DESCRIPTION, "at the airport");
+    this.series = this.series.editSeriesEvent(EventProperty.DESCRIPTION, "at the airport");
     assertEquals("at the airport", this.series.getDescription());
     assertEquals(2, this.series.getEvents().size());
 
-    this.series.editSeriesEvent(EventProperty.STATUS, "public");
+    this.series = this.series.editSeriesEvent(EventProperty.STATUS, "public");
     assertEquals(Status.PUBLIC, this.series.getStatus());
     assertEquals(2, this.series.getEvents().size());
 
-    this.series.editSeriesEvent(EventProperty.SUBJECT, "shopping");
+    this.series = this.series.editSeriesEvent(EventProperty.SUBJECT, "shopping");
     assertEquals("shopping", this.series.getSubject());
     assertEquals(2, this.series.getEvents().size());
   }
@@ -194,22 +194,22 @@ public class EventTests {
   @Test
   public void editEvents() {
     // edit single/multiday event (editEvents has same effect as editSingleEvent)
-    this.single.editEvents(EventProperty.START, "2027-10-09T00:00");
+    this.single = this.single.editEvents(EventProperty.START, "2027-10-09T00:00");
     assertEquals("2027-10-09T00:00", this.single.getStartDate().toString());
 
-    this.single.editEvents(EventProperty.END, "2027-10-09T00:00");
+    this.single = this.single.editEvents(EventProperty.END, "2027-10-09T00:00");
     assertEquals("2027-10-09T00:00", this.single.getEndDate().toString());
 
-    this.single.editEvents(EventProperty.LOCATION, "online");
+    this.single = this.single.editEvents(EventProperty.LOCATION, "online");
     assertEquals(Location.ONLINE, this.single.getLocation());
 
-    this.single.editEvents(EventProperty.DESCRIPTION, "at the airport");
+    this.single = this.single.editEvents(EventProperty.DESCRIPTION, "at the airport");
     assertEquals("at the airport", this.single.getDescription());
 
-    this.single.editEvents(EventProperty.STATUS, "public");
+    this.single = this.single.editEvents(EventProperty.STATUS, "public");
     assertEquals(Status.PUBLIC, this.single.getStatus());
 
-    this.single.editEvents(EventProperty.SUBJECT, "shopping");
+    this.single = this.single.editEvents(EventProperty.SUBJECT, "shopping");
     assertEquals("shopping", this.single.getSubject());
 
     // edit series event

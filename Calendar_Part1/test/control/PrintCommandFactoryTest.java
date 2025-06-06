@@ -3,7 +3,7 @@ package control;
 import org.junit.Test;
 
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertThrows;
 
 public class PrintCommandFactoryTest extends ACommandFactoryTest {
 
@@ -34,35 +34,25 @@ public class PrintCommandFactoryTest extends ACommandFactoryTest {
     String invalidQuery4 = "print events from 2025-06-03T10:00 to 2025-06-31T12:00";
     String invalidQuery5 = "print events from 2025-06-03T10:00 to 2025-06-01T12:00";
 
-    try {
-      testFactory.createCalendarCommand(invalidQuery1);
-    } catch (IllegalArgumentException e) {
-      assert e.getMessage().contains("Invalid print command");
-    }
+    // Method 1: Using assertThrows (preferred)
+    assertThrows("Should reject 'print event' (missing s)",
+            IllegalArgumentException.class,
+            () -> testFactory.createCalendarCommand(invalidQuery1));
 
-    try {
-      testFactory.createCalendarCommand(invalidQuery2);
-    } catch (IllegalArgumentException e) {
-      assertTrue(e.getMessage().contains("Invalid print command"));
-    }
+    assertThrows("Should reject conflicting keywords",
+            IllegalArgumentException.class,
+            () -> testFactory.createCalendarCommand(invalidQuery2));
 
-    try {
-      testFactory.createCalendarCommand(invalidQuery3);
-    } catch (IllegalArgumentException e) {
-      assertTrue(e.getMessage().contains("Invalid date provided: 2025-06-31"));
-    }
+    assertThrows("Should reject invalid date",
+            IllegalArgumentException.class,
+            () -> testFactory.createCalendarCommand(invalidQuery3));
 
-    try {
-      testFactory.createCalendarCommand(invalidQuery4);
-    } catch (IllegalArgumentException e) {
-      assertTrue(e.getMessage().contains("Invalid date provided: 2025-06-31"));
-    }
+    assertThrows("Should reject invalid end date",
+            IllegalArgumentException.class,
+            () -> testFactory.createCalendarCommand(invalidQuery4));
 
-    try {
-      testFactory.createCalendarCommand(invalidQuery5);
-    } catch (IllegalArgumentException e) {
-      assertTrue(e.getMessage().contains("Start date cannot be after end date"));
-    }
-
+    assertThrows("Should reject end date before start date",
+            IllegalArgumentException.class,
+            () -> testFactory.createCalendarCommand(invalidQuery5));
   }
 }

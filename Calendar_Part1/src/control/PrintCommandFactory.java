@@ -13,16 +13,31 @@ import control.commands.PrintEventsUsingInterval;
 class PrintCommandFactory extends ACommandFactory {
   @Override
   public CalendarCommand createCalendarCommand(String input) {
-    if (input.startsWith("print events")) {
-      if (input.contains("on")) {
-        return this.printEvents(input);
-      } else if (input.contains("from") && input.contains("to")) {
-        return this.printEventsWithInterval(input);
-      } else {
-        throw new IllegalArgumentException("Invalid print events command: " + input);
-      }
+    if (!input.startsWith("print events")) {
+      throw new IllegalArgumentException("Invalid print events command: " + input);
     }
-    throw new IllegalArgumentException("Invalid print events command: " + input);
+
+    String remaining = input.substring(12).trim(); // Remove "print events"
+    if (hasIntervalPattern(remaining)) {
+      return this.printEventsWithInterval(input);
+    }
+    else if (hasSingleDatePattern(remaining)) {
+      return this.printEvents(input);
+    }
+    else {
+      throw new IllegalArgumentException("Invalid print events command: " + input);
+    }
+  }
+
+  private boolean hasIntervalPattern(String remaining) {
+    return remaining.startsWith("from ") &&
+            remaining.contains(" to ") &&
+            remaining.indexOf(" to ") > remaining.indexOf("from ");
+  }
+
+  private boolean hasSingleDatePattern(String remaining) {
+    return remaining.startsWith("on ") &&
+            remaining.split("\\s+").length == 2;
   }
 
   private CalendarCommand printEvents(String input) {
