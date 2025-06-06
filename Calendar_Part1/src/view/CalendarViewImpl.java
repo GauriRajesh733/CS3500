@@ -53,6 +53,8 @@ public class CalendarViewImpl implements CalendarView {
   @Override
   public void showErrorMessage(String errorMessage) {
     out.println(errorMessage);
-    out.println("Please enter a new command");
+    if (!errorMessage.equals("File input must end with exit command")) {
+      out.println("Please enter a new command");
+    }
   }
 }

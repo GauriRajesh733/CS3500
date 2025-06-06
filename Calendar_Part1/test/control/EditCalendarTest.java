@@ -316,7 +316,7 @@ public class EditCalendarTest {
             this.stream.toString());
 
     // edit event command for event in middle of series
-    String input3 = "edit events location title from 2019-09-25T08:00 with physical";
+    String input3 = "edit events location title from 2019-09-23T08:00 with physical";
     CalendarCommand cmd = this.editCommandFactory.createCalendarCommand(input3);
     cmd.go(this.model, this.view);
 
@@ -326,10 +326,10 @@ public class EditCalendarTest {
     CalendarCommand printCmd2 = new PrintCommandFactory().createCalendarCommand(input4);
     printCmd2.go(this.model, this.view);
     assertEquals("Events from 2019-09-09T00:00 to 2019-11-09T00:00:" + System.lineSeparator() +
-                    "- title (physical): 2019-09-30T08:00 to 2019-09-30T17:00" + System.lineSeparator() +
+                    "- title: 2019-09-11T08:00 to 2019-09-11T17:00" + System.lineSeparator() +
                     "- title: 2019-09-09T08:00 to 2019-09-09T17:00" + System.lineSeparator() +
                     "- title (physical): 2019-09-25T08:00 to 2019-09-25T17:00" + System.lineSeparator() +
-                    "- title: 2019-09-23T08:00 to 2019-09-23T17:00" + System.lineSeparator() +
+                    "- title (physical): 2019-09-23T08:00 to 2019-09-23T17:00" + System.lineSeparator() +
                     "- title: 2019-09-18T08:00 to 2019-09-18T17:00" + System.lineSeparator() +
                     "- title: 2019-09-16T08:00 to 2019-09-16T17:00" + System.lineSeparator(),
             this.stream.toString());

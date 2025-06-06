@@ -31,7 +31,7 @@ public class CalendarModelImpl implements CalendarModel {
     // check if event already exists in calendar
     if (this.findSingleEvent(startDateTime, endDateTime, subject).isEmpty()) {
       new SeriesEvent(subject, daysOfWeek, occurrences,
-      startDateTime, endDateTime, null, null, null).addToCalendar(this.calendar);
+              startDateTime, endDateTime, null, null, null).addToCalendar(this.calendar);
     } else {
       throw new IllegalArgumentException("Given event with start date, end date, and subject already exists in calendar");
     }
@@ -97,9 +97,7 @@ public class CalendarModelImpl implements CalendarModel {
   }
 
 
-  public void removeEvents(AEvent eventToRemove, boolean removeSeries) {
-    ArrayList<AEvent> eventsToRemove = eventToRemove.getEvents();
-
+  public void removeEvents(ArrayList<AEvent> eventsToRemove, boolean removeSeries) {
     for (AEvent event : eventsToRemove) {
       LocalDate[] dateRange = this.datesBetween(event.startDateTime.toLocalDate(),
               event.endDateTime.toLocalDate());
@@ -114,10 +112,9 @@ public class CalendarModelImpl implements CalendarModel {
         ArrayList<AEvent> dayToRemoveEvent = this.calendar.get(dateToRemoveFrom);
 
         for (AEvent dayEvent : dayToRemoveEvent) {
-          if (removeSeries && !eventToRemove.sameSubjectAndStart(dayEvent.getSubject(), dayEvent.getStartDate())) {
+          if (removeSeries && !event.sameSubjectAndStart(dayEvent.getSubject(), dayEvent.getStartDate())) {
             newDateEntries.add(dayEvent);
-          }
-          else if (!removeSeries && !event.sameEvent(dayEvent.getSubject(), dayEvent.getStartDate(), dayEvent.getEndDate())) {
+          } else if (!removeSeries && !event.sameEvent(dayEvent.getSubject(), dayEvent.getStartDate(), dayEvent.getEndDate())) {
             newDateEntries.add(dayEvent);
           }
         }
@@ -148,8 +145,20 @@ public class CalendarModelImpl implements CalendarModel {
     }
 
     for (AEvent event : eventsToEdit) {
-      // remove event from calendar
-      this.removeEvents(event, false);
+      if (propertyToEdit != EventProperty.START) {
+        // remove all events from calendar
+        this.removeEvents(event.getEvents(), false);
+      } else {
+        // only remove events from date onward
+        ArrayList<AEvent> eventsToRemove = event.getEvents();
+        for (int i = eventsToRemove.size() - 1; i >= 0; i--) {
+          if (eventsToRemove.get(i).getStartDate().isBefore(event.getStartDate())) {
+            eventsToRemove.remove(i);
+          }
+        }
+        this.removeEvents(eventsToRemove, false);
+      }
+
       // update event
       AEvent newEvent = event.editEvents(propertyToEdit, newProperty);
       // add event back to calendar
@@ -202,7 +211,7 @@ public class CalendarModelImpl implements CalendarModel {
 
     for (AEvent event : eventToEdit) {
       // remove event from calendar
-      this.removeEvents(event, true);
+      this.removeEvents(event.getEvents(), true);
       // update event
       AEvent newEvent = event.editSeriesEvent(propertyToEdit, newProperty);
       // add event back to calendar

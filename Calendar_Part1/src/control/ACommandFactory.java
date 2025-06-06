@@ -18,6 +18,10 @@ abstract public class ACommandFactory implements CommandFactory {
     int index;
     try {
       index = input.lastIndexOf(command);
+
+      if (command.equals(" ")) {
+        index = input.indexOf(command);
+      }
     } catch (StringIndexOutOfBoundsException e) {
       throw new IllegalArgumentException("Calendar command missing keyword " + command);
     }

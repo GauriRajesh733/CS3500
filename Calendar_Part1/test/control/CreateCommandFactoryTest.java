@@ -1,10 +1,10 @@
-package control.commands.create;
+package control;
 
 import org.junit.Test;
 
 import control.ACommandFactory;
 import control.ACommandFactoryTest;
-import control.CalendarCommand;
+import control.commands.CalendarCommand;
 import control.commands.CreateCommandFactory;
 
 import static org.junit.Assert.assertNotNull;
