@@ -1,8 +1,5 @@
-package control.commands.print;
+package control;
 import org.junit.Test;
-
-import control.ACommandFactoryTest;
-import control.commands.PrintCommandFactory;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -10,13 +7,13 @@ import static org.junit.Assert.assertTrue;
 public class PrintCommandFactoryTest extends ACommandFactoryTest {
 
   @Override
-  public PrintCommandFactory makeFactory() {
+  protected ACommandFactory makeFactory() {
     return new PrintCommandFactory();
   }
 
   @Test
   public void testValidPrintCommands() {
-    PrintCommandFactory testFactory = makeFactory();
+    ACommandFactory testFactory = makeFactory();
 
     String query1 = "print events on 2025-06-03";
 
@@ -28,7 +25,7 @@ public class PrintCommandFactoryTest extends ACommandFactoryTest {
 
   @Test
   public void testInvalidPrintCommands() {
-    PrintCommandFactory testFactory = makeFactory();
+    ACommandFactory testFactory = makeFactory();
 
     String invalidQuery1 = "print event on 2025-06-03";
     String invalidQuery2 = "print events from 2025-06-03T10:00 to 2025-06-03T12:00 on 2025-06-03";

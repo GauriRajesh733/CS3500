@@ -1,11 +1,8 @@
-package control.commands.create;
+package control;
 
 import org.junit.Test;
 
-import control.ACommandFactory;
-import control.ACommandFactoryTest;
-import control.CalendarCommand;
-import control.commands.CreateCommandFactory;
+import control.commands.CalendarCommand;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThrows;
@@ -18,7 +15,7 @@ import static org.junit.Assert.assertThrows;
 public class CreateCommandFactoryTest extends ACommandFactoryTest {
 
   @Override
-  public ACommandFactory makeFactory() {
+  protected ACommandFactory makeFactory() {
     return new CreateCommandFactory();
   }
 

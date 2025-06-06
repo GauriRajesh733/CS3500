@@ -1,4 +1,4 @@
-package control.commands;
+package control;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -7,12 +7,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.time.LocalDateTime;
 
-import control.ACommandFactory;
-import control.ACommandFactoryTest;
-import control.CalendarCommand;
+import control.commands.CalendarCommand;
 import model.CalendarModel;
 import model.CalendarModelImpl;
-import model.SingleEvent;
 import view.CalendarView;
 import view.CalendarViewImpl;
 
@@ -20,7 +17,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThrows;
 
-public class ShowCalendarStatusTest extends ACommandFactoryTest {
+public class StatusCommandFactoryTest extends ACommandFactoryTest {
 
   private ByteArrayOutputStream outputStream;
   private CalendarModel mockModel;
@@ -28,7 +25,7 @@ public class ShowCalendarStatusTest extends ACommandFactoryTest {
 
   @Override
   public ACommandFactory makeFactory() {
-    return new ShowCalendarStatus();
+    return new StatusCommandFactory();
   }
 
   @Before
@@ -43,7 +40,7 @@ public class ShowCalendarStatusTest extends ACommandFactoryTest {
   public void testCreateShowStatus() {
     String input = "show status on 2025-05-05T10:00";
 
-    ShowCalendarStatus factory = (ShowCalendarStatus) makeFactory();
+    ACommandFactory factory = makeFactory();
 
     CalendarCommand command = commandFactory.createCalendarCommand(input);
     assertNotNull("Command should be created", command);
@@ -70,9 +67,7 @@ public class ShowCalendarStatusTest extends ACommandFactoryTest {
 
     String input = "show status on 2025-05-05T10:00";
 
-    SingleEvent event = new SingleEvent("Test Event", testDateTime, testDateTime.plusHours(1));
-
-    mockModel.addEvent(event);
+    mockModel.addSingleEvent("Test Event", testDateTime, testDateTime.plusHours(1));
 
     CalendarCommand cmd = commandFactory.createCalendarCommand(input);
     cmd.go(mockModel, mockView);

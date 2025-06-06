@@ -6,7 +6,12 @@ import control.commands.CreateCommandFactory;
 
 final class CalendarCommandFactory {
 
-  public CalendarCommand createCalendarCommand(String input) {
+  public CalendarCommand createCalendarCommand(String input) throws IllegalArgumentException {
+
+    if (input == null || input.trim().isEmpty()) {
+      throw new IllegalArgumentException("Invalid calendar event command: " + input);
+    }
+
     // create CreateCalendarEvent command
     if (input.startsWith("create event")) {
       return new CreateCommandFactory().createCalendarCommand(input);

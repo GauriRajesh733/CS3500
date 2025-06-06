@@ -1,10 +1,9 @@
 package control;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import control.commands.CalendarCommand;
 import model.EventProperty;
@@ -35,14 +34,62 @@ abstract public class ACommandFactory implements CommandFactory {
     return keyword;
   }
 
-  protected String searchDateTimeWithRegex(String input) {
-    Pattern pattern = Pattern.compile("(\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2})");
-    Matcher matcher = pattern.matcher(input);
-    if (matcher.find()) {
-      return matcher.group(0); // returns the first match
-    } else {
-      throw new IllegalArgumentException("Invalid date-time format in input: " + input);
+  protected SubjectAndRest extractSubject(String remaining) {
+    remaining = remaining.trim();
+
+    if (remaining.isEmpty()) {
+      throw new IllegalArgumentException("Event subject cannot be empty");
     }
+
+    int structuralFromIndex = findStructuralKeyword(remaining, " from ", "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}");
+    int structuralOnIndex = findStructuralKeyword(remaining, " on ", "\\d{4}-\\d{2}-\\d{2}");
+
+    int firstKeywordIndex;
+    String keyword;
+
+
+    if (structuralFromIndex != -1 && structuralOnIndex != -1) {
+      if (structuralFromIndex < structuralOnIndex) {
+        firstKeywordIndex = structuralFromIndex;
+        keyword = " from ";
+      } else {
+        firstKeywordIndex = structuralOnIndex;
+        keyword = " on ";
+      }
+    } else if (structuralFromIndex != -1) {
+      firstKeywordIndex = structuralFromIndex;
+      keyword = " from ";
+    } else if (structuralOnIndex != -1) {
+      firstKeywordIndex = structuralOnIndex;
+      keyword = " on ";
+    } else {
+      throw new IllegalArgumentException("Missing time specification (expected 'from DATETIME' or 'on DATE')");
+    }
+
+    String subject = remaining.substring(0, firstKeywordIndex).trim();
+    if (subject.isEmpty()) {
+      throw new IllegalArgumentException("Subject cannot be empty");
+    }
+
+    String commandStructure = remaining.substring(firstKeywordIndex + keyword.length()).trim();
+
+    return new SubjectAndRest(subject, commandStructure);
+  }
+
+  private int findStructuralKeyword(String input, String keyword, String dateTimePattern) {
+    int index = 0;
+    while ((index = input.indexOf(keyword, index)) != -1) {
+      int afterKeyword = index + keyword.length();
+      if (afterKeyword < input.length()) {
+        String remaining = input.substring(afterKeyword);
+        String[] tokens = remaining.split("\\s+");
+        if (tokens.length > 0 && tokens[0].matches(dateTimePattern)) {
+          return index;
+        }
+      }
+      index++;
+    }
+    return -1;
   }
 
   protected boolean validDateTime(String input) throws IllegalArgumentException {
@@ -63,22 +110,26 @@ abstract public class ACommandFactory implements CommandFactory {
     return true;
   }
 
-  protected boolean validStartAndEndTime(String startInput, String endInput) throws IllegalArgumentException {
+  protected void validDateTimeRange(String startDateTime, String endDateTime) throws IllegalArgumentException {
+    if (!validDateTime(startDateTime)) {
+      throw new IllegalArgumentException("Invalid start date and time: " + startDateTime);
+    }
+    if (!validDateTime(endDateTime)) {
+      throw new IllegalArgumentException("Invalid end date and time: " + endDateTime);
+    }
+    if (!startDateIsBeforeEndDate(startDateTime, endDateTime)) {
+      throw new IllegalArgumentException("Start date and time must be before end date and time");
+    }
+  }
+
+  private boolean startDateIsBeforeEndDate(
+          String startInput, String endInput) throws IllegalArgumentException {
     if (!validDateTime(startInput) || !validDateTime(endInput)) {
       return false;
     }
     LocalDateTime startDateTime = LocalDateTime.parse(startInput);
     LocalDateTime endDateTime = LocalDateTime.parse(endInput);
-    return !startDateTime.isAfter(endDateTime); // start time must be before end time
-  }
-
-  protected void validateKeywords(String input) {
-    if (input.contains("on") && input.contains("from")) {
-      throw new IllegalArgumentException("Cannot mix 'on' and 'from/to' keywords: " + input);
-    }
-    if (input.contains("times") && input.contains("until")) {
-      throw new IllegalArgumentException("Cannot mix 'for X times' and 'until date' keywords: " + input);
-    }
+    return startDateTime.isBefore(endDateTime);
   }
 
   protected boolean validNewProperty(String input, EventProperty propertyToEdit) {
@@ -95,6 +146,58 @@ abstract public class ACommandFactory implements CommandFactory {
         return input.equals("public") || input.equals("private");
       default:
         throw new IllegalArgumentException("Invalid property to edit for event");
+    }
+  }
+
+  protected boolean validOccurrencesNumber(String input) {
+    try {
+      int occurrences = Integer.parseInt(input);
+      return occurrences > 0; // occurrences must be a positive integer
+    } catch (NumberFormatException e) {
+      return false; // not a valid integer
+    }
+  }
+
+  protected static class SubjectAndRest {
+    protected final String subject;
+    protected final String remaining;
+
+    SubjectAndRest(String subject, String remaining) {
+      this.subject = subject;
+      this.remaining = remaining.trim();
+    }
+  }
+
+  protected DayOfWeek[] parseWeekdays(String weekdays) {
+    if (weekdays == null || weekdays.isEmpty()) {
+      throw new IllegalArgumentException("Weekdays cannot be empty");
+    }
+
+    DayOfWeek[] result = new DayOfWeek[weekdays.length()];
+    for (int i = 0; i < weekdays.length(); i++) {
+      result[i] = charToWeekday(weekdays.charAt(i));
+    }
+    return result;
+  }
+
+  protected static DayOfWeek charToWeekday(char c) {
+    switch (c) {
+      case 'M':
+        return DayOfWeek.MONDAY;
+      case 'T':
+        return DayOfWeek.TUESDAY;
+      case 'W':
+        return DayOfWeek.WEDNESDAY;
+      case 'R':
+        return DayOfWeek.THURSDAY;
+      case 'F':
+        return DayOfWeek.FRIDAY;
+      case 'S':
+        return DayOfWeek.SATURDAY;
+      case 'U':
+        return DayOfWeek.SUNDAY;
+      default:
+        throw new IllegalArgumentException("Invalid weekday: " + c);
     }
   }
 }
