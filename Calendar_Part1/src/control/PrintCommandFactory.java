@@ -13,13 +13,16 @@ import control.commands.PrintEventsUsingInterval;
 class PrintCommandFactory extends ACommandFactory {
   @Override
   public CalendarCommand createCalendarCommand(String input) {
-    if (input.contains("on")) {
-      return this.printEvents(input);
-    } else if (input.contains("from") && input.contains("to")) {
-      return this.printEventsWithInterval(input);
-    } else {
-      throw new IllegalArgumentException("Invalid print command" + input);
+    if (input.startsWith("print events")) {
+      if (input.contains("on")) {
+        return this.printEvents(input);
+      } else if (input.contains("from") && input.contains("to")) {
+        return this.printEventsWithInterval(input);
+      } else {
+        throw new IllegalArgumentException("Invalid print events command: " + input);
+      }
     }
+    throw new IllegalArgumentException("Invalid print events command: " + input);
   }
 
   private CalendarCommand printEvents(String input) {

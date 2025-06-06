@@ -91,8 +91,8 @@ public class StatusCommandFactoryTest extends ACommandFactoryTest {
     String[] invalidInputs = {
             "show",
             "show status",
-            //"show on 2025-05-05T10:00",
-            //"status on 2025-05-05T10:00",
+            "show on 2025-05-05T10:00",
+            "status on 2025-05-05T10:00",
             "show status on 2025-05-05",
 
     };
