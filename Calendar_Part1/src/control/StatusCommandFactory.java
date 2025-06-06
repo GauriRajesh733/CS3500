@@ -13,7 +13,7 @@ class StatusCommandFactory extends ACommandFactory {
 
   @Override
   public CalendarCommand createCalendarCommand(String input) {
-    if (input.contains("on")) {
+    if (input.contains("on") && input.contains(" show status")) {
       return this.showStatus(input);
     } else {
       throw new IllegalArgumentException("Invalid show status command" + input);
