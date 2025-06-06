@@ -294,7 +294,7 @@ public class CreateCommandFactoryTest extends ACommandFactoryTest {
                     "create event Test from 2025-06-04T10:00 to 2025-06-04T11:00 " +
                             "repeats X for 5 times"));
 
-    assertThrows(StringIndexOutOfBoundsException.class,
+    assertThrows(IllegalArgumentException.class,
             () -> commandFactory.createCalendarCommand(""));
 
     // Multiple keywords in command
