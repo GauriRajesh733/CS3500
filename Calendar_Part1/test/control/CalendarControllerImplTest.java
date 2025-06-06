@@ -113,7 +113,6 @@ public class CalendarControllerImplTest {
             "Please enter a new command" + System.lineSeparator() +
             "File input must end with exit command" + System.lineSeparator() +
             "File input must end with exit command" + System.lineSeparator(), os.toString());
-
   }
 
 

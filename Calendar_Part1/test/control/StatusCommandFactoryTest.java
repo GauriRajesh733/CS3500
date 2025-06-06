@@ -72,7 +72,7 @@ public class StatusCommandFactoryTest extends ACommandFactoryTest {
     CalendarCommand cmd = commandFactory.createCalendarCommand(input);
     cmd.run(mockModel, mockView);
 
-    assertEquals("Busy on 2025-05-05T10:00\n", outputStream.toString());
+    assertEquals("Busy on 2025-05-05T10:00" + System.lineSeparator(), outputStream.toString());
   }
 
   @Test
@@ -83,7 +83,7 @@ public class StatusCommandFactoryTest extends ACommandFactoryTest {
     CalendarCommand cmd = commandFactory.createCalendarCommand(input);
     cmd.run(mockModel, mockView);
 
-    assertEquals("Available on 2025-05-05T10:00\n", outputStream.toString());
+    assertEquals("Available on 2025-05-05T10:00" + System.lineSeparator(), outputStream.toString());
   }
 
   @Test
