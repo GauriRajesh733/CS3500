@@ -5,9 +5,16 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
+/**
+ * Represents view of calendar that is presented to users in command line.
+ */
 public class CalendarViewImpl implements CalendarView {
   private final PrintStream out;
 
+  /**
+   * Constructs a calendar view.
+   * @param out represents output stream.
+   */
   public CalendarViewImpl(PrintStream out) {
     this.out = out;
   }

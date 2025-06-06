@@ -29,7 +29,12 @@ public class CreateSingleEvent implements CalendarCommand {
             startDate.getDayOfMonth(), 17, 0);
   }
 
-  // create single day event
+  /**
+   * Constructor to create a single event with specific start and end times.
+   * @param subject subject of the event
+   * @param startDateTime start date and time for the event
+   * @param endDateTime end date and time for the event
+   */
   public CreateSingleEvent(String subject, LocalDateTime startDateTime, LocalDateTime endDateTime) {
     this.subject = subject;
     this.startDate = startDateTime;

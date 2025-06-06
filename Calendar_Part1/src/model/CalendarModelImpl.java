@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Represents a calendar that can store single events and series of events that can be edited.
+ */
 public class CalendarModelImpl implements CalendarModel {
   private final Map<LocalDate, ArrayList<AEvent>> calendar;
 
@@ -43,7 +46,7 @@ public class CalendarModelImpl implements CalendarModel {
   @Override
   public void editSingleEvent(
           EventProperty propertyToEdit, LocalDateTime startDate,
-          LocalDateTime endDate, String subject, String newProperty) {
+          LocalDateTime endDate, String subject, String newProperty) throws IllegalArgumentException {
     ArrayList<AEvent> eventsToEdit = this.findSingleEvent(startDate, endDate, subject);
 
     if (eventsToEdit.isEmpty()) {
@@ -62,6 +65,12 @@ public class CalendarModelImpl implements CalendarModel {
   }
 
 
+  /**
+   * Get list of dates between given start and end date.
+   * @param start represents start date.
+   * @param end represents end date.
+   * @return an array of dates in given range.
+   */
   private LocalDate[] datesBetween(LocalDate start, LocalDate end) {
     LocalDate[] dates = new LocalDate[(int) start.until(end, ChronoUnit.DAYS) + 1];
     for (int i = 0; i < dates.length; i++) {
@@ -151,7 +160,7 @@ public class CalendarModelImpl implements CalendarModel {
   @Override
   public void editEvents(
           EventProperty propertyToEdit, String subject,
-          LocalDateTime startDate, String newProperty) {
+          LocalDateTime startDate, String newProperty) throws IllegalArgumentException {
     ArrayList<AEvent> eventsToEdit = this.findSeries(startDate, subject);
 
     if (eventsToEdit.isEmpty()) {
@@ -218,7 +227,7 @@ public class CalendarModelImpl implements CalendarModel {
   @Override
   public void editSeries(
           EventProperty propertyToEdit, String subject,
-          LocalDateTime startDate, String newProperty) {
+          LocalDateTime startDate, String newProperty) throws IllegalArgumentException {
     // find event or events if single multiday event
     ArrayList<AEvent> eventToEdit = this.findSeries(startDate, subject);
 
@@ -257,6 +266,14 @@ public class CalendarModelImpl implements CalendarModel {
     return false;
   }
 
+  /**
+   * Finds the single event or list of events if a multiday event in this calendar based on the
+   * given information.
+   * @param startDate represents the start date.
+   * @param endDate represents the end date.
+   * @param subject represents the subject.
+   * @return list with single event or multiple events if multiday event based on given information.
+   */
   private ArrayList<AEvent> findSingleEvent(
           LocalDateTime startDate, LocalDateTime endDate, String subject) {
     ArrayList<AEvent> singleEvent = new ArrayList<>();
@@ -288,6 +305,12 @@ public class CalendarModelImpl implements CalendarModel {
     return singleEvent;
   }
 
+  /**
+   * Find list of all events in a series based on start date and subject.
+   * @param startDate represents the start date.
+   * @param subject represents the subject.
+   * @return list of events in this series.
+   */
   private ArrayList<AEvent> findSeries(LocalDateTime startDate, String subject) {
     ArrayList<AEvent> seriesEvents = new ArrayList<>();
     ArrayList<AEvent> dayEvents = this.calendar.get(startDate.toLocalDate());
