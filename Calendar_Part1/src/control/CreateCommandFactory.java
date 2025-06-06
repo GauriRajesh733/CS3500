@@ -5,6 +5,12 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.time.DayOfWeek;
 
+import javax.print.DocFlavor;
+
+import control.commands.CalendarCommand;
+import control.commands.CreateEventSeries;
+import control.commands.CreateSingleEvent;
+
 /**
  * Factory for creating calendar commands to add events to the calendar.
  * This factory handles various types of event creation commands.
@@ -29,8 +35,8 @@ final class CreateCommandFactory extends ACommandFactory {
       throw new IllegalArgumentException("Invalid date/time format in command: " + input, e);
     } catch (NumberFormatException e) {
       throw new IllegalArgumentException("Invalid number format in command: " + input, e);
-    } catch (Exception e) {
-      throw new IllegalArgumentException("Invalid create event command: " + input, e);
+    } catch (StringIndexOutOfBoundsException e) {
+      throw new IllegalArgumentException("Invalid command format: " + input, e);
     }
   }
 
@@ -41,38 +47,38 @@ final class CreateCommandFactory extends ACommandFactory {
       throw new IllegalArgumentException("Create command must have at least an event subject.");
     }
 
-    // Single event creation
-    if (length == 4 && parts[0].equals("from") && parts[2].equals("to")) {
-      return createSingleEvent(subject, parts[1], parts[3]);
+    // Single event creation (from/to keywords stripped by extractSubject)
+    if (length == 3 && parts[1].equals("to")) {
+      return createSingleEvent(subject, parts[0], parts[2]);
     }
 
-    // N-event series creation
-    if (length == 9 && parts[0].equals("from") && parts[2].equals("to")
-            && parts[4].equals("repeats") && parts[6].equals("for") && parts[8].equals("times")) {
-      return createNEventSeries(subject, parts[1], parts[3], parts[5], parts[7]);
+    // N-event series creation (from/to keywords stripped)
+    if (length == 8 && parts[1].equals("to")
+            && parts[3].equals("repeats") && parts[5].equals("for") && parts[7].equals("times")) {
+      return createNEventSeries(subject, parts[0], parts[2], parts[4], parts[6]);
     }
 
-    // Events with end date creation
-    if (length == 8 && parts[0].equals("from") && parts[2].equals("to")
-            && parts[4].equals("repeats") && parts[6].equals("until")) {
-      return createEventsWithEndDate(subject, parts[1], parts[3], parts[5], parts[7]);
+    // Events with end date creation (from/to keywords stripped)
+    if (length == 7 && parts[1].equals("to")
+            && parts[3].equals("repeats") && parts[5].equals("until")) {
+      return createEventsWithEndDate(subject, parts[0], parts[2], parts[4], parts[6]);
     }
 
-    //All day event creation
-    if (length == 2 && parts[0].equals("on")) {
-      return createAllDayEvent(subject, parts[1]);
+    // All day event creation (on keyword stripped by extractSubject)
+    if (length == 1) {
+      return createAllDayEvent(subject, parts[0]);
     }
 
-    //All day events repeats N times
-    if (length == 7 && parts[0].equals("on") && parts[2].equals("repeats")
-            && parts[4].equals("for") && parts[6].equals("times")) {
-      return createAllDayEvents(subject, parts[1], parts[3], parts[5]);
+    // All day events repeats N times (on keyword stripped)
+    if (length == 6 && parts[1].equals("repeats")
+            && parts[3].equals("for") && parts[5].equals("times")) {
+      return createAllDayEvents(subject, parts[0], parts[2], parts[4]);
     }
 
-    // All day events with end date
-    if (length == 6 && parts[0].equals("on") && parts[2].equals("repeats")
-            && parts[4].equals("until")) {
-      return createAllDayEventsWithEndDate(subject, parts[1], parts[3], parts[5]);
+    // All day events with end date (on keyword stripped)
+    if (length == 5 && parts[1].equals("repeats")
+            && parts[3].equals("until")) {
+      return createAllDayEventsWithEndDate(subject, parts[0], parts[2], parts[4]);
     }
 
     throw new IllegalArgumentException("Invalid create command format. Expected one of: " +

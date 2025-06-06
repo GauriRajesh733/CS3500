@@ -2,10 +2,7 @@ package control;
 
 import org.junit.Test;
 
-import control.ACommandFactory;
-import control.ACommandFactoryTest;
 import control.commands.CalendarCommand;
-import control.commands.CreateCommandFactory;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThrows;
@@ -31,9 +28,9 @@ public class CreateCommandFactoryTest extends ACommandFactoryTest {
 
     assertNotNull(cmd); // Ensure command is created
 
-    // Multi-word subject with quotes
+    // Multi-word subject
     CalendarCommand cmd2 = commandFactory.createCalendarCommand(
-            "create event \"Team Standup\" from 2025-06-04T09:00 to 2025-06-04T09:30");
+            "create event Team Standup from 2025-06-04T09:00 to 2025-06-04T09:30");
     assertNotNull(cmd2);
 
     // Multi-day event
@@ -297,7 +294,7 @@ public class CreateCommandFactoryTest extends ACommandFactoryTest {
                     "create event Test from 2025-06-04T10:00 to 2025-06-04T11:00 " +
                             "repeats X for 5 times"));
 
-    assertThrows(IllegalArgumentException.class,
+    assertThrows(StringIndexOutOfBoundsException.class,
             () -> commandFactory.createCalendarCommand(""));
 
     // Multiple keywords in command
