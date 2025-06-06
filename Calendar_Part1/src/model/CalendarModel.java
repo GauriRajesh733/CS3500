@@ -23,7 +23,5 @@ public interface CalendarModel {
 
   boolean showCalendarStatus(LocalDateTime date);
 
-  void removeEvent(AEvent eventToRemove);
-
-  void removeSeries(AEvent eventToRemove);
+  void removeEvents(AEvent eventToRemove, boolean removeSeries);
 }

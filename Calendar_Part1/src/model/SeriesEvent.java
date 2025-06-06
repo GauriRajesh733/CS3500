@@ -10,15 +10,28 @@ import java.util.Map;
 class SeriesEvent extends AEvent {
   private SeriesEvent next;
   private SeriesEvent prev;
+  private final DayOfWeek[] days;
 
-  public SeriesEvent(String subject, LocalDateTime startDateTime, LocalDateTime endDateTime,
-                     String description, Location location, Status status) {
+  protected SeriesEvent(String subject, LocalDateTime startDateTime, LocalDateTime endDateTime,
+                        String description, Location location, Status status,
+                        SeriesEvent prev, SeriesEvent next, DayOfWeek[] days) {
     super(subject, startDateTime, endDateTime, description, location, status);
+    this.prev = prev;
+    if (this.hasPrev()) {
+      this.prev.setNext(this);
+    }
+    this.next = next;
+    if (this.hasNext()) {
+      this.next.setPrev(this);
+    }
+    this.days = days;
   }
 
-  public SeriesEvent(String subject, DayOfWeek[] daysOfWeek, int occurrences,
-                     LocalDateTime startDateTime, LocalDateTime endDateTime) {
-    super(subject, startDateTime, endDateTime, null, null, null);
+  public SeriesEvent(String subject, DayOfWeek[] days, int occurrences,
+                     LocalDateTime startDateTime, LocalDateTime endDateTime,
+                     String description, Location location, Status status) {
+    super(subject, startDateTime, endDateTime, description, location, status);
+    this.days = days;
 
     int eventCount = 0;
     this.prev = null;
@@ -29,10 +42,9 @@ class SeriesEvent extends AEvent {
     SeriesEvent nextEvent;
 
     while (eventCount < occurrences - 1) {
-      DayOfWeek currentDayOfWeek = daysOfWeek[eventCount % daysOfWeek.length];
-      LocalDateTime nextStartDate = getNextWeekDate(daysOfWeek, currentEvent, true);
-      LocalDateTime nextEndDate = getNextWeekDate(daysOfWeek, currentEvent, false);
-      nextEvent = new SeriesEvent(subject, nextStartDate, nextEndDate);
+      LocalDateTime nextStartDate = getNextWeekDate(days, currentEvent, true);
+      LocalDateTime nextEndDate = getNextWeekDate(days, currentEvent, false);
+      nextEvent = new SeriesEvent(days, subject, nextStartDate, nextEndDate);
 
       currentEvent.setNext(nextEvent);
       nextEvent.setPrev(currentEvent);
@@ -48,11 +60,11 @@ class SeriesEvent extends AEvent {
     }
   }
 
-
-  public SeriesEvent(String subject, LocalDateTime startDateTime, LocalDateTime endDateTime) {
+  public SeriesEvent(DayOfWeek[] days, String subject, LocalDateTime startDateTime, LocalDateTime endDateTime) {
     super(subject, startDateTime, endDateTime, null, null, null);
     this.next = null;
     this.prev = null;
+    this.days = days;
   }
 
   protected LocalDateTime getNextWeekDate(DayOfWeek[] daysOfWeek, AEvent currentEvent, boolean startDate) {
@@ -97,27 +109,47 @@ class SeriesEvent extends AEvent {
     }
   }
 
+  public void addSingleEventToCalendar(Map<LocalDate, ArrayList<AEvent>> calendar) {
+    if (!calendar.containsKey(this.startDateTime.toLocalDate())) {
+      calendar.put(this.startDateTime.toLocalDate(), new ArrayList<AEvent>());
+    }
+    calendar.get(this.startDateTime.toLocalDate()).add(this);
+  }
+
   @Override
   public AEvent editSingleEvent(EventProperty propertyToEdit, String newProperty) throws
           IllegalArgumentException {
     switch (propertyToEdit) {
-      // if not editing start or end date call super method
+      // if not editing start date keep event in series
       case SUBJECT:
         return new SeriesEvent(newProperty, this.startDateTime, this.endDateTime, this.description
-                , this.location, this.status);
+                , this.location, this.status, this.prev, this.next, this.days);
       case DESCRIPTION:
         return new SeriesEvent(this.subject, this.startDateTime, this.endDateTime, newProperty
-                , this.location, this.status);
+                , this.location, this.status, this.prev, this.next, this.days);
       case LOCATION:
         return new SeriesEvent(this.subject, this.startDateTime, this.endDateTime, this.description
-                , Location.fromInput(newProperty), this.status);
+                , Location.fromInput(newProperty), this.status, this.prev, this.next, this.days);
       case STATUS:
         return new SeriesEvent(this.subject, this.startDateTime, this.endDateTime, this.description
-                , this.location, Status.fromInput(newProperty));
+                , this.location, Status.fromInput(newProperty), this.prev, this.next, this.days);
       case END:
-        return new SeriesEvent(this.subject, this.startDateTime, LocalDateTime.parse(newProperty));
+        LocalDateTime newEndDateTime = LocalDateTime.parse(newProperty);
+        if (this.startDateTime.isAfter(newEndDateTime)) {
+          throw new IllegalArgumentException("Start date time must be before end date time");
+        }
+        if (this.startDateTime.until(newEndDateTime, ChronoUnit.DAYS) >= 1) {
+          throw new IllegalArgumentException("Start date and end date for event series must be same");
+        }
+        return new SeriesEvent(this.subject, this.startDateTime, newEndDateTime, this.description
+                , this.location, this.status, this.prev, this.next, this.days);
       case START:
-        return new SingleEvent(newProperty, LocalDateTime.parse(newProperty), this.endDateTime);
+        LocalDateTime newStartDate = LocalDateTime.parse(newProperty);
+        if (newStartDate.isAfter(this.endDateTime)) {
+          throw new IllegalArgumentException("Start date time must be before end date time");
+        }
+        return new SingleEvent(this.subject, newStartDate, this.endDateTime, this.description,
+                this.location, this.status);
       default:
         throw new IllegalArgumentException("Unsupported property: " + propertyToEdit);
     }
@@ -125,101 +157,108 @@ class SeriesEvent extends AEvent {
 
   @Override
   public SeriesEvent editSeriesEvent(EventProperty propertyToEdit, String newProperty) {
-    switch (propertyToEdit) {
-      // if not editing start or end date call super method
-      case SUBJECT:
-      case DESCRIPTION:
-      case LOCATION:
-      case STATUS:
-      case END:
-        super.editSingleEvent(propertyToEdit, newProperty);
-        // update all following events
-        if (this.hasNext()) {
-          this.next.editNextSeriesEvents(propertyToEdit, newProperty);
-        }
-        // update all previous events
-        if (this.hasPrev()) {
-          this.prev.editPrevSeriesEvents(propertyToEdit, newProperty);
-        }
-        break;
-      // if editing start date update previous and following event start dates accordingly
-      case START:
-        this.startDateTime = LocalDateTime.parse(newProperty);
-        if (this.hasNext()) {
-          long daysToNext = this.daysBetween(this.next);
-          // calculate updated start date for following series event
-          LocalDateTime nextStartDate = LocalDateTime.parse(newProperty).plusDays(daysToNext);
-          this.next.editNextEventsStart(propertyToEdit, nextStartDate.toString());
-        }
-        // update all previous events
-        if (this.hasPrev()) {
-          long daysAfterPrev = this.prev.daysBetween(this);
-          // calculate updated start date for following series event
-          LocalDateTime nextStartDate = LocalDateTime.parse(newProperty).minusDays(daysAfterPrev);
-          this.prev.editPrevEventsStart(propertyToEdit, nextStartDate.toString());
-        }
-    }
-  }
-
-  protected void editNextSeriesEvents(EventProperty propertyToEdit, String newProperty) {
-    super.editSingleEvent(propertyToEdit, newProperty);
-
-    // update all following events
-    if (this.hasNext()) {
-      this.next.editNextSeriesEvents(propertyToEdit, newProperty);
-    }
-  }
-
-  protected void editPrevSeriesEvents(EventProperty propertyToEdit, String newProperty) {
-    super.editSingleEvent(propertyToEdit, newProperty);
-
-    // update all following events
-    if (this.hasPrev()) {
-      this.prev.editPrevSeriesEvents(propertyToEdit, newProperty);
-    }
+    return this.firstEvent().editEvents(propertyToEdit, newProperty);
   }
 
   protected long daysBetween(SeriesEvent other) {
     return this.startDateTime.until(other.startDateTime, ChronoUnit.DAYS);
   }
 
+  protected SeriesEvent firstEvent() {
+    SeriesEvent curr = new SeriesEvent(this.subject, this.startDateTime, this.endDateTime,
+            this.description, this.location, this.status, this.prev, this.next, this.days);
+    while (curr.hasPrev()) {
+      curr = curr.prev();
+    }
+    return curr;
+  }
+
   @Override
-  public void editEvents(EventProperty propertyToEdit, String newProperty) {
+  public SeriesEvent editEvents(EventProperty propertyToEdit, String newProperty) {
+    SeriesEvent newSeries;
     switch (propertyToEdit) {
-      // if not editing start or end date call super method on this and following events in series
       case SUBJECT:
+        if (this.hasNext()) {
+          return new SeriesEvent(newProperty, this.startDateTime, this.endDateTime, this.description
+                  , this.location, this.status, this.prev, this.next.editEvents(propertyToEdit, newProperty)
+                  , this.days);
+        } else {
+          return new SeriesEvent(newProperty, this.startDateTime, this.endDateTime, this.description
+                  , this.location, this.status, this.prev, this.next
+                  , this.days);
+        }
+
       case DESCRIPTION:
+        if (this.hasNext()) {
+          return new SeriesEvent(this.subject, this.startDateTime, this.endDateTime, newProperty
+                  , this.location, this.status, this.prev, this.next.editEvents(propertyToEdit, newProperty)
+                  , this.days);
+        } else {
+          return new SeriesEvent(this.subject, this.startDateTime, this.endDateTime, newProperty
+                  , this.location, this.status, this.prev, this.next
+                  , this.days);
+        }
+
       case LOCATION:
+        if (this.hasNext()) {
+          return new SeriesEvent(this.subject, this.startDateTime, this.endDateTime, this.description
+                  , Location.fromInput(newProperty), this.status, this.prev, this.next.editEvents(propertyToEdit, newProperty)
+                  , this.days);
+        } else {
+          return new SeriesEvent(this.subject, this.startDateTime, this.endDateTime, this.description
+                  , Location.fromInput(newProperty), this.status, this.prev, this.next, this.days);
+        }
+
       case STATUS:
+        if (this.hasNext()) {
+          return new SeriesEvent(this.subject, this.startDateTime, this.endDateTime, this.description
+                  , this.location, Status.fromInput(newProperty), this.prev, this.next.editEvents(propertyToEdit, newProperty)
+                  , this.days);
+        } else {
+          return new SeriesEvent(this.subject, this.startDateTime, this.endDateTime, this.description
+                  , this.location, Status.fromInput(newProperty), this.prev, this.next, this.days);
+        }
+
       case END:
-        super.editSingleEvent(propertyToEdit, newProperty);
-        if (this.hasNext()) {
-          this.next.editEvents(propertyToEdit, newProperty);
+        LocalDateTime newEndDateTime = LocalDateTime.parse(newProperty);
+        if (this.startDateTime.isAfter(newEndDateTime)) {
+          throw new IllegalArgumentException("Start date time must be before end date time");
         }
-        break;
-      // if editing start date update this event and following events in series; unlink first from previous
+        if (this.startDateTime.until(newEndDateTime, ChronoUnit.DAYS) >= 1) {
+          throw new IllegalArgumentException("Start date and end date for event series must be same");
+        }
+        if (this.hasNext()) {
+          return new SeriesEvent(this.subject, this.startDateTime, newEndDateTime, this.description
+                  , this.location, this.status, this.prev, this.next.editEvents(propertyToEdit, newProperty), this.days);
+        } else {
+          return new SeriesEvent(this.subject, this.startDateTime, newEndDateTime, this.description
+                  , this.location, this.status, this.prev, this.next, this.days);
+        }
+        // if editing start date update this event and following events in series; unlink first from previous
       case START:
-        this.startDateTime = LocalDateTime.parse(newProperty);
-        if (this.hasPrev()) {
-          this.prev.setNext(null);
-          this.setPrev(null);
+        LocalDateTime newStartDate = LocalDateTime.parse(newProperty);
+        if (newStartDate.isAfter(this.endDateTime)) {
+          throw new IllegalArgumentException("Start date time must be before end date time");
         }
-        if (this.hasNext()) {
-          long daysToNext = this.daysBetween(this.next);
-          // calculate updated start date for following series event
-          LocalDateTime nextStartDate = LocalDateTime.parse(newProperty).plusDays(daysToNext);
-          this.next.editEvents(propertyToEdit, nextStartDate.toString());
-        }
-        break;
+        int followingOccurrences = this.followingOccurrences();
+        return new SeriesEvent(this.subject, this.days, followingOccurrences, newStartDate,
+                this.endDateTime, this.description, this.location, this.status);
+      default:
+        throw new IllegalArgumentException("Unsupported property: " + propertyToEdit);
     }
   }
 
-  protected void relinkSeriesEvent() {
-    this.prev.setNext(this);
-    this.setPrev(this.prev);
-    this.next.setPrev(this);
-    this.setNext(this.next);
+  protected int followingOccurrences() {
+    int i = 1;
+    SeriesEvent curr = new SeriesEvent(this.subject, this.startDateTime, this.endDateTime,
+            this.description, this.location, this.status, this.prev, this.next, this.days);
+    while (curr.hasNext()) {
+      i++;
+      curr = curr.next();
+    }
+    return i;
   }
+
 
   @Override
   public ArrayList<AEvent> getEvents() {
@@ -264,40 +303,6 @@ class SeriesEvent extends AEvent {
     }
 
     return currentDate;
-  }
-
-  protected void editNextEventsStart(EventProperty propertyToEdit, String newProperty) {
-    // update start of this event
-    if (propertyToEdit == EventProperty.START) {
-      this.startDateTime = LocalDateTime.parse(newProperty);
-    }
-
-    // update start of following events
-    if (this.hasNext()) {
-      this.startDateTime = LocalDateTime.parse(newProperty);
-      long daysToNext = this.daysBetween(this.next);
-
-      // calculate updated start date for following series event
-      LocalDateTime nextStartDate = LocalDateTime.parse(newProperty).plusDays(daysToNext);
-      this.next.editNextEventsStart(propertyToEdit, nextStartDate.toString());
-    }
-  }
-
-  protected void editPrevEventsStart(EventProperty propertyToEdit, String newProperty) {
-    // update start of this event
-    if (propertyToEdit == EventProperty.START) {
-      this.startDateTime = LocalDateTime.parse(newProperty);
-    }
-
-    // update start of previous events
-    if (this.hasPrev()) {
-      this.startDateTime = LocalDateTime.parse(newProperty);
-      long daysAfterPrev = this.prev.daysBetween(this);
-
-      // calculate updated start date for following series event
-      LocalDateTime nextStartDate = LocalDateTime.parse(newProperty).minusDays(daysAfterPrev);
-      this.prev.editPrevEventsStart(propertyToEdit, nextStartDate.toString());
-    }
   }
 
   protected ArrayList<AEvent> getSeriesEvents() {
