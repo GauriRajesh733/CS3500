@@ -5,6 +5,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Map;
 
+/**
+ * Represents a single event in a calendar.
+ */
 class SingleEvent extends AEvent {
 
   public SingleEvent(String subject, LocalDateTime startDate, LocalDateTime endDate,
