@@ -18,7 +18,7 @@ import static org.junit.Assert.assertThrows;
 public class CreateCommandFactoryTest extends ACommandFactoryTest {
 
   @Override
-  public ACommandFactory makeFactory() {
+  protected ACommandFactory makeFactory() {
     return new CreateCommandFactory();
   }
 
