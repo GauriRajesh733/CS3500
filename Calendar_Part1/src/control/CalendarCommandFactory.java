@@ -3,8 +3,13 @@ package control;
 
 import control.commands.CalendarCommand;
 
-final class CalendarCommandFactory {
+/**
+ * Factory class for creating calendar commands based on user input.
+ * This class determines the type of command to create based on the input string.
+ */
+final class CalendarCommandFactory extends ACommandFactory {
 
+  @Override
   public CalendarCommand createCalendarCommand(String input) throws IllegalArgumentException {
 
     if (input == null || input.trim().isEmpty()) {

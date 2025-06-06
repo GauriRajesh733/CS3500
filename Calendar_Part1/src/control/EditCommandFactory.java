@@ -9,6 +9,11 @@ import control.commands.EditSeries;
 import control.commands.EditSingleEvent;
 import model.EventProperty;
 
+/**
+ * Factory for creating Edit commands for the calendar.
+ * This factory handles the creation of commands to edit events or series
+ * based on user input.
+ */
 final class EditCommandFactory extends ACommandFactory {
 
   @Override

@@ -18,11 +18,11 @@ public class EditEvents implements CalendarCommand {
   private final String newProperty;
 
   /**
-   * Constructor to edit events in the calendar.
-   * @param propertyToEdit the property to be edited (e.g., SUBJECT, START_DATE, END_DATE)
-   * @param subject the subject of the event to be edited
-   * @param startDate the start date and time of the event to be edited
-   * @param newProperty the new value for the property being edited
+   * Constructor to create an EditEvents command.
+   * @param propertyToEdit the property of the event to edit (e.g., SUBJECT, LOCATION, etc.)
+   * @param subject the subject of the event to match for editing
+   * @param startDate the start date and time of the events to edit
+   * @param newProperty the new value for the specified property
    */
   public EditEvents(
           EventProperty propertyToEdit, String subject,

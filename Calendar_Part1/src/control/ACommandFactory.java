@@ -8,10 +8,14 @@ import java.time.format.DateTimeParseException;
 import control.commands.CalendarCommand;
 import model.EventProperty;
 
-abstract public class ACommandFactory implements CommandFactory {
+/**
+ * Abstract class for command factories that create calendar commands.
+ * This class provides common functionality for parsing and validating command inputs.
+ */
+abstract class ACommandFactory implements CommandFactory {
 
   @Override
-  abstract public CalendarCommand createCalendarCommand(String input);
+  public abstract CalendarCommand createCalendarCommand(String input);
 
   protected int searchKeywordIndex(String input, String command) throws IllegalArgumentException {
     int index;
@@ -49,7 +53,8 @@ abstract public class ACommandFactory implements CommandFactory {
 
     int structuralFromIndex = findStructuralKeyword(
             remaining, " from ", "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}");
-    int structuralOnIndex = findStructuralKeyword(remaining, " on ", "\\d{4}-\\d{2}-\\d{2}");
+    int structuralOnIndex = findStructuralKeyword(
+            remaining, " on ", "\\d{4}-\\d{2}-\\d{2}");
 
     int firstKeywordIndex;
     String keyword;
@@ -79,7 +84,8 @@ abstract public class ACommandFactory implements CommandFactory {
       throw new IllegalArgumentException("Subject cannot be empty");
     }
 
-    String commandStructure = remaining.substring(firstKeywordIndex + keyword.length()).trim();
+    String commandStructure = remaining.substring(
+            firstKeywordIndex + keyword.length()).trim();
 
     return new SubjectAndRest(subject, commandStructure);
   }
