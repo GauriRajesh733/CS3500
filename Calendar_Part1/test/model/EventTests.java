@@ -9,8 +9,14 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
+/**
+ * Test class for events.
+ */
 public class EventTests {
   AEvent single, multiday, series;
 
@@ -114,7 +120,6 @@ public class EventTests {
             LocalDateTime.of(2026, 9, 9, 8, 0),
             LocalDateTime.of(2025, 9, 9, 10, 0)));
   }
-
   // NOTE: this also tests methods to get start date, end date, status, location, etc.
   @Test
   public void editSingleEvent() {
@@ -167,7 +172,6 @@ public class EventTests {
     assertEquals("shopping", this.series.getSubject());
     assertEquals(2, this.series.getEvents().size());
   }
-
   @Test
   public void editSeriesEvent() {
     // edit single/multiday event (editSeriesEvent has same effect as editSingleEvent)

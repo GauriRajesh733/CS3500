@@ -10,7 +10,14 @@ import model.CalendarModelImpl;
 import view.CalendarView;
 import view.CalendarViewImpl;
 
+/**
+ * Main runner class for calendar application.
+ */
 public class Main {
+  /**
+   * Run calendar application.
+   * @param args represents command line arguments.
+   */
   public static void main(String[] args) {
     try {
       // create calendar model and view
@@ -26,11 +33,9 @@ public class Main {
         File file = new File(args[3]);
         try (InputStream stream = new FileInputStream(file)) {
           new CalendarControllerImpl(stream).run(model, view);
-        }
-        catch (FileNotFoundException e) {
+        } catch (FileNotFoundException e) {
           throw new IllegalArgumentException("File not found");
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
           throw new IllegalArgumentException("Failed to read file");
         }
       }

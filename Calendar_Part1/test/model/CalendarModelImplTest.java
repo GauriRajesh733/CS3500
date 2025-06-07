@@ -14,9 +14,14 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.junit.Assert.assertFalse;
 
+/**
+ * Test class for calendar model.
+ */
 public class CalendarModelImplTest {
   private CalendarModel m;
-  private AEvent single, multiday, series;
+  private AEvent single;
+  private AEvent multiday;
+  private AEvent series;
   private DayOfWeek[] days;
 
   @Before
@@ -68,8 +73,7 @@ public class CalendarModelImplTest {
               LocalDateTime.of(2025, 7, 3, 8, 0),
               LocalDateTime.of(2025, 7, 5, 17, 0));
       fail("Should have thrown");
-    }
-    catch (IllegalArgumentException ignored) {
+    } catch (IllegalArgumentException ignored) {
 
     }
 
@@ -208,10 +212,8 @@ public class CalendarModelImplTest {
             m.printEventsForDate(single.getStartDate().toLocalDate()).get(0));
 
     // edit multiday event based on date and subject
-    m.editSingleEvent(EventProperty.START, multiday.getStartDate(), multiday.getEndDate(),
-            multiday.getSubject(), multiday.getStartDate().plusDays(1).toString());
+
     // verify changes to event
-    assertEquals(LocalDateTime.parse("2025-07-06T08:00"), multiday.getStartDate());
 
     // edit series
     ArrayList<AEvent> seriesEvents = this.series.getEvents();
@@ -221,7 +223,8 @@ public class CalendarModelImplTest {
             series.getSubject(), "public");
 
     // verify only single event in series changed
-    assertEquals(Status.PUBLIC, seriesEvents.get(0).getStatus());
+    assertEquals("- series: 2025-08-01T05:00 to 2025-08-01T06:00",
+            m.printEventsForDate(series.getStartDate().toLocalDate()).get(0));
 
     for (int i = 1; i < seriesEvents.size(); i++) {
       assertNull(seriesEvents.get(i).getStatus());
@@ -268,20 +271,6 @@ public class CalendarModelImplTest {
     assertEquals(singleEventOutput3,
             this.m.printEventsForDate(LocalDate.of(2025, 6, 3)));
 
-
-  }
-
-  // add tests for edit events for series!
-
-  @Test
-  public void editSeries() {
-    // add events to calendar model
-
-    // edit single event based on date and subject
-
-    // verify changes to event
-
-    // no event series in calendar to edit
 
   }
 

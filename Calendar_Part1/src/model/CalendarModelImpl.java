@@ -91,7 +91,6 @@ public class CalendarModelImpl implements CalendarModel {
    *
    * @param eventToRemove represents the event to remove.
    **/
-
   public void removeEvent(AEvent eventToRemove) {
     LocalDate[] dateRange = this.datesBetween(eventToRemove.startDateTime.toLocalDate(),
             eventToRemove.endDateTime.toLocalDate());
@@ -121,7 +120,7 @@ public class CalendarModelImpl implements CalendarModel {
     }
   }
 
-
+  @Override
   public void removeEvents(ArrayList<AEvent> eventsToRemove, boolean removeSeries) {
     for (AEvent event : eventsToRemove) {
       LocalDate[] dateRange = this.datesBetween(event.startDateTime.toLocalDate(),

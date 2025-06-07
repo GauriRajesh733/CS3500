@@ -11,7 +11,6 @@ import static org.junit.Assert.assertThrows;
  * This is a test class for the CreateCommandFactory.
  * It extends ACommandFactoryTest to test the specific functionality of CreateCommandFactory.
  */
-
 public class CreateCommandFactoryTest extends ACommandFactoryTest {
 
   @Override
@@ -237,7 +236,6 @@ public class CreateCommandFactoryTest extends ACommandFactoryTest {
     for (String command : invalidCommands) {
       assertThrows("Should throw exception for: " + command,
           IllegalArgumentException.class,
-              () -> commandFactory.createCalendarCommand(command));
     }
   }
 
@@ -254,8 +252,7 @@ public class CreateCommandFactoryTest extends ACommandFactoryTest {
     };
 
     for (String command : invalidCommands) {
-      assertThrows("Should throw exception for: " + command,
-              IllegalArgumentException.class,
+      assertThrows("Should throw exception for: " + command, IllegalArgumentException.class,
               () -> commandFactory.createCalendarCommand(command));
     }
   }

@@ -15,6 +15,9 @@ import view.CalendarViewImpl;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
+/**
+ * Tests for edit calendar commands.
+ */
 public class EditCalendarTest {
   private ByteArrayOutputStream stream;
   private CommandFactory editCommandFactory;
@@ -446,8 +449,7 @@ public class EditCalendarTest {
       CalendarCommand cmd = this.editCommandFactory.createCalendarCommand(input3);
       cmd.run(this.model, this.view);
       fail("Should have thrown");
-    }
-    catch (IllegalArgumentException e) {
+    } catch (IllegalArgumentException e) {
       assertEquals("Start date time must be before end date time", e.getMessage());
     }
   }
@@ -481,8 +483,7 @@ public class EditCalendarTest {
       CalendarCommand cmd = this.editCommandFactory.createCalendarCommand(input3);
       cmd.run(this.model, this.view);
       fail("Should have thrown");
-    }
-    catch (IllegalArgumentException e) {
+    } catch (IllegalArgumentException e) {
       assertEquals("Start date time must be before end date time", e.getMessage());
     }
   }
@@ -516,8 +517,7 @@ public class EditCalendarTest {
       CalendarCommand cmd = this.editCommandFactory.createCalendarCommand(input3);
       cmd.run(this.model, this.view);
       fail("Should have thrown");
-    }
-    catch (IllegalArgumentException e) {
+    } catch (IllegalArgumentException e) {
       assertEquals("Series event cannot span multiple days", e.getMessage());
     }
   }
@@ -552,8 +552,7 @@ public class EditCalendarTest {
       CalendarCommand cmd = this.editCommandFactory.createCalendarCommand(input3);
       cmd.run(this.model, this.view);
       fail("Should have thrown");
-    }
-    catch (IllegalArgumentException ignored) {
+    } catch (IllegalArgumentException ignored) {
     }
   }
 
@@ -587,8 +586,7 @@ public class EditCalendarTest {
       CalendarCommand cmd = this.editCommandFactory.createCalendarCommand(input3);
       cmd.run(this.model, this.view);
       fail("Should have thrown");
-    }
-    catch (IllegalArgumentException ignored) {
+    } catch (IllegalArgumentException ignored) {
     }
   }
 
@@ -622,8 +620,7 @@ public class EditCalendarTest {
       CalendarCommand cmd = this.editCommandFactory.createCalendarCommand(input3);
       cmd.run(this.model, this.view);
       fail("Should have thrown");
-    }
-    catch (IllegalArgumentException ignored) {
+    } catch (IllegalArgumentException ignored) {
     }
   }
 
@@ -657,8 +654,7 @@ public class EditCalendarTest {
       CalendarCommand cmd = this.editCommandFactory.createCalendarCommand(input3);
       cmd.run(this.model, this.view);
       fail("Should have thrown");
-    }
-    catch (IllegalArgumentException ignored) {
+    } catch (IllegalArgumentException ignored) {
     }
   }
 

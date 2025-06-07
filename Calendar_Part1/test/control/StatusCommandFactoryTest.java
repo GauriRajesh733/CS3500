@@ -17,6 +17,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThrows;
 
+/**
+ * Test class for status commands.
+ */
 public class StatusCommandFactoryTest extends ACommandFactoryTest {
 
   private ByteArrayOutputStream outputStream;

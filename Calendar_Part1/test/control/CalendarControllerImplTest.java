@@ -10,16 +10,14 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 
-import model.CalendarModel;
 import model.CalendarModelImpl;
-import view.CalendarView;
 import view.CalendarViewImpl;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
 
-
+/**
+ * Test class for calendar controller.
+ */
 public class CalendarControllerImplTest {
   private CalendarController c;
   private PrintStream s;
