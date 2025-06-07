@@ -339,7 +339,7 @@ public class EventTests {
 
     // get events should return a list with all the events in a series
     assertTrue(
-            seriesEvents.get(0).sameEvent(
+           seriesEvents.get(0).sameEvent(
                     "lab",
                     LocalDateTime.of(2025, 1, 6, 14, 0),
                     LocalDateTime.of(2025, 1, 6, 16, 30)));
