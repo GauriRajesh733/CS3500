@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
  * Implementation of the MultiCalendarModel interface.
  * This class provides methods to manage multiple calendars and perform operations on them.
  */
-public class MultiCalendarModelImpl implements  MultiCalendarModel{
+public class MultiCalendarModelImpl implements  MultiCalendarModel {
 
   @Override
   public void createCalendar(String calendarName) {
