@@ -207,7 +207,7 @@ class SeriesEvent extends AEvent {
         if (this.startDateTime.isAfter(newEndDateTime)) {
           throw new IllegalArgumentException("Start date time must be before end date time");
         }
-        if (this.startDateTime.until(newEndDateTime, ChronoUnit.DAYS) >= 1) {
+        if (this.startDateTime.until(newEndDateTime, ChronoUnit.DAYS) > 1) {
           throw new IllegalArgumentException(
                   "Series event cannot span multiple days");
         }
@@ -217,10 +217,6 @@ class SeriesEvent extends AEvent {
         LocalDateTime newStartDate = LocalDateTime.parse(newProperty);
         if (newStartDate.isAfter(this.endDateTime)) {
           throw new IllegalArgumentException("Start date time must be before end date time");
-        }
-        if (newStartDate.until(this.endDateTime, ChronoUnit.DAYS) >= 1) {
-          throw new IllegalArgumentException(
-                  "Series event cannot span multiple days");
         }
         return new SingleEvent(this.subject, newStartDate, this.endDateTime, this.description,
                 this.location, this.status);
@@ -300,7 +296,7 @@ class SeriesEvent extends AEvent {
         if (this.startDateTime.isAfter(newEndDateTime)) {
           throw new IllegalArgumentException("Start date time must be before end date time");
         }
-        if (this.startDateTime.until(newEndDateTime, ChronoUnit.DAYS) >= 1) {
+        if (this.startDateTime.until(newEndDateTime, ChronoUnit.DAYS) > 1) {
           throw new IllegalArgumentException(
                   "Series event cannot span multiple days");
         }
@@ -319,7 +315,7 @@ class SeriesEvent extends AEvent {
         if (newStartDate.isAfter(this.endDateTime)) {
           throw new IllegalArgumentException("Start date time must be before end date time");
         }
-        if (newStartDate.until(this.endDateTime, ChronoUnit.DAYS) >= 1) {
+        if (newStartDate.until(this.endDateTime, ChronoUnit.DAYS) > 1) {
           throw new IllegalArgumentException(
                   "Series event cannot span multiple days");
         }

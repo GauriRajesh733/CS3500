@@ -15,7 +15,6 @@ import static org.junit.Assert.fail;
  * Test class for CalendarCommandFactory.
  * This class tests the creation of calendar commands and handles invalid command inputs.
  */
-
 public class CalendarCommandFactoryTest {
 
   private CalendarCommandFactory factory;

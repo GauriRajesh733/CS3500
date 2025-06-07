@@ -11,6 +11,9 @@ import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
 
+/**
+ * Test class for calendar view.
+ */
 public class CalendarViewImplTest {
   ByteArrayOutputStream stream;
   CalendarView view;
