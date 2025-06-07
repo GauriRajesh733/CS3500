@@ -14,7 +14,6 @@ import static org.junit.Assert.assertTrue;
  * This is an abstract test class for ACommandFactory.
  * It provides common tests for command factories that extend ACommandFactory.
  */
-
 public abstract class ACommandFactoryTest {
 
   protected ACommandFactory commandFactory;

@@ -6,6 +6,9 @@ import control.commands.CalendarCommand;
 
 import static org.junit.Assert.fail;
 
+/**
+ * Test class for edit command factory.
+ */
 public class EditCommandFactoryTest extends ACommandFactoryTest {
 
   @Override

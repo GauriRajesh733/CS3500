@@ -11,7 +11,6 @@ import static org.junit.Assert.assertThrows;
  * This is a test class for the CreateCommandFactory.
  * It extends ACommandFactoryTest to test the specific functionality of CreateCommandFactory.
  */
-
 public class CreateCommandFactoryTest extends ACommandFactoryTest {
 
   @Override
