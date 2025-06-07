@@ -12,7 +12,7 @@ public enum Location {
    * @return location corresponding to given input.
    * @throws IllegalArgumentException if the input does not correspond to a location.
    */
-  public static Location fromInput(String input) throws IllegalArgumentException{
+  public static Location fromInput(String input) throws IllegalArgumentException {
     switch (input) {
       case "physical":
         return PHYSICAL;

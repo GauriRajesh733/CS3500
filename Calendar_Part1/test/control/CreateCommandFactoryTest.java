@@ -157,12 +157,10 @@ public class CreateCommandFactoryTest extends ACommandFactoryTest {
   @Test
   public void testInvalidCreateCommandSingleEvent() {
     // Invalid command formats for single event
-    String[] invalidCommands = {
-            "create event on 2025-05-05", // missing subject
-            "create event test on 2025-13-05", // invalid month
-            "create event test on 2025-05-32", // invalid day
-            "create event test on 2025-05-05T25:00", // invalid hour
-            "create event test on 2025-05-05T10:60" // invalid minute
+    String[] invalidCommands = {"create event on 2025-05-05", "create event test on 2025-13-05",
+            "create event test on 2025-05-32",
+            "create event test on 2025-05-05T25:00",
+            "create event test on 2025-05-05T10:60"
     };
 
     for (String command : invalidCommands) {
@@ -235,8 +233,7 @@ public class CreateCommandFactoryTest extends ACommandFactoryTest {
     };
 
     for (String command : invalidCommands) {
-      assertThrows("Should throw exception for: " + command,
-              IllegalArgumentException.class,
+      assertThrows("Should throw exception for: " + command, IllegalArgumentException.class,
               () -> commandFactory.createCalendarCommand(command));
     }
   }
@@ -254,8 +251,7 @@ public class CreateCommandFactoryTest extends ACommandFactoryTest {
     };
 
     for (String command : invalidCommands) {
-      assertThrows("Should throw exception for: " + command,
-              IllegalArgumentException.class,
+      assertThrows("Should throw exception for: " + command, IllegalArgumentException.class,
               () -> commandFactory.createCalendarCommand(command));
     }
   }

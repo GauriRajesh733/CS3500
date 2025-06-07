@@ -55,7 +55,8 @@ public abstract class AEvent implements Event {
 
   @Override
   public boolean sameEvent(String subject, LocalDateTime startDate, LocalDateTime endDate) {
-    return this.subject.equals(subject) && this.startDateTime.equals(startDate) && this.endDateTime.equals(endDate);
+    return this.subject.equals(subject) && this.startDateTime.equals(startDate) &&
+            this.endDateTime.equals(endDate);
   }
 
   @Override
@@ -78,7 +79,8 @@ public abstract class AEvent implements Event {
       throw new IllegalArgumentException("Event is missing start date, end date, or subject");
     }
 
-    return "- " + this.subject + this.formatLocation() + this.startDateTime + " to " + this.endDateTime;
+    return "- " + this.subject + this.formatLocation() + this.startDateTime + " to "
+            + this.endDateTime;
   }
 
   /**

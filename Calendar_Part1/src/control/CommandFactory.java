@@ -1,6 +1,7 @@
 package control;
 
 import control.commands.CalendarCommand;
+
 /**
  * Interface for a factory that creates calendar commands based on user input.
  * This interface defines a method to create a CalendarCommand from a given input string.

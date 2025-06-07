@@ -15,7 +15,9 @@ import view.CalendarViewImpl;
 
 import static org.junit.Assert.assertEquals;
 
-
+/**
+ * Test class for calendar controller.
+ */
 public class CalendarControllerImplTest {
   private CalendarController c;
   private PrintStream s;

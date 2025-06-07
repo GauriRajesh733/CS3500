@@ -31,6 +31,7 @@ public class CalendarModelImpl implements CalendarModel {
     }
   }
 
+  @Override
   public void addSeriesEvent(String subject, DayOfWeek[] daysOfWeek, int occurrences,
                              LocalDateTime startDateTime, LocalDateTime endDateTime) {
     // check if event already exists in calendar
@@ -46,7 +47,8 @@ public class CalendarModelImpl implements CalendarModel {
   @Override
   public void editSingleEvent(
           EventProperty propertyToEdit, LocalDateTime startDate,
-          LocalDateTime endDate, String subject, String newProperty) throws IllegalArgumentException {
+          LocalDateTime endDate, String subject, String newProperty) throws
+          IllegalArgumentException {
     ArrayList<AEvent> eventsToEdit = this.findSingleEvent(startDate, endDate, subject);
 
     if (eventsToEdit.isEmpty()) {
@@ -84,7 +86,6 @@ public class CalendarModelImpl implements CalendarModel {
    *
    * @param eventToRemove represents the event to remove.
    **/
-
   public void removeEvent(AEvent eventToRemove) {
     LocalDate[] dateRange = this.datesBetween(eventToRemove.startDateTime.toLocalDate(),
             eventToRemove.endDateTime.toLocalDate());
@@ -114,7 +115,7 @@ public class CalendarModelImpl implements CalendarModel {
     }
   }
 
-
+  @Override
   public void removeEvents(ArrayList<AEvent> eventsToRemove, boolean removeSeries) {
     for (AEvent event : eventsToRemove) {
       LocalDate[] dateRange = this.datesBetween(event.startDateTime.toLocalDate(),
