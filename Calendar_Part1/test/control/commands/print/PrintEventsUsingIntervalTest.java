@@ -36,16 +36,16 @@ public class PrintEventsUsingIntervalTest {
 
   @Test
   public void testPrintEventsConstructor() {
-    LocalDateTime startDateTime =  LocalDateTime.of(2025, 5, 5, 10,0);
-    LocalDateTime endDateTime =  LocalDateTime.of(2025, 5, 5, 15,0);
+    LocalDateTime startDateTime = LocalDateTime.of(2025, 5, 5, 10, 0);
+    LocalDateTime endDateTime = LocalDateTime.of(2025, 5, 5, 15, 0);
     PrintEventsUsingInterval command = new PrintEventsUsingInterval(startDateTime, endDateTime);
     assertNotNull(command);
   }
 
   @Test
   public void testPrintDaysWithNoEvents() {
-    LocalDateTime startDateTime =  LocalDateTime.of(2025, 5, 5, 10,0);
-    LocalDateTime endDateTime =  LocalDateTime.of(2025, 5, 5, 15,0);
+    LocalDateTime startDateTime = LocalDateTime.of(2025, 5, 5, 10, 0);
+    LocalDateTime endDateTime = LocalDateTime.of(2025, 5, 5, 15, 0);
     PrintEventsUsingInterval command = new PrintEventsUsingInterval(startDateTime, endDateTime);
 
     command.run(mockModel, mockView);
@@ -57,8 +57,8 @@ public class PrintEventsUsingIntervalTest {
 
   @Test
   public void testPrintDaysWithOneEvent() {
-    LocalDateTime startDateTime =  LocalDateTime.of(2025, 5, 5, 5,0);
-    LocalDateTime endDateTime =  LocalDateTime.of(2025, 5, 5, 15,0);
+    LocalDateTime startDateTime = LocalDateTime.of(2025, 5, 5, 5, 0);
+    LocalDateTime endDateTime = LocalDateTime.of(2025, 5, 5, 15, 0);
 
     mockModel.addSingleEvent(
             "Test Event", LocalDateTime.of(2025, 5, 5, 5, 5), LocalDateTime.of(2025, 5, 5, 5, 5));

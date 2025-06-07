@@ -20,11 +20,9 @@ class PrintCommandFactory extends ACommandFactory {
     String remaining = input.substring(12).trim(); // Remove "print events"
     if (hasIntervalPattern(remaining)) {
       return this.printEventsWithInterval(input);
-    }
-    else if (hasSingleDatePattern(remaining)) {
+    } else if (hasSingleDatePattern(remaining)) {
       return this.printEvents(input);
-    }
-    else {
+    } else {
       throw new IllegalArgumentException("Invalid print events command: " + input);
     }
   }
@@ -61,7 +59,7 @@ class PrintCommandFactory extends ACommandFactory {
     String eventStartDateTime = search(
             input, fromIndex + 5, toIndex - 1,
             "Calendar Command printEventsWithIntervals input eventStartDateTime wrong indexing.");
-    String eventEndDateTime =search(
+    String eventEndDateTime = search(
             input, toIndex + 3, input.length(),
             "Calendar Command printEventsWithIntervals input eventEndDateTime wrong indexing.");
 
@@ -84,7 +82,6 @@ class PrintCommandFactory extends ACommandFactory {
 
     return new PrintEventsUsingInterval(startDateTime, endDateTime);
   }
-
 
 
 }

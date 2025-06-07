@@ -19,7 +19,9 @@ import static org.junit.Assert.assertFalse;
  */
 public class CalendarModelImplTest {
   private CalendarModel m;
-  private AEvent single, multiday, series;
+  private AEvent single;
+  private AEvent multiday;
+  private AEvent series;
   private DayOfWeek[] days;
 
   @Before
@@ -58,8 +60,7 @@ public class CalendarModelImplTest {
       m.addSingleEvent(
               "multiday", LocalDateTime.of(2025, 7, 3, 8, 0), LocalDateTime.of(2025, 7, 5, 17, 0));
       fail("Should have thrown");
-    }
-    catch (IllegalArgumentException ignored) {
+    } catch (IllegalArgumentException ignored) {
 
     }
 
@@ -107,8 +108,10 @@ public class CalendarModelImplTest {
 
     this.m.addSingleEvent(
             "multiday1", LocalDateTime.of(2025, 7, 3, 8, 0), LocalDateTime.of(2025, 7, 5, 17, 0));
-    this.m.addSingleEvent("multiday2", LocalDateTime.of(2025, 7, 3, 8, 0), LocalDateTime.of(2025, 7, 5, 17, 0).plusHours(2));
-    this.m.addSingleEvent("multiday3", LocalDateTime.of(2025, 7, 3, 8, 0), LocalDateTime.of(2025, 7, 5, 17, 0).plusHours(4));
+    this.m.addSingleEvent("multiday2", LocalDateTime.of(2025, 7, 3, 8, 0), LocalDateTime.of(2025,
+            7, 5, 17, 0).plusHours(2));
+    this.m.addSingleEvent("multiday3", LocalDateTime.of(2025, 7, 3, 8, 0), LocalDateTime.of(2025,
+            7, 5, 17, 0).plusHours(4));
 
     // 3 multiday events that span 3 days each = 9 events
     assertEquals(9, this.m.printEventsForDate(LocalDate.of(2025, 7, 3)).size());
@@ -133,7 +136,7 @@ public class CalendarModelImplTest {
 
     // verify changes (1 single day event + 1 multiday event spans 3 days + 4 events in series = 8)
     assertEquals(8, this.m.printEventsUsingInterval(LocalDateTime.of(2022, 6, 3, 8, 0),
-                    LocalDateTime.of(2028, 6, 3, 17, 0)).size());
+            LocalDateTime.of(2028, 6, 3, 17, 0)).size());
   }
 
   @Test
@@ -220,20 +223,6 @@ public class CalendarModelImplTest {
     singleEventOutput3.add("- new subject: 2025-06-03T08:00 to 2025-06-03T17:00");
     assertEquals(singleEventOutput3, this.m.printEventsForDate(LocalDate.of(2025, 6, 3)));
 
-
-  }
-
-  // add tests for edit events for series!
-
-  @Test
-  public void editSeries() {
-    // add events to calendar model
-
-    // edit single event based on date and subject
-
-    // verify changes to event
-
-    // no event series in calendar to edit
 
   }
 
