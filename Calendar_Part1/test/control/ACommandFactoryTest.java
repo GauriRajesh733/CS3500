@@ -48,7 +48,8 @@ public abstract class ACommandFactoryTest {
     int endIndex = 12; // index after "event"
 
     String expectedKeyword = "event";
-    String actualKeyword = commandFactory.search(input, startIndex, endIndex, "Keyword not found");
+    String actualKeyword = commandFactory.search(
+            input, startIndex, endIndex, "Keyword not found");
 
     assertEquals(expectedKeyword, actualKeyword);
   }

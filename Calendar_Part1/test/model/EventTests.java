@@ -18,26 +18,38 @@ public class EventTests {
   public void setUp() {
     this.single = new SingleEvent(
             "class", LocalDateTime.of(2025, 9, 9, 8, 0),
-            LocalDateTime.of(2025, 9, 9, 10, 0), null, null, null);
-    this.multiday = new SingleEvent("vacation", LocalDateTime.of(2025, 9, 9, 0, 0),
-            LocalDateTime.of(2025, 9, 16, 0, 0), null, null, null);
+            LocalDateTime.of(
+                    2025, 9, 9, 10, 0),
+            null, null, null);
+    this.multiday = new SingleEvent("vacation",
+            LocalDateTime.of(2025, 9, 9, 0, 0),
+            LocalDateTime.of(2025, 9, 16, 0, 0),
+            null, null, null);
     DayOfWeek[] days = {DayOfWeek.MONDAY, DayOfWeek.WEDNESDAY};
-    this.series = new SeriesEvent("lab", days, 2, LocalDateTime.of(2025, 1, 6, 14, 0),
-            LocalDateTime.of(2025, 1, 6, 16, 30), null, null, null);
+    this.series = new SeriesEvent("lab", days, 2,
+            LocalDateTime.of(2025, 1, 6, 14, 0),
+            LocalDateTime.of(2025, 1, 6, 16, 30),
+            null, null, null);
   }
 
   @Test
   public void getStartDate() {
-    assertEquals(LocalDateTime.of(2025, 9, 9, 8, 0), this.single.getStartDate());
-    assertEquals(LocalDateTime.of(2025, 9, 9, 0, 0), this.multiday.getStartDate());
-    assertEquals(LocalDateTime.of(2025, 1, 6, 14, 0), this.series.getStartDate());
+    assertEquals(LocalDateTime.of(2025, 9, 9, 8, 0),
+            this.single.getStartDate());
+    assertEquals(LocalDateTime.of(2025, 9, 9, 0, 0),
+            this.multiday.getStartDate());
+    assertEquals(LocalDateTime.of(2025, 1, 6, 14, 0),
+            this.series.getStartDate());
   }
 
   @Test
   public void getEndDate() {
-    assertEquals(LocalDateTime.of(2025, 9, 9, 10, 0), this.single.getEndDate());
-    assertEquals(LocalDateTime.of(2025, 9, 16, 0, 0), this.multiday.getEndDate());
-    assertEquals(LocalDateTime.of(2025, 1, 6, 16, 30), this.series.getEndDate());
+    assertEquals(LocalDateTime.of(2025, 9, 9, 10, 0),
+            this.single.getEndDate());
+    assertEquals(LocalDateTime.of(2025, 9, 16, 0, 0),
+            this.multiday.getEndDate());
+    assertEquals(LocalDateTime.of(2025, 1, 6, 16, 30),
+            this.series.getEndDate());
   }
 
   @Test
@@ -59,33 +71,47 @@ public class EventTests {
     // verify that events added to calendar
     assertTrue(calendar.get(LocalDate.of(2025, 9, 9)).contains(this.single));
 
-    assertTrue(calendar.get(LocalDate.of(2025, 9, 9)).contains(this.multiday));
-    assertTrue(calendar.get(LocalDate.of(2025, 9, 10)).contains(this.multiday));
-    assertTrue(calendar.get(LocalDate.of(2025, 9, 11)).contains(this.multiday));
-    assertTrue(calendar.get(LocalDate.of(2025, 9, 12)).contains(this.multiday));
-    assertTrue(calendar.get(LocalDate.of(2025, 9, 13)).contains(this.multiday));
-    assertTrue(calendar.get(LocalDate.of(2025, 9, 14)).contains(this.multiday));
-    assertTrue(calendar.get(LocalDate.of(2025, 9, 15)).contains(this.multiday));
-    assertTrue(calendar.get(LocalDate.of(2025, 9, 16)).contains(this.multiday));
+    assertTrue(calendar.get(
+            LocalDate.of(2025, 9, 9)).contains(this.multiday));
+    assertTrue(calendar.get(
+            LocalDate.of(2025, 9, 10)).contains(this.multiday));
+    assertTrue(calendar.get(
+            LocalDate.of(2025, 9, 11)).contains(this.multiday));
+    assertTrue(calendar.get(
+            LocalDate.of(2025, 9, 12)).contains(this.multiday));
+    assertTrue(calendar.get(
+            LocalDate.of(2025, 9, 13)).contains(this.multiday));
+    assertTrue(calendar.get(
+            LocalDate.of(2025, 9, 14)).contains(this.multiday));
+    assertTrue(calendar.get(
+            LocalDate.of(2025, 9, 15)).contains(this.multiday));
+    assertTrue(calendar.get(
+            LocalDate.of(2025, 9, 16)).contains(this.multiday));
 
     ArrayList<AEvent> seriesEvents = this.series.getEvents();
 
-    assertTrue(calendar.get(LocalDate.of(2025, 1, 6)).contains(seriesEvents.get(0)));
-    assertTrue(calendar.get(LocalDate.of(2025, 1, 8)).contains(seriesEvents.get(1)));
+    assertTrue(calendar.get(
+            LocalDate.of(2025, 1, 6)).contains(seriesEvents.get(0)));
+    assertTrue(calendar.get(
+            LocalDate.of(2025, 1, 8)).contains(seriesEvents.get(1)));
   }
 
   @Test
   public void sameEvent() {
     // true cases
-    assertTrue(this.single.sameEvent("class", LocalDateTime.of(2025, 9, 9, 8, 0),
+    assertTrue(this.single.sameEvent("class", LocalDateTime.of(
+            2025, 9, 9, 8, 0),
             LocalDateTime.of(2025, 9, 9, 10, 0)));
 
     // false cases
-    assertFalse(this.single.sameEvent("class", LocalDateTime.of(2025, 9, 9, 8, 0),
+    assertFalse(this.single.sameEvent("class",
+            LocalDateTime.of(2025, 9, 9, 8, 0),
             LocalDateTime.of(2026, 9, 9, 10, 0)));
-    assertFalse(this.single.sameEvent("different", LocalDateTime.of(2026, 9, 9, 8, 0),
+    assertFalse(this.single.sameEvent("different",
+            LocalDateTime.of(2026, 9, 9, 8, 0),
             LocalDateTime.of(2025, 9, 9, 10, 0)));
-    assertFalse(this.single.sameEvent("class", LocalDateTime.of(2026, 9, 9, 8, 0),
+    assertFalse(this.single.sameEvent("class",
+            LocalDateTime.of(2026, 9, 9, 8, 0),
             LocalDateTime.of(2025, 9, 9, 10, 0)));
   }
 
@@ -102,7 +128,8 @@ public class EventTests {
     this.single = this.single.editSingleEvent(EventProperty.LOCATION, "online");
     assertEquals(Location.ONLINE, this.single.getLocation());
 
-    this.single = this.single.editSingleEvent(EventProperty.DESCRIPTION, "at the airport");
+    this.single = this.single.editSingleEvent(EventProperty.DESCRIPTION,
+            "at the airport");
     assertEquals("at the airport", this.single.getDescription());
 
     this.single = this.single.editSingleEvent(EventProperty.STATUS, "public");
@@ -153,7 +180,8 @@ public class EventTests {
     this.single = this.single.editSeriesEvent(EventProperty.LOCATION, "online");
     assertEquals(Location.ONLINE, this.single.getLocation());
 
-    this.single = this.single.editSeriesEvent(EventProperty.DESCRIPTION, "at the airport");
+    this.single = this.single.editSeriesEvent(EventProperty.DESCRIPTION,
+            "at the airport");
     assertEquals("at the airport", this.single.getDescription());
 
     this.single = this.single.editSeriesEvent(EventProperty.STATUS, "public");
@@ -162,7 +190,8 @@ public class EventTests {
     this.single = this.single.editSeriesEvent(EventProperty.SUBJECT, "shopping");
     assertEquals("shopping", this.single.getSubject());
 
-    AEvent earlierSeries = this.series.editSeriesEvent(EventProperty.START, "2025-08-01T04:00");
+    AEvent earlierSeries = this.series.editSeriesEvent(EventProperty.START,
+            "2025-08-01T04:00");
     assertEquals("2025-08-01T04:00", earlierSeries.getStartDate().toString());
     assertEquals("2025-08-01T06:00", earlierSeries.getEndDate().toString()); // End unchanged
     assertEquals(2, earlierSeries.getEvents().size());
@@ -178,7 +207,8 @@ public class EventTests {
     assertEquals(Location.ONLINE, this.series.getLocation());
     assertEquals(2, this.series.getEvents().size());
 
-    this.series = this.series.editSeriesEvent(EventProperty.DESCRIPTION, "at the airport");
+    this.series = this.series.editSeriesEvent(EventProperty.DESCRIPTION,
+            "at the airport");
     assertEquals("at the airport", this.series.getDescription());
     assertEquals(2, this.series.getEvents().size());
 
@@ -245,22 +275,28 @@ public class EventTests {
   @Test
   public void sameSubjectAndStart() {
     // true cases
-    assertTrue(this.single.sameSubjectAndStart("class", LocalDateTime.parse("2025-09-09T08:00")));
+    assertTrue(this.single.sameSubjectAndStart("class",
+            LocalDateTime.parse("2025-09-09T08:00")));
 
     // false cases
-    assertFalse(this.single.sameSubjectAndStart("class2", LocalDateTime.parse("2025-09-09T08:00")));
-    assertFalse(this.single.sameSubjectAndStart("class", LocalDateTime.parse("2025-09-09T09:00")));
-    assertFalse(this.single.sameSubjectAndStart("class2", LocalDateTime.parse("2025-09-09T12:00")));
+    assertFalse(this.single.sameSubjectAndStart("class2",
+            LocalDateTime.parse("2025-09-09T08:00")));
+    assertFalse(this.single.sameSubjectAndStart("class",
+            LocalDateTime.parse("2025-09-09T09:00")));
+    assertFalse(this.single.sameSubjectAndStart("class2",
+            LocalDateTime.parse("2025-09-09T12:00")));
   }
 
   @Test
   public void testToString() {
     assertEquals("- class: 2025-09-09T08:00 to 2025-09-09T10:00", this.single.toString());
-    assertEquals("- vacation: 2025-09-09T00:00 to 2025-09-16T00:00", this.multiday.toString());
+    assertEquals("- vacation: 2025-09-09T00:00 to 2025-09-16T00:00",
+            this.multiday.toString());
     assertEquals("- lab: 2025-01-06T14:00 to 2025-01-06T16:30", this.series.toString());
 
     AEvent invalidSingle1 = new SingleEvent(
-            null, LocalDateTime.parse("2025-09-09T08:00"), LocalDateTime.now(), null, null, null);
+            null, LocalDateTime.parse("2025-09-09T08:00"), LocalDateTime.now(),
+            null, null, null);
     try {
       String s = invalidSingle1.toString();
       fail("Should have thrown an exception");
@@ -268,7 +304,8 @@ public class EventTests {
       assertEquals("Event is missing start date, end date, or subject", e.getMessage());
     }
 
-    AEvent invalidSingle2 = new SingleEvent("subject", null, LocalDateTime.now(), null, null, null);
+    AEvent invalidSingle2 = new SingleEvent("subject", null, LocalDateTime.now(),
+            null, null, null);
     try {
       String s = invalidSingle2.toString();
       fail("Should have thrown an exception");
@@ -277,7 +314,8 @@ public class EventTests {
     }
 
     AEvent invalidSingle3 = new SingleEvent(
-            "subject", LocalDateTime.parse("2025-09-09T08:00"), null, null, null, null);
+            "subject", LocalDateTime.parse("2025-09-09T08:00"), null,
+            null, null, null);
     try {
       String s = invalidSingle3.toString();
       fail("Should have thrown an exception");
@@ -302,11 +340,13 @@ public class EventTests {
     // get events should return a list with all the events in a series
     assertTrue(
             seriesEvents.get(0).sameEvent(
-                    "lab", LocalDateTime.of(2025, 1, 6, 14, 0),
+                    "lab",
+                    LocalDateTime.of(2025, 1, 6, 14, 0),
                     LocalDateTime.of(2025, 1, 6, 16, 30)));
     assertTrue(
             seriesEvents.get(1).sameEvent(
-                    "lab", LocalDateTime.of(2025, 1, 8, 14, 0),
+                    "lab",
+                    LocalDateTime.of(2025, 1, 8, 14, 0),
                     LocalDateTime.of(2025, 1, 8, 16, 30)));
     // check for correct number of events in series
     assertEquals(2, seriesEvents.size());

@@ -206,8 +206,10 @@ public class CreateEventSeriesTest {
   @Test
   public void testVerifySeriesWithPrintCommand() {
     String subject = "Print";
-    LocalDateTime startDateTime = LocalDateTime.of(2025, 8, 4, 16, 0); // Monday
-    LocalDateTime endDateTime = LocalDateTime.of(2025, 8, 4, 17, 0);
+    LocalDateTime startDateTime = LocalDateTime.of(
+            2025, 8, 4, 16, 0); // Monday
+    LocalDateTime endDateTime = LocalDateTime.of(
+            2025, 8, 4, 17, 0);
     DayOfWeek[] daysOfWeek = {DayOfWeek.MONDAY, DayOfWeek.FRIDAY};
     int occurrences = 4;
 
@@ -215,13 +217,15 @@ public class CreateEventSeriesTest {
             subject, daysOfWeek, occurrences, startDateTime, endDateTime);
     command.run(mockModel, mockView);
 
-    PrintEvents printCommand = new PrintEvents(LocalDate.of(2025, 8, 4)); // First Monday
+    PrintEvents printCommand = new PrintEvents(
+            LocalDate.of(2025, 8, 4)); // First Monday
     printCommand.run(mockModel, mockView);
 
     String output = outputStream.toString();
     assertTrue("Should show events on the date", output.contains("Events on 2025-08-04:"));
     assertTrue("Should contain the event subject", output.contains(subject));
-    assertTrue("Should show correct times", output.contains("16:00") && output.contains("17:00"));
+    assertTrue("Should show correct times",
+            output.contains("16:00") && output.contains("17:00"));
   }
 
 

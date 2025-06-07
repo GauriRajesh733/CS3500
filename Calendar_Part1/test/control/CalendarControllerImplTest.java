@@ -37,7 +37,8 @@ public class CalendarControllerImplTest {
   @Test
   public void testValidFileInputsNoExit() throws FileNotFoundException {
     this.is = new FileInputStream(
-            "C:\\Users\\gauri\\Documents\\GitHub\\CS3500\\Calendar_Part1\\res\\validCommands");
+            "C:\\Users\\gauri\\Documents\\GitHub\\CS3500" +
+                    "\\Calendar_Part1\\res\\validCommands");
     this.c = new CalendarControllerImpl(is);
     this.c.run(new CalendarModelImpl(), new CalendarViewImpl(s));
     String correctOutput = "Events from 2025-05-05T10:00 to 2025-05-21T11:00:"
@@ -92,10 +93,12 @@ public class CalendarControllerImplTest {
   @Test
   public void testInvalidFileInputsNoExit() throws FileNotFoundException {
     this.is = new FileInputStream(
-            "C:\\Users\\gauri\\Documents\\GitHub\\CS3500\\Calendar_Part1\\res\\invalidCommands");
+            "C:\\Users\\gauri\\Documents\\GitHub\\" +
+                    "CS3500\\Calendar_Part1\\res\\invalidCommands");
     this.c = new CalendarControllerImpl(is);
     this.c.run(new CalendarModelImpl(), new CalendarViewImpl(s));
-    assertEquals("Invalid calendar event command: blah blah blah" + System.lineSeparator() +
+    assertEquals("Invalid calendar event command: blah blah blah"
+            + System.lineSeparator() +
             "Please enter a new command" + System.lineSeparator() +
             "File input must end with exit command" + System.lineSeparator() +
             "Invalid date provided: 2025" + System.lineSeparator() +
@@ -119,10 +122,12 @@ public class CalendarControllerImplTest {
   @Test
   public void testValidFileInputsNoExit2() throws FileNotFoundException {
     this.is = new FileInputStream(
-            "C:\\Users\\gauri\\Documents\\GitHub\\CS3500\\Calendar_Part1\\res\\validCommands2.txt");
+            "C:\\Users\\gauri\\Documents\\GitHub\\CS3500" +
+                    "\\Calendar_Part1\\res\\validCommands2.txt");
     this.c = new CalendarControllerImpl(is);
     this.c.run(new CalendarModelImpl(), new CalendarViewImpl(s));
-    assertEquals("Events from 2025-06-02T09:50 to 2025-06-30T11:20:" + System.lineSeparator() +
+    assertEquals("Events from 2025-06-02T09:50 to 2025-06-30T11:20:"
+            + System.lineSeparator() +
             "- lab: 2025-06-30T09:50 to 2025-06-30T11:20" + System.lineSeparator() +
             "- lab: 2025-06-11T09:50 to 2025-06-11T11:20" + System.lineSeparator() +
             "- lab: 2025-06-09T09:50 to 2025-06-09T11:20" + System.lineSeparator() +
