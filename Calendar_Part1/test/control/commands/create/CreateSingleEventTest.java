@@ -50,7 +50,8 @@ public class CreateSingleEventTest {
 
     command.run(mockModel, mockView);
 
-    ArrayList<String> events = mockModel.printEventsForDate(LocalDate.of(2025, 5, 1));
+    ArrayList<String> events = mockModel.printEventsForDate(
+            LocalDate.of(2025, 5, 1));
 
     assertFalse("Event should be added to calendar", events.isEmpty());
 
@@ -86,8 +87,10 @@ public class CreateSingleEventTest {
   @Test
   public void testCreateMultiDayEvent() {
     String subject = "Multi Day Event";
-    LocalDateTime startDateTime = LocalDateTime.of(2025, 5, 1, 14, 0);
-    LocalDateTime endDateTime = LocalDateTime.of(2025, 5, 3, 16, 0);
+    LocalDateTime startDateTime = LocalDateTime.of(
+            2025, 5, 1, 14, 0);
+    LocalDateTime endDateTime = LocalDateTime.of(
+            2025, 5, 3, 16, 0);
 
     CreateSingleEvent command = new CreateSingleEvent(subject, startDateTime, endDateTime);
     command.run(mockModel, mockView);
@@ -109,8 +112,10 @@ public class CreateSingleEventTest {
   @Test
   public void testCreateDuplicateEventThrowsException() {
     String subject = "Duplicate Event";
-    LocalDateTime startDateTime = LocalDateTime.of(2025, 5, 1, 10, 0);
-    LocalDateTime endDateTime = LocalDateTime.of(2025, 5, 1, 11, 0);
+    LocalDateTime startDateTime = LocalDateTime.of(
+            2025, 5, 1, 10, 0);
+    LocalDateTime endDateTime = LocalDateTime.of(
+            2025, 5, 1, 11, 0);
 
     CreateSingleEvent command1 = new CreateSingleEvent(subject, startDateTime, endDateTime);
     CreateSingleEvent command2 = new CreateSingleEvent(subject, startDateTime, endDateTime);
@@ -130,8 +135,10 @@ public class CreateSingleEventTest {
   public void testCreateEventAndVerifyWithPrint() {
     String subject = "Verification Event";
     LocalDate eventDate = LocalDate.of(2025, 5, 5);
-    LocalDateTime startDateTime = LocalDateTime.of(2025, 5, 5, 9, 30);
-    LocalDateTime endDateTime = LocalDateTime.of(2025, 5, 5, 10, 30);
+    LocalDateTime startDateTime = LocalDateTime.of(
+            2025, 5, 5, 9, 30);
+    LocalDateTime endDateTime = LocalDateTime.of(
+            2025, 5, 5, 10, 30);
 
     CreateSingleEvent createCommand = new CreateSingleEvent(subject, startDateTime, endDateTime);
     createCommand.run(mockModel, mockView);

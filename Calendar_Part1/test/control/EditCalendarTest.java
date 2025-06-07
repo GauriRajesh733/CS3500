@@ -155,7 +155,8 @@ public class EditCalendarTest {
     String input2 = "print events from 2025-06-04T21:19 to 2025-06-07T21:19";
     CalendarCommand printCmd1 = new PrintCommandFactory().createCalendarCommand(input2);
     printCmd1.run(this.model, this.view);
-    assertEquals("Events from 2025-06-04T21:19 to 2025-06-07T21:19:" + System.lineSeparator() +
+    assertEquals("Events from 2025-06-04T21:19 to 2025-06-07T21:19:"
+                    + System.lineSeparator() +
                     "- title: 2025-06-04T21:19 to 2025-06-07T21:19" + System.lineSeparator() +
                     "- title: 2025-06-04T21:19 to 2025-06-07T21:19" + System.lineSeparator() +
                     "- title: 2025-06-04T21:19 to 2025-06-07T21:19" + System.lineSeparator() +
@@ -174,7 +175,8 @@ public class EditCalendarTest {
     String input4 = "print events from 2025-06-04T21:19 to 2025-06-07T21:19";
     CalendarCommand printCmd2 = new PrintCommandFactory().createCalendarCommand(input4);
     printCmd2.run(this.model, this.view);
-    assertEquals("Events from 2025-06-04T21:19 to 2025-06-07T21:19:" + System.lineSeparator() +
+    assertEquals("Events from 2025-06-04T21:19 to 2025-06-07T21:19:"
+                    + System.lineSeparator() +
                     "- title (physical): 2025-06-04T21:19 to 2025-06-07T21:19"
                     + System.lineSeparator() +
                     "- title (physical): 2025-06-04T21:19 to 2025-06-07T21:19"
@@ -198,7 +200,8 @@ public class EditCalendarTest {
     String input2 = "print events from 2025-06-04T21:19 to 2025-06-07T21:19";
     CalendarCommand printCmd1 = new PrintCommandFactory().createCalendarCommand(input2);
     printCmd1.run(this.model, this.view);
-    assertEquals("Events from 2025-06-04T21:19 to 2025-06-07T21:19:" + System.lineSeparator() +
+    assertEquals("Events from 2025-06-04T21:19 to 2025-06-07T21:19:"
+                    + System.lineSeparator() +
                     "- title: 2025-06-04T21:19 to 2025-06-07T21:19" + System.lineSeparator() +
                     "- title: 2025-06-04T21:19 to 2025-06-07T21:19" + System.lineSeparator() +
                     "- title: 2025-06-04T21:19 to 2025-06-07T21:19" + System.lineSeparator() +
@@ -216,7 +219,8 @@ public class EditCalendarTest {
     String input4 = "print events from 2025-06-04T21:19 to 2025-06-07T21:19";
     CalendarCommand printCmd2 = new PrintCommandFactory().createCalendarCommand(input4);
     printCmd2.run(this.model, this.view);
-    assertEquals("Events from 2025-06-04T21:19 to 2025-06-07T21:19:" + System.lineSeparator() +
+    assertEquals("Events from 2025-06-04T21:19 to 2025-06-07T21:19:"
+                    + System.lineSeparator() +
                     "- title (physical): 2025-06-04T21:19 to 2025-06-07T21:19"
                     + System.lineSeparator() +
                     "- title (physical): 2025-06-04T21:19 to 2025-06-07T21:19"
@@ -240,7 +244,8 @@ public class EditCalendarTest {
     String input2 = "print events from 2025-06-04T21:19 to 2025-06-07T21:19";
     CalendarCommand printCmd1 = new PrintCommandFactory().createCalendarCommand(input2);
     printCmd1.run(this.model, this.view);
-    assertEquals("Events from 2025-06-04T21:19 to 2025-06-07T21:19:" + System.lineSeparator() +
+    assertEquals("Events from 2025-06-04T21:19 to 2025-06-07T21:19:"
+                    + System.lineSeparator() +
                     "- title: 2025-06-04T21:19 to 2025-06-07T21:19" + System.lineSeparator() +
                     "- title: 2025-06-04T21:19 to 2025-06-07T21:19" + System.lineSeparator() +
                     "- title: 2025-06-04T21:19 to 2025-06-07T21:19" + System.lineSeparator() +
@@ -258,7 +263,8 @@ public class EditCalendarTest {
     String input4 = "print events from 2025-06-04T21:19:00 to 2025-06-07T21:19";
     CalendarCommand printCmd2 = new PrintCommandFactory().createCalendarCommand(input4);
     printCmd2.run(this.model, this.view);
-    assertEquals("Events from 2025-06-04T21:19 to 2025-06-07T21:19:" + System.lineSeparator() +
+    assertEquals("Events from 2025-06-04T21:19 to 2025-06-07T21:19:"
+                    + System.lineSeparator() +
                     "- title (physical): 2025-06-04T21:19 to 2025-06-07T21:19"
                     + System.lineSeparator() +
                     "- title (physical): 2025-06-04T21:19 to 2025-06-07T21:19"
@@ -284,7 +290,8 @@ public class EditCalendarTest {
     String input2 = "print events from 2019-09-09T00:00 to 2019-11-09T00:00";
     CalendarCommand printCmd1 = new PrintCommandFactory().createCalendarCommand(input2);
     printCmd1.run(this.model, this.view);
-    assertEquals("Events from 2019-09-09T00:00 to 2019-11-09T00:00:" + System.lineSeparator() +
+    assertEquals("Events from 2019-09-09T00:00 to 2019-11-09T00:00:"
+                    + System.lineSeparator() +
                     "- title: 2019-09-11T08:00 to 2019-09-11T17:00" + System.lineSeparator() +
                     "- title: 2019-09-09T08:00 to 2019-09-09T17:00" + System.lineSeparator() +
                     "- title: 2019-09-25T08:00 to 2019-09-25T17:00" + System.lineSeparator() +
@@ -306,7 +313,8 @@ public class EditCalendarTest {
     String input4 = "print events from 2019-09-09T00:00 to 2019-11-09T00:00";
     CalendarCommand printCmd2 = new PrintCommandFactory().createCalendarCommand(input4);
     printCmd2.run(this.model, this.view);
-    assertEquals("Events from 2019-09-09T00:00 to 2019-11-09T00:00:" + System.lineSeparator() +
+    assertEquals("Events from 2019-09-09T00:00 to 2019-11-09T00:00:"
+                    + System.lineSeparator() +
                     "- title (physical): 2019-09-11T08:00 to 2019-09-11T17:00"
                     + System.lineSeparator() +
                     "- title: 2019-09-09T08:00 to 2019-09-09T17:00" + System.lineSeparator() +
@@ -329,7 +337,8 @@ public class EditCalendarTest {
     String input2 = "print events from 2019-09-09T00:00 to 2019-11-09T00:00";
     CalendarCommand printCmd1 = new PrintCommandFactory().createCalendarCommand(input2);
     printCmd1.run(this.model, this.view);
-    assertEquals("Events from 2019-09-09T00:00 to 2019-11-09T00:00:" + System.lineSeparator() +
+    assertEquals("Events from 2019-09-09T00:00 to 2019-11-09T00:00:"
+                    + System.lineSeparator() +
                     "- title: 2019-09-11T08:00 to 2019-09-11T17:00" + System.lineSeparator() +
                     "- title: 2019-09-09T08:00 to 2019-09-09T17:00" + System.lineSeparator() +
                     "- title: 2019-09-25T08:00 to 2019-09-25T17:00" + System.lineSeparator() +
@@ -348,7 +357,8 @@ public class EditCalendarTest {
     String input4 = "print events from 2019-09-09T00:00 to 2019-11-09T00:00";
     CalendarCommand printCmd2 = new PrintCommandFactory().createCalendarCommand(input4);
     printCmd2.run(this.model, this.view);
-    assertEquals("Events from 2019-09-09T00:00 to 2019-11-09T00:00:" + System.lineSeparator() +
+    assertEquals("Events from 2019-09-09T00:00 to 2019-11-09T00:00:"
+                    + System.lineSeparator() +
                     "- title: 2019-09-11T08:00 to 2019-09-11T17:00" + System.lineSeparator() +
                     "- title: 2019-09-09T08:00 to 2019-09-09T17:00" + System.lineSeparator() +
                     "- title (physical): 2019-09-25T08:00 to 2019-09-25T17:00"
@@ -372,7 +382,8 @@ public class EditCalendarTest {
     String input2 = "print events from 2019-09-09T00:00 to 2019-11-09T00:00";
     CalendarCommand printCmd1 = new PrintCommandFactory().createCalendarCommand(input2);
     printCmd1.run(this.model, this.view);
-    assertEquals("Events from 2019-09-09T00:00 to 2019-11-09T00:00:" + System.lineSeparator() +
+    assertEquals("Events from 2019-09-09T00:00 to 2019-11-09T00:00:"
+                    + System.lineSeparator() +
                     "- title: 2019-09-11T08:00 to 2019-09-11T17:00" + System.lineSeparator() +
                     "- title: 2019-09-09T08:00 to 2019-09-09T17:00" + System.lineSeparator() +
                     "- title: 2019-09-25T08:00 to 2019-09-25T17:00" + System.lineSeparator() +
@@ -392,7 +403,8 @@ public class EditCalendarTest {
     String input4 = "print events from 2019-09-09T00:00 to 2019-11-09T00:00";
     CalendarCommand printCmd2 = new PrintCommandFactory().createCalendarCommand(input4);
     printCmd2.run(this.model, this.view);
-    assertEquals("Events from 2019-09-09T00:00 to 2019-11-09T00:00:" + System.lineSeparator() +
+    assertEquals("Events from 2019-09-09T00:00 to 2019-11-09T00:00:"
+                    + System.lineSeparator() +
                     "- title (physical): 2019-09-11T08:00 to 2019-09-11T17:00"
                     + System.lineSeparator() +
                     "- title (physical): 2019-09-09T08:00 to 2019-09-09T17:00"
@@ -420,7 +432,8 @@ public class EditCalendarTest {
     String input2 = "print events from 2019-09-09T00:00 to 2019-11-09T00:00";
     CalendarCommand printCmd1 = new PrintCommandFactory().createCalendarCommand(input2);
     printCmd1.run(this.model, this.view);
-    assertEquals("Events from 2019-09-09T00:00 to 2019-11-09T00:00:" + System.lineSeparator() +
+    assertEquals("Events from 2019-09-09T00:00 to 2019-11-09T00:00:"
+                    + System.lineSeparator() +
                     "- title: 2019-09-11T08:00 to 2019-09-11T17:00" + System.lineSeparator() +
                     "- title: 2019-09-09T08:00 to 2019-09-09T17:00" + System.lineSeparator() +
                     "- title: 2019-09-25T08:00 to 2019-09-25T17:00" + System.lineSeparator() +
@@ -453,7 +466,8 @@ public class EditCalendarTest {
     String input2 = "print events from 2019-09-09T00:00 to 2019-11-09T00:00";
     CalendarCommand printCmd1 = new PrintCommandFactory().createCalendarCommand(input2);
     printCmd1.run(this.model, this.view);
-    assertEquals("Events from 2019-09-09T00:00 to 2019-11-09T00:00:" + System.lineSeparator() +
+    assertEquals("Events from 2019-09-09T00:00 to 2019-11-09T00:00:"
+                    + System.lineSeparator() +
                     "- title: 2019-09-11T08:00 to 2019-09-11T17:00" + System.lineSeparator() +
                     "- title: 2019-09-09T08:00 to 2019-09-09T17:00" + System.lineSeparator() +
                     "- title: 2019-09-25T08:00 to 2019-09-25T17:00" + System.lineSeparator() +
@@ -486,7 +500,8 @@ public class EditCalendarTest {
     String input2 = "print events from 2019-09-09T00:00 to 2019-11-09T00:00";
     CalendarCommand printCmd1 = new PrintCommandFactory().createCalendarCommand(input2);
     printCmd1.run(this.model, this.view);
-    assertEquals("Events from 2019-09-09T00:00 to 2019-11-09T00:00:" + System.lineSeparator() +
+    assertEquals("Events from 2019-09-09T00:00 to 2019-11-09T00:00:"
+                    + System.lineSeparator() +
                     "- title: 2019-09-11T08:00 to 2019-09-11T17:00" + System.lineSeparator() +
                     "- title: 2019-09-09T08:00 to 2019-09-09T17:00" + System.lineSeparator() +
                     "- title: 2019-09-25T08:00 to 2019-09-25T17:00" + System.lineSeparator() +
@@ -519,7 +534,8 @@ public class EditCalendarTest {
     String input2 = "print events from 2019-09-09T00:00 to 2019-11-09T00:00";
     CalendarCommand printCmd1 = new PrintCommandFactory().createCalendarCommand(input2);
     printCmd1.run(this.model, this.view);
-    assertEquals("Events from 2019-09-09T00:00 to 2019-11-09T00:00:" + System.lineSeparator() +
+    assertEquals("Events from 2019-09-09T00:00 to 2019-11-09T00:00:"
+                    + System.lineSeparator() +
                     "- title: 2019-09-11T08:00 to 2019-09-11T17:00" + System.lineSeparator() +
                     "- title: 2019-09-09T08:00 to 2019-09-09T17:00" + System.lineSeparator() +
                     "- title: 2019-09-25T08:00 to 2019-09-25T17:00" + System.lineSeparator() +
@@ -531,7 +547,8 @@ public class EditCalendarTest {
 
     try {
       // edit series command for all events in series
-      String input3 = "edit event start title from 2019-09-09T08:00 to 2019-09-09T17:00 with 2019-09-09";
+      String input3 = "edit event start title from 2019-09-09T08:00 to " +
+              "2019-09-09T17:00 with 2019-09-09";
       CalendarCommand cmd = this.editCommandFactory.createCalendarCommand(input3);
       cmd.run(this.model, this.view);
       fail("Should have thrown");
@@ -551,7 +568,8 @@ public class EditCalendarTest {
     String input2 = "print events from 2019-09-09T00:00 to 2019-11-09T00:00";
     CalendarCommand printCmd1 = new PrintCommandFactory().createCalendarCommand(input2);
     printCmd1.run(this.model, this.view);
-    assertEquals("Events from 2019-09-09T00:00 to 2019-11-09T00:00:" + System.lineSeparator() +
+    assertEquals("Events from 2019-09-09T00:00 to 2019-11-09T00:00:"
+                    + System.lineSeparator() +
                     "- title: 2019-09-11T08:00 to 2019-09-11T17:00" + System.lineSeparator() +
                     "- title: 2019-09-09T08:00 to 2019-09-09T17:00" + System.lineSeparator() +
                     "- title: 2019-09-25T08:00 to 2019-09-25T17:00" + System.lineSeparator() +
@@ -563,7 +581,8 @@ public class EditCalendarTest {
 
     try {
       // edit series command for all events in series
-      String input3 = "edit event end title from 2019-09-09T08:00 to 2019-09-09T17:00 with blah blah blah";
+      String input3 = "edit event end title from 2019-09-09T08:00 to " +
+              "2019-09-09T17:00 with blah blah blah";
       CalendarCommand cmd = this.editCommandFactory.createCalendarCommand(input3);
       cmd.run(this.model, this.view);
       fail("Should have thrown");
@@ -583,7 +602,8 @@ public class EditCalendarTest {
     String input2 = "print events from 2019-09-09T00:00 to 2019-11-09T00:00";
     CalendarCommand printCmd1 = new PrintCommandFactory().createCalendarCommand(input2);
     printCmd1.run(this.model, this.view);
-    assertEquals("Events from 2019-09-09T00:00 to 2019-11-09T00:00:" + System.lineSeparator() +
+    assertEquals("Events from 2019-09-09T00:00 to 2019-11-09T00:00:"
+                    + System.lineSeparator() +
                     "- title: 2019-09-11T08:00 to 2019-09-11T17:00" + System.lineSeparator() +
                     "- title: 2019-09-09T08:00 to 2019-09-09T17:00" + System.lineSeparator() +
                     "- title: 2019-09-25T08:00 to 2019-09-25T17:00" + System.lineSeparator() +
@@ -595,7 +615,8 @@ public class EditCalendarTest {
 
     try {
       // edit series command for all events in series
-      String input3 = "edit event location title from 2019-09-09T08:00 to 2019-09-09T17:00 with blah blah blah";
+      String input3 = "edit event location title from 2019-09-09T08:00 to " +
+              "2019-09-09T17:00 with blah blah blah";
       CalendarCommand cmd = this.editCommandFactory.createCalendarCommand(input3);
       cmd.run(this.model, this.view);
       fail("Should have thrown");
@@ -615,7 +636,8 @@ public class EditCalendarTest {
     String input2 = "print events from 2019-09-09T00:00 to 2019-11-09T00:00";
     CalendarCommand printCmd1 = new PrintCommandFactory().createCalendarCommand(input2);
     printCmd1.run(this.model, this.view);
-    assertEquals("Events from 2019-09-09T00:00 to 2019-11-09T00:00:" + System.lineSeparator() +
+    assertEquals("Events from 2019-09-09T00:00 to 2019-11-09T00:00:"
+                    + System.lineSeparator() +
                     "- title: 2019-09-11T08:00 to 2019-09-11T17:00" + System.lineSeparator() +
                     "- title: 2019-09-09T08:00 to 2019-09-09T17:00" + System.lineSeparator() +
                     "- title: 2019-09-25T08:00 to 2019-09-25T17:00" + System.lineSeparator() +
@@ -627,7 +649,8 @@ public class EditCalendarTest {
 
     try {
       // edit series command for all events in series
-      String input3 = "edit event end title from 2019-09-09T08:00 to 2019-09-09T17:00 with blah blah blah";
+      String input3 = "edit event end title from 2019-09-09T08:00 to " +
+              "2019-09-09T17:00 with blah blah blah";
       CalendarCommand cmd = this.editCommandFactory.createCalendarCommand(input3);
       cmd.run(this.model, this.view);
       fail("Should have thrown");

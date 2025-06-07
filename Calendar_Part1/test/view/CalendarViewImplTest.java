@@ -36,7 +36,8 @@ public class CalendarViewImplTest {
 
     // empty list of dates
     view.showEventsOnDate(singleDayEvents, LocalDate.of(2025, 6, 2));
-    assertEquals("No events on 2025-06-02" + System.lineSeparator(), this.stream.toString());
+    assertEquals("No events on 2025-06-02" + System.lineSeparator(),
+            this.stream.toString());
 
     // list of dates with 1 single event
     this.resetStream();
@@ -82,7 +83,8 @@ public class CalendarViewImplTest {
     // no events in range
     ArrayList<String> eventsInRange = new ArrayList<>();
     view.showEventsInRange(
-            eventsInRange, LocalDateTime.of(2025, 5, 2, 0, 0), LocalDateTime.of(2025, 5, 4, 0, 0));
+            eventsInRange, LocalDateTime.of(2025, 5, 2, 0, 0),
+            LocalDateTime.of(2025, 5, 4, 0, 0));
     assertEquals("No events from 2025-05-02T00:00 to 2025-05-04T00:00" +
             System.lineSeparator(), this.stream.toString());
 
@@ -92,8 +94,10 @@ public class CalendarViewImplTest {
     eventsInRange.add("- Project: 2025-05-03T11:20 to 2025-05-04T11:20");
     eventsInRange.add("- Class: 2025-05-04T11:20 to 2025-05-04T02:20");
     view.showEventsInRange(
-            eventsInRange, LocalDateTime.of(2025, 5, 2, 0, 0), LocalDateTime.of(2025, 5, 4, 0, 0));
-    assertEquals("Events from 2025-05-02T00:00 to 2025-05-04T00:00:" + System.lineSeparator()
+            eventsInRange, LocalDateTime.of(2025, 5, 2, 0, 0),
+            LocalDateTime.of(2025, 5, 4, 0, 0));
+    assertEquals("Events from 2025-05-02T00:00 to 2025-05-04T00:00:"
+            + System.lineSeparator()
             + "- Gym: 2025-05-02T11:20 to 2025-05-02T12:20" + System.lineSeparator()
             + "- Project: 2025-05-03T11:20 to 2025-05-04T11:20" + System.lineSeparator()
             + "- Class: 2025-05-04T11:20 to 2025-05-04T02:20" +
@@ -106,8 +110,10 @@ public class CalendarViewImplTest {
     eventsInRange.add("- Project (online): 2025-05-03T11:20 to 2025-05-04T11:20");
     eventsInRange.add("- Class (physical): 2025-05-04T11:20 to 2025-05-04T02:20");
     view.showEventsInRange(
-            eventsInRange, LocalDateTime.of(2025, 5, 2, 0, 0), LocalDateTime.of(2025, 5, 4, 0, 0));
-    assertEquals("Events from 2025-05-02T00:00 to 2025-05-04T00:00:" + System.lineSeparator()
+            eventsInRange, LocalDateTime.of(2025, 5, 2, 0, 0),
+            LocalDateTime.of(2025, 5, 4, 0, 0));
+    assertEquals("Events from 2025-05-02T00:00 to 2025-05-04T00:00:"
+            + System.lineSeparator()
             + "- Gym (physical): 2025-05-02T11:20 to 2025-05-02T12:20" + System.lineSeparator()
             + "- Project (online): 2025-05-03T11:20 to 2025-05-04T11:20" + System.lineSeparator()
             + "- Class (physical): 2025-05-04T11:20 to 2025-05-04T02:20" +
@@ -120,13 +126,18 @@ public class CalendarViewImplTest {
   @Test
   public void showStatus() {
     // available status
-    view.showStatus(false, LocalDateTime.of(2025, 5, 2, 0, 0));
-    assertEquals("Available on 2025-05-02T00:00" + System.lineSeparator(), this.stream.toString());
+    view.showStatus(false,
+            LocalDateTime.of(2025, 5, 2, 0, 0));
+    assertEquals(
+            "Available on 2025-05-02T00:00"
+                    + System.lineSeparator(), this.stream.toString());
 
     // busy status
     this.resetStream();
-    view.showStatus(true, LocalDateTime.of(2025, 5, 2, 0, 0));
-    assertEquals("Busy on 2025-05-02T00:00" + System.lineSeparator(), this.stream.toString());
+    view.showStatus(true,
+            LocalDateTime.of(2025, 5, 2, 0, 0));
+    assertEquals("Busy on 2025-05-02T00:00"
+            + System.lineSeparator(), this.stream.toString());
   }
 
   // test if view displays error message

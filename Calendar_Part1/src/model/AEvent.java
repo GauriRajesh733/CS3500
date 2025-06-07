@@ -55,8 +55,8 @@ public abstract class AEvent implements Event {
 
   @Override
   public boolean sameEvent(String subject, LocalDateTime startDate, LocalDateTime endDate) {
-    return this.subject.equals(subject) && this.startDateTime.equals(startDate) &&
-            this.endDateTime.equals(endDate);
+    return this.subject.equals(subject)
+            && this.startDateTime.equals(startDate) && this.endDateTime.equals(endDate);
   }
 
   @Override

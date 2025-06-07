@@ -57,7 +57,9 @@ public class PrintEventsTest {
     LocalDate testDate = LocalDate.of(2025, 5, 5);
 
     mockModel.addSingleEvent(
-            "Test Event", LocalDateTime.of(2025, 5, 5, 5, 5), LocalDateTime.of(2025, 5, 5, 5, 5));
+            "Test Event",
+            LocalDateTime.of(2025, 5, 5, 5, 5),
+            LocalDateTime.of(2025, 5, 5, 5, 5));
 
     PrintEvents command = new PrintEvents(testDate);
     command.run(mockModel, mockView);
@@ -67,7 +69,8 @@ public class PrintEventsTest {
     assertEquals(expectedOutput, outputStream.toString());
 
     mockModel.addSingleEvent(
-            "Test Event2", LocalDateTime.of(2025, 5, 5, 5, 10),
+            "Test Event2",
+            LocalDateTime.of(2025, 5, 5, 5, 10),
             LocalDateTime.of(2025, 5, 5, 5, 15));
 
     command.run(mockModel, mockView);

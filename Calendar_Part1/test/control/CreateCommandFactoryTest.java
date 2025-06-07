@@ -157,10 +157,11 @@ public class CreateCommandFactoryTest extends ACommandFactoryTest {
   @Test
   public void testInvalidCreateCommandSingleEvent() {
     // Invalid command formats for single event
-    String[] invalidCommands = {"create event on 2025-05-05", "create event test on 2025-13-05",
-            "create event test on 2025-05-32",
-            "create event test on 2025-05-05T25:00",
-            "create event test on 2025-05-05T10:60"
+    String[] invalidCommands = {"create event on 2025-05-05", // missing subject
+            "create event test on 2025-13-05", // invalid month
+            "create event test on 2025-05-32", // invalid day
+            "create event test on 2025-05-05T25:00", // invalid hour
+            "create event test on 2025-05-05T10:60" // invalid minute
     };
 
     for (String command : invalidCommands) {
@@ -172,8 +173,8 @@ public class CreateCommandFactoryTest extends ACommandFactoryTest {
 
   @Test
   public void testInvalidCreateCommandSeriesNTimes() {
-    String[] invalidCommands = {
-            "create event test from 2025-05-05 to 2025-05-06 repeats M for 0 times", // zero times
+    String[] invalidCommands = {"create event test from 2025-05-05 to 2025-05-06 " +
+            "repeats M for 0 times", // zero times
             "create event test from 2025-05-05 to 2025-05-06 repeats M for -1" +
                     " times", // negative times
             "create event test from 2025-05-05 to 2025-05-06 repeats M for 1", // missing 'times'
@@ -214,7 +215,7 @@ public class CreateCommandFactoryTest extends ACommandFactoryTest {
 
     for (String command : invalidCommands) {
       assertThrows("Should throw exception for: " + command,
-              IllegalArgumentException.class,
+          IllegalArgumentException.class,
               () -> commandFactory.createCalendarCommand(command));
     }
   }
@@ -223,18 +224,18 @@ public class CreateCommandFactoryTest extends ACommandFactoryTest {
   public void testSingleAllDayEventInvalid() {
     // Invalid command formats for single all-day event
     String[] invalidCommands = {
-            "create event on 2025-05-05", // missing subject
-            "create event test on 2025-13-05", // invalid month
-            "create event test on 2025-05-32", // invalid day
-            "create event test on 2025-05-05T25:00", // invalid hour
-            "create event test on 2025-05-05T10:60", // invalid minute
-            "create", // incomplete command
-            "creat event test" // incomplete command
+        "create event on 2025-05-05", // missing subject
+        "create event test on 2025-13-05", // invalid month
+        "create event test on 2025-05-32", // invalid day
+        "create event test on 2025-05-05T25:00", // invalid hour
+        "create event test on 2025-05-05T10:60", // invalid minute
+        "create", // incomplete command
+        "creat event test" // incomplete command
     };
 
     for (String command : invalidCommands) {
-      assertThrows("Should throw exception for: " + command, IllegalArgumentException.class,
-              () -> commandFactory.createCalendarCommand(command));
+      assertThrows("Should throw exception for: " + command,
+          IllegalArgumentException.class,
     }
   }
 
@@ -242,12 +243,12 @@ public class CreateCommandFactoryTest extends ACommandFactoryTest {
   public void testAllDayEventSeriesInvalidN() {
     // Invalid command formats for all-day event series
     String[] invalidCommands = {
-            "create event on 2025-05-05 repeats M for 0 times", // zero times
-            "create event on 2025-05-05 repeats M for -1 times", // negative times
-            "create event on 2025-05-05 repeats M until 2025-04-01", // until date before start date
-            "create event on 2025-05-05 repeats M until 2025-06-01 for 1 times", // invalid format
-            "create event on 2025-05-05 repeats M until", // missing until date
-            "create event on 2025-05-05 repeats", // missing repeat type
+        "create event on 2025-05-05 repeats M for 0 times", // zero times
+        "create event on 2025-05-05 repeats M for -1 times", // negative times
+        "create event on 2025-05-05 repeats M until 2025-04-01", // until date before start date
+        "create event on 2025-05-05 repeats M until 2025-06-01 for 1 times", // invalid format
+        "create event on 2025-05-05 repeats M until", // missing until date
+        "create event on 2025-05-05 repeats", // missing repeat type
     };
 
     for (String command : invalidCommands) {

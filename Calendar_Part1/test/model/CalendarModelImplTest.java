@@ -28,15 +28,22 @@ public class CalendarModelImplTest {
   public void setUp() {
     this.m = new CalendarModelImpl();
     this.single = new SingleEvent(
-            "single", LocalDateTime.of(2025, 6, 3, 8, 0),
-            LocalDateTime.of(2025, 6, 3, 17, 0), null, null, null);
+            "single",
+            LocalDateTime.of(2025, 6, 3, 8, 0),
+            LocalDateTime.of(2025, 6, 3, 17, 0),
+            null, null, null);
     this.multiday = new SingleEvent(
-            "multiday", LocalDateTime.of(2025, 7, 3, 8, 0),
-            LocalDateTime.of(2025, 7, 5, 17, 0), null, null, null);
+            "multiday",
+            LocalDateTime.of(2025, 7, 3, 8, 0),
+            LocalDateTime.of(
+                    2025, 7, 5, 17, 0),
+            null, null, null);
     this.days = new DayOfWeek[]{DayOfWeek.SATURDAY, DayOfWeek.SUNDAY};
     this.series = new SeriesEvent(
-            "series", days, 4, LocalDateTime.of(2025, 8, 1, 5, 0),
-            LocalDateTime.of(2025, 8, 1, 6, 0), null, null, null);
+            "series", days, 4,
+            LocalDateTime.of(2025, 8, 1, 5, 0),
+            LocalDateTime.of(2025, 8, 1, 6, 0),
+            null, null, null);
   }
 
   // NOTE: ADD REMOVE TESTS!
@@ -44,7 +51,9 @@ public class CalendarModelImplTest {
   public void testAddEvent() {
     // add single event
     m.addSingleEvent(
-            "single", LocalDateTime.of(2025, 6, 3, 8, 0), LocalDateTime.of(2025, 6, 3, 17, 0));
+            "single",
+            LocalDateTime.of(2025, 6, 3, 8, 0),
+            LocalDateTime.of(2025, 6, 3, 17, 0));
 
     // verify changes
     assertTrue(
@@ -52,13 +61,17 @@ public class CalendarModelImplTest {
 
     // add multiday event
     m.addSingleEvent(
-            "multiday", LocalDateTime.of(2025, 7, 3, 8, 0), LocalDateTime.of(2025, 7, 5, 17, 0));
+            "multiday",
+            LocalDateTime.of(2025, 7, 3, 8, 0),
+            LocalDateTime.of(2025, 7, 5, 17, 0));
 
     // verify that duplicate event cannot be added
     try {
       // try to add duplicate multiday event
       m.addSingleEvent(
-              "multiday", LocalDateTime.of(2025, 7, 3, 8, 0), LocalDateTime.of(2025, 7, 5, 17, 0));
+              "multiday",
+              LocalDateTime.of(2025, 7, 3, 8, 0),
+              LocalDateTime.of(2025, 7, 5, 17, 0));
       fail("Should have thrown");
     } catch (IllegalArgumentException ignored) {
 
@@ -75,7 +88,8 @@ public class CalendarModelImplTest {
 
     // add series event
     m.addSeriesEvent(
-            "series", days, 4, LocalDateTime.of(2025, 8, 1, 5, 0),
+            "series", days, 4,
+            LocalDateTime.of(2025, 8, 1, 5, 0),
             LocalDateTime.of(2025, 8, 1, 6, 0));
 
     // verify changes
@@ -86,10 +100,14 @@ public class CalendarModelImplTest {
     // check that duplicate event with same start date, end date, and subject cannot be added
     try {
       m.addSingleEvent(
-              "single", LocalDateTime.of(2025, 6, 3, 8, 0), LocalDateTime.of(2025, 6, 3, 17, 0));
+              "single",
+              LocalDateTime.of(2025, 6, 3, 8, 0),
+              LocalDateTime.of(2025, 6, 3, 17, 0));
       fail("Should have thrown");
     } catch (IllegalArgumentException e) {
-      assertEquals("Given event with start date, end date, and subject already exists in calendar",
+      assertEquals(
+              "Given event with start date, end date, " +
+                      "and subject already exists in calendar",
               e.getMessage());
     }
 
@@ -102,19 +120,26 @@ public class CalendarModelImplTest {
 
     // print events for date with events
     this.m.addSingleEvent(
-            "single", LocalDateTime.of(2025, 6, 3, 8, 0), LocalDateTime.of(2025, 6, 3, 17, 0));
+            "single",
+            LocalDateTime.of(2025, 6, 3, 8, 0),
+            LocalDateTime.of(2025, 6, 3, 17, 0));
 
     assertEquals(1, this.m.printEventsForDate(single.getStartDate().toLocalDate()).size());
 
     this.m.addSingleEvent(
-            "multiday1", LocalDateTime.of(2025, 7, 3, 8, 0), LocalDateTime.of(2025, 7, 5, 17, 0));
-    this.m.addSingleEvent("multiday2", LocalDateTime.of(2025, 7, 3, 8, 0), LocalDateTime.of(2025,
-            7, 5, 17, 0).plusHours(2));
-    this.m.addSingleEvent("multiday3", LocalDateTime.of(2025, 7, 3, 8, 0), LocalDateTime.of(2025,
-            7, 5, 17, 0).plusHours(4));
+            "multiday1",
+            LocalDateTime.of(2025, 7, 3, 8, 0),
+            LocalDateTime.of(2025, 7, 5, 17, 0));
+    this.m.addSingleEvent("multiday2",
+            LocalDateTime.of(2025, 7, 3, 8, 0),
+            LocalDateTime.of(2025, 7, 5, 17, 0).plusHours(2));
+    this.m.addSingleEvent("multiday3",
+            LocalDateTime.of(2025, 7, 3, 8, 0),
+            LocalDateTime.of(2025, 7, 5, 17, 0).plusHours(4));
 
     // 3 multiday events that span 3 days each = 9 events
-    assertEquals(9, this.m.printEventsForDate(LocalDate.of(2025, 7, 3)).size());
+    assertEquals(9,
+            this.m.printEventsForDate(LocalDate.of(2025, 7, 3)).size());
   }
 
   @Test
@@ -122,21 +147,29 @@ public class CalendarModelImplTest {
     // print events for date range with no events
     assertEquals(
             new ArrayList<String>(),
-            this.m.printEventsUsingInterval(LocalDateTime.of(2025, 6, 3, 8, 0),
+            this.m.printEventsUsingInterval(
+                    LocalDateTime.of(2025, 6, 3, 8, 0),
                     LocalDateTime.of(2025, 6, 3, 17, 0)));
 
     // print events for date range with events
     this.m.addSingleEvent(
-            "single", LocalDateTime.of(2025, 6, 3, 8, 0), LocalDateTime.of(2025, 6, 3, 17, 0));
+            "single",
+            LocalDateTime.of(2025, 6, 3, 8, 0),
+            LocalDateTime.of(2025, 6, 3, 17, 0));
     this.m.addSingleEvent(
-            "multiday", LocalDateTime.of(2025, 7, 3, 8, 0), LocalDateTime.of(2025, 7, 5, 17, 0));
+            "multiday",
+            LocalDateTime.of(2025, 7, 3, 8, 0),
+            LocalDateTime.of(2025, 7, 5, 17, 0));
     this.m.addSeriesEvent(
-            "series", days, 4, LocalDateTime.of(2025, 8, 1, 5, 0),
+            "series", days, 4,
+            LocalDateTime.of(2025, 8, 1, 5, 0),
             LocalDateTime.of(2025, 8, 1, 6, 0));
 
     // verify changes (1 single day event + 1 multiday event spans 3 days + 4 events in series = 8)
-    assertEquals(8, this.m.printEventsUsingInterval(LocalDateTime.of(2022, 6, 3, 8, 0),
-            LocalDateTime.of(2028, 6, 3, 17, 0)).size());
+    assertEquals(8, this.m.printEventsUsingInterval(LocalDateTime.of(
+            2022, 6, 3, 8, 0),
+                    LocalDateTime.of(
+                            2028, 6, 3, 17, 0)).size());
   }
 
   @Test
@@ -144,21 +177,29 @@ public class CalendarModelImplTest {
     // no event in calendar to edit
     try {
       m.editSingleEvent(
-              EventProperty.LOCATION, LocalDateTime.of(2025, 5, 6, 0, 0),
-              LocalDateTime.of(2025, 5, 6, 5, 0), "name", "online");
+              EventProperty.LOCATION, LocalDateTime.of(
+                      2025, 5, 6, 0, 0),
+              LocalDateTime.of(2025, 5, 6, 5, 0),
+              "name", "online");
       fail("Should have thrown");
     } catch (IllegalArgumentException e) {
       assertEquals(
-              "No events in calendar with given start date, end date, and subject", e.getMessage());
+              "No events in calendar with given start date, end date, and subject",
+              e.getMessage());
     }
 
     // add events to calendar model
     m.addSingleEvent(
-            "single", LocalDateTime.of(2025, 6, 3, 8, 0), LocalDateTime.of(2025, 6, 3, 17, 0));
+            "single", LocalDateTime.of(
+                    2025, 6, 3, 8, 0),
+            LocalDateTime.of(2025, 6, 3, 17, 0));
     m.addSingleEvent(
-            "multiday", LocalDateTime.of(2025, 7, 3, 8, 0), LocalDateTime.of(2025, 7, 5, 17, 0));
+            "multiday", LocalDateTime.of(
+                    2025, 7, 3, 8, 0),
+            LocalDateTime.of(2025, 7, 5, 17, 0));
     m.addSeriesEvent(
-            "series", days, 4, LocalDateTime.of(2025, 8, 1, 5, 0),
+            "series", days, 4,
+            LocalDateTime.of(2025, 8, 1, 5, 0),
             LocalDateTime.of(2025, 8, 1, 6, 0));
 
     // edit single event based on date and subject
@@ -193,7 +234,8 @@ public class CalendarModelImplTest {
   // NOTE: testing only for changes visible in model output
   @Test
   public void editEventsForSingleEvents() {
-    LocalDateTime startDate = LocalDateTime.of(2025, 6, 3, 8, 0);
+    LocalDateTime startDate = LocalDateTime.of(
+            2025, 6, 3, 8, 0);
     LocalDateTime endDate = LocalDateTime.of(2025, 6, 3, 17, 0);
 
     // add events to calendar model
@@ -202,48 +244,58 @@ public class CalendarModelImplTest {
     // verify change
     ArrayList<String> singleEventOutput1 = new ArrayList<>();
     singleEventOutput1.add("- single: 2025-06-03T08:00 to 2025-06-03T17:00");
-    assertEquals(singleEventOutput1, this.m.printEventsForDate(LocalDate.of(2025, 6, 3)));
+    assertEquals(singleEventOutput1, this.m.printEventsForDate(LocalDate.of(
+            2025, 6, 3)));
 
     // EDIT SUBJECT
 
     // edit single event based on date and subject
-    this.m.editSingleEvent(EventProperty.SUBJECT, startDate, endDate, "single", "new subject");
+    this.m.editSingleEvent(
+            EventProperty.SUBJECT, startDate, endDate, "single", "new subject");
 
     // verify changes to event
     ArrayList<String> singleEventOutput2 = new ArrayList<>();
     singleEventOutput2.add("- new subject: 2025-06-03T08:00 to 2025-06-03T17:00");
-    assertEquals(singleEventOutput2, this.m.printEventsForDate(LocalDate.of(2025, 6, 3)));
+    assertEquals(
+            singleEventOutput2, this.m.printEventsForDate(LocalDate.of(
+                    2025, 6, 3)));
 
     // EDIT DESCRIPTION
     this.m.editSingleEvent(
-            EventProperty.DESCRIPTION, startDate, endDate, "new subject", "new description");
+            EventProperty.DESCRIPTION, startDate, endDate,
+            "new subject", "new description");
 
     // verify changes to event
     ArrayList<String> singleEventOutput3 = new ArrayList<>();
     singleEventOutput3.add("- new subject: 2025-06-03T08:00 to 2025-06-03T17:00");
-    assertEquals(singleEventOutput3, this.m.printEventsForDate(LocalDate.of(2025, 6, 3)));
+    assertEquals(singleEventOutput3,
+            this.m.printEventsForDate(LocalDate.of(2025, 6, 3)));
 
 
   }
 
   @Test
   public void testShowCalendarStatus() {
-    LocalDateTime queryDateTime = LocalDateTime.of(2025, 6, 3, 10, 0);
+    LocalDateTime queryDateTime = LocalDateTime.of(
+            2025, 6, 3, 10, 0);
 
     // available status if no events on given date
     assertFalse("Should be available initially",
             m.showCalendarStatus(queryDateTime));
 
     // add events to calendar
-    m.addSingleEvent("Test", LocalDateTime.of(2025, 6, 3, 10, 0),
+    m.addSingleEvent("Test", LocalDateTime.of(
+            2025, 6, 3, 10, 0),
             LocalDateTime.of(2025, 6, 3, 11, 0));
 
     // busy status if events on given date
 
 
     assertFalse("Should be free before event",
-            m.showCalendarStatus(LocalDateTime.of(2025, 6, 3, 9, 0)));
+            m.showCalendarStatus(LocalDateTime.of(
+                    2025, 6, 3, 9, 0)));
     assertFalse("Should be free before event",
-            m.showCalendarStatus(LocalDateTime.of(2025, 6, 3, 12, 0)));
+            m.showCalendarStatus(LocalDateTime.of(
+                    2025, 6, 3, 12, 0)));
   }
 }

@@ -14,6 +14,9 @@ import java.util.Map;
 public class CalendarModelImpl implements CalendarModel {
   private final Map<LocalDate, ArrayList<AEvent>> calendar;
 
+  /**
+   * Constructs a CalendarModelImpl object with an empty calendar.
+   */
   public CalendarModelImpl() {
     this.calendar = new HashMap<>();
   }
@@ -24,7 +27,8 @@ public class CalendarModelImpl implements CalendarModel {
     // check if event already exists in calendar
     if (this.findSingleEvent(startDateTime, endDateTime, subject).isEmpty()) {
       new SingleEvent(
-              subject, startDateTime, endDateTime, null, null, null).addToCalendar(this.calendar);
+              subject, startDateTime, endDateTime,
+              null, null, null).addToCalendar(this.calendar);
     } else {
       throw new IllegalArgumentException("Given event with start date, end date, and subject " +
               "already exists in calendar");
@@ -37,7 +41,8 @@ public class CalendarModelImpl implements CalendarModel {
     // check if event already exists in calendar
     if (this.findSingleEvent(startDateTime, endDateTime, subject).isEmpty()) {
       new SeriesEvent(subject, daysOfWeek, occurrences,
-              startDateTime, endDateTime, null, null, null).addToCalendar(this.calendar);
+              startDateTime, endDateTime,
+              null, null, null).addToCalendar(this.calendar);
     } else {
       throw new IllegalArgumentException(
               "Given event with start date, end date, and subject already exists in calendar");
@@ -47,8 +52,8 @@ public class CalendarModelImpl implements CalendarModel {
   @Override
   public void editSingleEvent(
           EventProperty propertyToEdit, LocalDateTime startDate,
-          LocalDateTime endDate, String subject, String newProperty) throws
-          IllegalArgumentException {
+          LocalDateTime endDate, String subject, String newProperty)
+          throws IllegalArgumentException {
     ArrayList<AEvent> eventsToEdit = this.findSingleEvent(startDate, endDate, subject);
 
     if (eventsToEdit.isEmpty()) {
